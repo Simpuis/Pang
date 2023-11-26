@@ -131,6 +131,10 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input_handler.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="shader.cpp" />
+    <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="node.cpp" />
+    <ClCompile Include="scene_graph.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -139,6 +143,10 @@
   <ItemGroup>
     <ClInclude Include="game.h" />
     <ClInclude Include="input_handler.h" />
+    <ClInclude Include="shader.h" />
+    <ClInclude Include="sprite.h" />
+    <ClInclude Include="node.h" />
+    <ClInclude Include="scene_graph.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
