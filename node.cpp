@@ -7,11 +7,13 @@
 node::node() : parent_(nullptr)
 {
 	sprite_ = std::make_unique<sprite>();
+	material_ = std::make_unique<material>();
 }
 
 node::node(const glm::vec3 pos): parent_(nullptr), position_(pos)
 {
 	sprite_ = std::make_unique<sprite>();
+	material_ = std::make_unique<material>();
 }
 
 void node::add_child(node* node_target)
@@ -41,3 +43,14 @@ node* node::release_child(node* node_target)
 
 	return nullptr;
 }
+
+sprite* node::get_sprite() const
+{
+	return sprite_.get();
+}
+
+material* node::get_material() const
+{
+	return material_.get();
+}
+

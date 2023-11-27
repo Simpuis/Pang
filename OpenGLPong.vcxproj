@@ -131,19 +131,24 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input_handler.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="material.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="shader_loader.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="node.cpp" />
     <ClCompile Include="scene_graph.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="fragment_shader.glsl" />
     <None Include="packages.config" />
     <None Include="vertex_shader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
     <ClInclude Include="input_handler.h" />
+    <ClInclude Include="material.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="shader_loader.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="node.h" />
     <ClInclude Include="scene_graph.h" />

@@ -7,6 +7,7 @@
 
 #include "node.h"
 #include "shader.h"
+#include "shader_loader.h"
 #include "sprite.h"
 
 game::game(int width, int height, const std::string& title)
@@ -29,21 +30,7 @@ void game::loop()
 {
 	const node* root_node = new node();
 
-	const auto vertex_shader_source = "#version 330 core\n"
-		"layout (location = 0) in vec3 aPos;\n"
-		"void main()\n"
-		"{\n"
-		"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-		"}\0";
-
-	const auto fragment_shader_source = "#version 330 core\n"
-		"out vec4 fragColor;\n"
-		"void main()\n"
-		"{\n"
-		"    fragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-		"}\0";
-
-	const shader* program = new shader(vertex_shader_source, fragment_shader_source);
+	root_node->get_material()->material_shader = std::unique_ptr<shader>(shader_loader::load_shader("vertex_shader.glsl", "fragment_shader.glsl"));
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void*>(nullptr));
 	glEnableVertexAttribArray(0);
@@ -54,8 +41,8 @@ void game::loop()
 		glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		program->use();
-		glBindVertexArray(root_node->sprite_->VAO_);
+		root_node->get_material()->material_shader->use();
+		glBindVertexArray(root_node->get_sprite()->VAO_);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
@@ -64,7 +51,6 @@ void game::loop()
 	}
 
 	delete(root_node);
-	delete(program);
 }
 
 void game::init_glfw_window(const int width, const int height, const std::string& title)
