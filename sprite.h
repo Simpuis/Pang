@@ -3,6 +3,8 @@
 #include <vector>
 #include <glm/vec2.hpp>
 
+#include "scene_graph.h"
+
 class sprite
 {
 public:

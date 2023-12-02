@@ -19,10 +19,10 @@ void sprite::init()
 	glBindVertexArray(VAO_);
 
 	const float vertices[] = {
-		 size_.x,  size_.y, 0.0f, // top right
-		 size_.x, -size_.y, 0.0f, // bottom right
-		-size_.x, -size_.y, 0.0f, // bottom left
-		-size_.x,  size_.y, 0.0f // top left
+		 size_.x,  size_.y, 0.0f,	1.0f, 1.0f, // top right
+		 size_.x, -size_.y, 0.0f,	1.0f, 0.0f, // bottom right
+		-size_.x, -size_.y, 0.0f,	0.0f, 0.0f, // bottom left
+		-size_.x,  size_.y, 0.0f,	0.0f, 1.0f  // top left
 	};
 
 	const unsigned int indices[] = {
@@ -38,4 +38,12 @@ void sprite::init()
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), static_cast<void*>(nullptr));
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void*>(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(0);
 }

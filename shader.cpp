@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <glad/glad.h>
+#include <glm/matrix.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 shader::shader(const char* vertex_shader_source, const char* fragment_shader_source)
 {
@@ -17,6 +19,36 @@ shader::shader(const char* vertex_shader_source, const char* fragment_shader_sou
 void shader::use() const
 {
 	glUseProgram(id_);
+}
+
+void shader::set_int(const std::string& name, int value) const
+{
+	const int location = glGetUniformLocation(id_, name.c_str());
+	glUniform1i(location, value);
+}
+
+void shader::set_vector(const std::string& name, const glm::vec2 vector) const
+{
+	const int location = glGetUniformLocation(id_, name.c_str());
+	glUniform2f(location, vector.x, vector.y);
+}
+
+void shader::set_vector(const std::string& name, const glm::vec3 vector) const
+{
+	const int location = glGetUniformLocation(id_, name.c_str());
+	glUniform3f(location, vector.x, vector.y, vector.z);
+}
+
+void shader::set_vector(const std::string& name, const glm::vec4 vector) const
+{
+	const int location = glGetUniformLocation(id_, name.c_str());
+	glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
+}
+
+void shader::set_matrix(const std::string& name, glm::mat4 matrix) const
+{
+	const int location = glGetUniformLocation(id_, name.c_str());
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 unsigned int shader::compile_shader(const char* shader_source, const GLenum shader_type)

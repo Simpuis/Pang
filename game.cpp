@@ -4,17 +4,23 @@
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
+#include <entt/entity/registry.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-#include "node.h"
+#include "material.h"
 #include "shader.h"
 #include "shader_loader.h"
 #include "sprite.h"
+#include "texture_loader.h"
+#include "transform.h"
 
 game::game(int width, int height, const std::string& title)
 {
 	init_glfw_window(width, height, title);
 	input_ = std::make_unique<input_handler>(input_handler());
-	
+
+	registry_ = entt::registry();
 }
 
 game::~game()
@@ -28,29 +34,32 @@ void game::framebuffer_size_callback(GLFWwindow* window, const int width, const 
 
 void game::loop()
 {
-	const node* root_node = new node();
+	auto entitty = registry_.create();
 
-	root_node->get_material()->material_shader = std::unique_ptr<shader>(shader_loader::load_shader("vertex_shader.glsl", "fragment_shader.glsl"));
+	auto& material_comp = registry_.emplace<material>(entitty);
+	material_comp.material_shader = std::unique_ptr<shader>(shader_loader::load_shader("vertex_shader.glsl", "fragment_shader.glsl"));
+	material_comp.set_texture("tex", texture_loader::load_texture("container.jpg", GL_RGB), 0);
+	material_comp.set_texture("tex2", texture_loader::load_texture("awesomeface.png", GL_RGB), 1);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void*>(nullptr));
-	glEnableVertexAttribArray(0);
+	registry_.emplace<sprite>(entitty);
+
+	auto& trans = registry_.emplace<transform>(entitty, glm::mat4(1.0f));
+	trans.transform_matrix = glm::rotate(trans.transform_matrix, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	trans.transform_matrix = glm::scale(trans.transform_matrix, glm::vec3(0.5f, 0.5f, 0.5f));
+
 
 	while (!glfwWindowShouldClose(window_)) {
 		input_->process_input(window_);
 
+		trans.transform_matrix = glm::rotate(trans.transform_matrix, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
 		glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		root_node->get_material()->material_shader->use();
-		glBindVertexArray(root_node->get_sprite()->VAO_);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+		renderer_.render_scene(registry_, window_);
 
-		glfwSwapBuffers(window_);
 		glfwPollEvents();
 	}
-
-	delete(root_node);
 }
 
 void game::init_glfw_window(const int width, const int height, const std::string& title)
