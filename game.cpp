@@ -47,11 +47,15 @@ void game::loop()
 	trans.transform_matrix = glm::rotate(trans.transform_matrix, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	trans.transform_matrix = glm::scale(trans.transform_matrix, glm::vec3(0.5f, 0.5f, 0.5f));
 
-
+	double lastFrameTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window_)) {
+		const double currentFrameTime = glfwGetTime();
+		const double delta = currentFrameTime - lastFrameTime;
+		lastFrameTime = currentFrameTime;
+
 		input_->process_input(window_);
 
-		trans.transform_matrix = glm::rotate(trans.transform_matrix, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		trans.transform_matrix[3] = glm::vec4(sin((float)glfwGetTime()), 0.0f, 0.0f, 1.0f);
 
 		glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -76,7 +80,7 @@ void game::init_glfw_window(const int width, const int height, const std::string
 		exit();
 	}
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, width, height);
 	glfwSetFramebufferSizeCallback(window_, framebuffer_size_callback);
 }
 
