@@ -18,7 +18,8 @@ void renderer::render_scene(const material_lookup_registry& material_registry, c
 	{
 		auto [transform_comp, sprite_comp, material_comp] = view.get<transform, sprite, material_component>(entity);
 
-		const material* mat = material_registry.get_material(material_comp.id);
+		//const material* mat = material_registry.get_material(material_comp.id);
+		const material* mat = material_comp.material.get();
 
 		for(auto& [key, value] : mat->get_texture())
 		{

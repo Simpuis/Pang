@@ -78,6 +78,9 @@
     <ClCompile Include="material_lookup_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="texture_lookup_registry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="vertex_shader.glsl">
@@ -138,6 +141,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="material_lookup_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_lookup_registry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

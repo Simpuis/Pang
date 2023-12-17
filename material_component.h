@@ -8,5 +8,5 @@ struct material_component
 	material_component(const unsigned int material_id) : id(material_id) {}
 
 	unsigned int id;
-	std::weak_ptr<material> material; 
+	std::shared_ptr<material> material; 
 };

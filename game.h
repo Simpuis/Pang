@@ -33,4 +33,3 @@ private:
 	editor editor_;
 	material_lookup_registry material_lookup_registry_;
 };
-

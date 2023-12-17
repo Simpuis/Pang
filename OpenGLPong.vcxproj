@@ -151,6 +151,7 @@
     <ClCompile Include="scene_graph.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="texture_loader.cpp" />
+    <ClCompile Include="texture_lookup_registry.cpp" />
     <ClCompile Include="transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +176,7 @@
     <ClInclude Include="scene_graph.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="texture_loader.h" />
+    <ClInclude Include="texture_lookup_registry.h" />
     <ClInclude Include="transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
