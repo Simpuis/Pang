@@ -71,6 +71,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgAutoLink>true</VcpkgAutoLink>
+    <VcpkgEnabled>true</VcpkgEnabled>
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
+    <VcpkgManifestInstall>true</VcpkgManifestInstall>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -129,11 +135,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="custom_game_logic.cpp" />
+    <ClCompile Include="editor.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input_handler.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="material.cpp" />
+    <ClCompile Include="material_component.cpp" />
+    <ClCompile Include="material_lookup_registry.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="scene_serializer.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="shader_loader.cpp" />
     <ClCompile Include="sprite.cpp" />
@@ -148,10 +159,16 @@
     <None Include="vertex_shader.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cereal_glm_serialization.h" />
+    <ClInclude Include="custom_game_logic.h" />
+    <ClInclude Include="editor.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="input_handler.h" />
     <ClInclude Include="material.h" />
+    <ClInclude Include="material_component.h" />
+    <ClInclude Include="material_lookup_registry.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="scene_serializer.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shader_loader.h" />
     <ClInclude Include="sprite.h" />

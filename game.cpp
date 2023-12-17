@@ -5,15 +5,12 @@
 
 #include <GLFW/glfw3.h>
 #include <entt/entity/registry.hpp>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
-#include "material.h"
-#include "shader.h"
-#include "shader_loader.h"
-#include "sprite.h"
-#include "texture_loader.h"
-#include "transform.h"
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
+#include "custom_game_logic.h"
 
 game::game(int width, int height, const std::string& title)
 {
@@ -34,36 +31,47 @@ void game::framebuffer_size_callback(GLFWwindow* window, const int width, const 
 
 void game::loop()
 {
-	auto entitty = registry_.create();
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
 
-	auto& material_comp = registry_.emplace<material>(entitty);
-	material_comp.material_shader = std::unique_ptr<shader>(shader_loader::load_shader("vertex_shader.glsl", "fragment_shader.glsl"));
-	material_comp.set_texture("tex", texture_loader::load_texture("container.jpg", GL_RGB), 0);
-	material_comp.set_texture("tex2", texture_loader::load_texture("awesomeface.png", GL_RGB), 1);
+	ImGui_ImplGlfw_InitForOpenGL(window_, true);
+	ImGui_ImplOpenGL3_Init();
 
-	registry_.emplace<sprite>(entitty);
-
-	auto& trans = registry_.emplace<transform>(entitty, glm::mat4(1.0f));
-	trans.transform_matrix = glm::rotate(trans.transform_matrix, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	trans.transform_matrix = glm::scale(trans.transform_matrix, glm::vec3(0.5f, 0.5f, 0.5f));
+	custom_game_logic::init(registry_);
 
 	double lastFrameTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window_)) {
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		ImGui::ShowDemoWindow();
+
+		editor_.update(io, registry_);
+
 		const double currentFrameTime = glfwGetTime();
 		const double delta = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
 
 		input_->process_input(window_);
 
-		trans.transform_matrix[3] = glm::vec4(sin((float)glfwGetTime()), 0.0f, 0.0f, 1.0f);
+		custom_game_logic::update(registry_, delta);
 
 		glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		renderer_.render_scene(registry_, window_);
+		renderer_.render_scene(material_lookup_registry_, registry_, window_);
 
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		glfwSwapBuffers(window_);
 		glfwPollEvents();
 	}
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void game::init_glfw_window(const int width, const int height, const std::string& title)

@@ -16,6 +16,15 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{6ff6cf70-765c-4204-a7bd-3e19b966423a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{5000e6aa-15f1-4d2b-9db3-3ddf3aa155b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{c96708d3-b2d6-4abe-b102-9c04b99b7e2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{49a4aa59-e1b7-4244-86ae-f291f33ab1bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -30,13 +39,7 @@
     <ClCompile Include="scene_graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="shader_loader.cpp">
@@ -51,7 +54,28 @@
     <ClCompile Include="renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="custom_game_logic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
     <ClCompile Include="transform.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scene_serializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="material_component.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="material_lookup_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,13 +98,7 @@
     <ClInclude Include="scene_graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shader_loader.h">
@@ -95,7 +113,31 @@
     <ClInclude Include="renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="custom_game_logic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>Components</Filter>
+    </ClInclude>
     <ClInclude Include="transform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="editor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scene_serializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cereal_glm_serialization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="material_component.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="material_lookup_registry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

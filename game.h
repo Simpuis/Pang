@@ -4,7 +4,9 @@
 #include <memory>
 #include <entt/entity/registry.hpp>
 
+#include "editor.h"
 #include "input_handler.h"
+#include "material_lookup_registry.h"
 #include "renderer.h"
 
 class game
@@ -27,5 +29,8 @@ private:
 
 	entt::registry registry_;
 	renderer renderer_;
+
+	editor editor_;
+	material_lookup_registry material_lookup_registry_;
 };
 

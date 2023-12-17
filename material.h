@@ -15,8 +15,11 @@ public:
 	const std::map<unsigned int, std::unique_ptr<texture>>& get_texture() const;
 	void set_texture(std::string uniform_name, texture* texture_unit, int unit = 0);
 
-
 private:
 	std::map<unsigned int, std::unique_ptr<texture>> material_texture_units;
 };
 
+/*
+template<typename Archive>
+void serialize(Archive& )
+*/

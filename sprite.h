@@ -21,3 +21,10 @@ public:
 	glm::vec2 size_;
 };
 
+/*
+template<typename Archive>
+void serialize(Archive& archive, sprite& sprite_comp)
+{
+	archive(sprite_comp.size_);
+}
+*/

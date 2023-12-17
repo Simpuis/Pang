@@ -9,3 +9,10 @@ struct transform
 	glm::mat4 transform_matrix;
 };
 
+/*
+template<typename Archive>
+void serialize(Archive& archive, transform& transform)
+{
+	archive(transform.transform_matrix);
+}
+*/
