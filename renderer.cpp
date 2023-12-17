@@ -8,7 +8,8 @@
 #include "sprite.h"
 #include "transform.h"
 
-void renderer::render_scene(const material_lookup_registry& material_registry, const entt::registry& registry, GLFWwindow* window) const
+void renderer::render_scene(texture_lookup_registry& texture_registry, const entt::registry& registry,
+	GLFWwindow* window) const
 {
 	glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -23,7 +24,7 @@ void renderer::render_scene(const material_lookup_registry& material_registry, c
 
 		for(auto& [key, value] : mat->get_texture())
 		{
-			value->bind(key);
+			texture_registry.get_texture(value)->bind(key);
 		}
 		mat->material_shader->use();
 		mat->material_shader->set_matrix("transform", transform_comp.transform_matrix);
@@ -35,4 +36,3 @@ void renderer::render_scene(const material_lookup_registry& material_registry, c
 		glUseProgram(0);
 	}
 }
-

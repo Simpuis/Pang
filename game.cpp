@@ -60,11 +60,21 @@ void game::loop()
 			entt::snapshot{test_registry}.get<transform>(output);
 		}
 
-		/*std::ofstream out_file;
-		out_file.open("test");
-		out_file << storage.rdbuf();*/
+		{
+			std::ofstream out_file;
+			out_file.open("test");
+			out_file << storage.rdbuf();
+		}
 
-		cereal::JSONInputArchive input(storage);
+		std::stringstream storage1;
+
+	    {
+		    std::ifstream in_file;
+			in_file.open("test");
+			storage1 << in_file.rdbuf();
+	    }
+
+		cereal::JSONInputArchive input(storage1);
 
 		entt::registry test_input_registry;
 		entt::snapshot_loader{test_input_registry}.get<transform>(input);
@@ -89,7 +99,7 @@ void game::loop()
 		glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		renderer_.render_scene(material_lookup_registry_, registry_, window_);
+		renderer_.render_scene(texture_lookup_registry_, registry_, window_);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

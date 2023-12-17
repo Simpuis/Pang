@@ -31,5 +31,5 @@ private:
 	renderer renderer_;
 
 	editor editor_;
-	material_lookup_registry material_lookup_registry_;
+	texture_lookup_registry texture_lookup_registry_;
 };

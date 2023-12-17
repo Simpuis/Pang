@@ -18,7 +18,7 @@ void custom_game_logic::init(entt::registry& registry)
 	material_component& mat = registry.emplace<material_component>(entity, material_component(0));
 	mat.material = std::make_shared<material>();
 	mat.material->material_shader = std::unique_ptr<shader>(shader_loader::load_shader("vertex_shader.glsl", "fragment_shader.glsl"));
-	mat.material->set_texture("texture1", texture_loader::load_texture("wall.jpg", GL_RGBA));
+	mat.material->set_texture("texture1", "wall.jpg");
 }
 
 void custom_game_logic::update(entt::registry& registry, double delta)
