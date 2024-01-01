@@ -10,8 +10,6 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include <cereal/archives/json.hpp>
-#include "cereal_glm_serialization.h"
 #include "transform.h"
 
 #include "custom_game_logic.h"
@@ -46,41 +44,6 @@ void game::loop()
 
 	double lastFrameTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window_)) {
-	    entt::registry test_registry;
-
-		auto ent = test_registry.create();
-		test_registry.emplace<transform>(ent, transform(glm::mat4(1)));
-
-		std::stringstream storage;
-
-		{
-			// output finishes flushing when it goes out of scope
-			cereal::JSONOutputArchive output(storage);
-
-			entt::snapshot{test_registry}.get<transform>(output);
-		}
-
-		{
-			std::ofstream out_file;
-			out_file.open("test");
-			out_file << storage.rdbuf();
-		}
-
-		std::stringstream storage1;
-
-	    {
-		    std::ifstream in_file;
-			in_file.open("test");
-			storage1 << in_file.rdbuf();
-	    }
-
-		cereal::JSONInputArchive input(storage1);
-
-		entt::registry test_input_registry;
-		entt::snapshot_loader{test_input_registry}.get<transform>(input);
-
-		assert(test_input_registry.get<transform>(ent).transform_matrix == glm::mat4(1), "test1 is not 0");
-
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -99,7 +62,7 @@ void game::loop()
 		glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		renderer_.render_scene(texture_lookup_registry_, registry_, window_);
+		renderer_.render_scene(registry_, window_);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

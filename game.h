@@ -6,7 +6,6 @@
 
 #include "editor.h"
 #include "input_handler.h"
-#include "material_lookup_registry.h"
 #include "renderer.h"
 
 class game
@@ -31,5 +30,4 @@ private:
 	renderer renderer_;
 
 	editor editor_;
-	texture_lookup_registry texture_lookup_registry_;
 };

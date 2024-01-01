@@ -1,7 +1,6 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <cereal/cereal.hpp>
 
 struct transform
 {
@@ -10,9 +9,3 @@ struct transform
 
 	glm::mat4 transform_matrix;
 };
-
-template<typename Archive>
-void serialize(Archive& archive, transform& transform)
-{
-	archive(cereal::make_nvp("transform_matrix", transform.transform_matrix));
-}

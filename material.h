@@ -12,11 +12,11 @@ public:
 
 	std::unique_ptr<shader> material_shader;
 
-	const std::map<unsigned int, std::string>& get_texture() const;
-	void set_texture(std::string uniform_name, const std::string& texture_unit, int unit = 0);
+	const std::map<unsigned int, texture*>& get_texture() const;
+	void set_texture(std::string uniform_name, texture* texture_unit, int unit = 0);
 
 private:
-	std::map<unsigned int, std::string> material_texture_units_;
+	std::map<unsigned int, texture*> material_texture_units_;
 };
 
 /*
