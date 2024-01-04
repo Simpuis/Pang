@@ -52,7 +52,9 @@ add_executable(OpenGLPong
         vec2.h
         vec3.h
         name.cpp
-        name.h)
+        name.h
+        scene_deserializer.cpp
+        scene_deserializer.h)
 
 target_include_directories(OpenGLPong PRIVATE ${TINYGLTF_INCLUDE_DIRS})
 target_include_directories(OpenGLPong PRIVATE ${Stb_INCLUDE_DIR})

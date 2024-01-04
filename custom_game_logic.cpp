@@ -12,6 +12,7 @@
 #include "shader_loader.h"
 #include "scene_serializer.h"
 #include "name.h"
+#include "scene_deserializer.h"
 
 void custom_game_logic::init(entt::registry& registry)
 {
@@ -41,6 +42,19 @@ void custom_game_logic::init(entt::registry& registry)
             .get<transform>(output)
             .get<name>(output);
     }
+
+    scene_deserializer input = scene_deserializer(scene_deserializer::gltf_file_type::ascii, "test.gltf");
+    input.register_transform_type<transform>()
+         .register_name_type<name>()
+         .load_scene_into_registry(destination);
+
+    assert(destination.valid(e0));
+    assert(destination.all_of<transform>(e0));
+    assert(destination.all_of<name>(e0));
+    assert(destination.get<name>(e0).name_string == "Poop");
+    assert(destination.valid(e1));
+    assert(destination.all_of<name>(e1));
+    assert(destination.get<name>(e1).name_string == "Dinner");
 }
 
 void custom_game_logic::update(entt::registry& registry, double delta)

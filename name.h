@@ -2,6 +2,7 @@
 
 #include <string>
 #include <utility>
+#include <entt/entt.hpp>
 
 namespace tinygltf{
     class Model;
@@ -14,4 +15,5 @@ struct name {
     std::string name_string;
 
     void serialize(tinygltf::Model& model, tinygltf::Node* node) const;
+    static void deserialize(const tinygltf::Node& node, entt::registry& registry, const entt::entity& entity);
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <entt/entt.hpp>
 
 namespace tinygltf {
     class Model;
@@ -15,4 +16,5 @@ struct transform
 	glm::mat4 transform_matrix;
 
     void serialize(tinygltf::Model& model, tinygltf::Node* node) const;
+    static void deserialize(const tinygltf::Node& node, entt::registry& registry, const entt::entity& entity);
 };
