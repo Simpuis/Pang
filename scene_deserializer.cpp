@@ -1,34 +1,35 @@
 #include <iostream>
 #include "scene_deserializer.h"
+#include "material.h"
 
 void scene_deserializer::load_scene_into_registry(entt::registry &registry) {
-    tinygltf::Model model = load_scene_file(scene_path, input_type);
+    tinygltf::Model model;
+    if(!load_scene_file(model, scene_path, input_type)) return;
 
-    for(auto node : model.nodes) {
+    std::map<unsigned int, std::shared_ptr<material>> material_lookup;
+
+    for(const auto& node : model.nodes) {
         auto entity = registry.create();
+        deserialization_data data(model, node, registry, entity, material_lookup);
 
-        if(!node.name.empty()) {
-            name_deserializer(node, registry, entity);
-        }
-
-        if(!node.matrix.empty()) {
-            transform_deserializer(node, registry, entity);
+        for(const auto& core_deserializer : core_deserializers) {
+            core_deserializer(data);
         }
     }
 }
 
-tinygltf::Model
-scene_deserializer::load_scene_file(const std::string &path, const scene_deserializer::gltf_file_type file_type) {
-    tinygltf::Model model;
+bool
+scene_deserializer::load_scene_file(tinygltf::Model& model, const std::string &path, const scene_deserializer::gltf_file_type file_type) {
     tinygltf::TinyGLTF loader;
     std::string error_message;
     std::string warning_message;
 
+    bool result = false;
     if(file_type == gltf_file_type::ascii) {
-        loader.LoadASCIIFromFile(&model, &error_message, &warning_message, path);
+        result = loader.LoadASCIIFromFile(&model, &error_message, &warning_message, path);
     }
     else if(file_type == gltf_file_type::binary) {
-        loader.LoadBinaryFromFile(&model, &error_message, &warning_message, path);
+        result = loader.LoadBinaryFromFile(&model, &error_message, &warning_message, path);
     }
 
     if(!error_message.empty()) {
@@ -39,5 +40,5 @@ scene_deserializer::load_scene_file(const std::string &path, const scene_deseria
         std::cout << "TinyGLTF Warning loading scene file " << path << std::endl << "Warning Message: " << warning_message;
     }
 
-    return model;
+    return result;
 }

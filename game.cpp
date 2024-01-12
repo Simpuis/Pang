@@ -13,6 +13,7 @@
 #include "transform.h"
 
 #include "custom_game_logic.h"
+#include "gl_debug.h"
 
 game::game(int width, int height, const std::string& title)
 {
@@ -60,7 +61,7 @@ void game::loop()
 		custom_game_logic::update(registry_, delta);
 
 		glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		renderer_.render_scene(registry_, window_);
 
@@ -90,6 +91,18 @@ void game::init_glfw_window(const int width, const int height, const std::string
 		exit();
 	}
 
+    int flags = 0;
+    glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+    if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+    {
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        glDebugMessageCallback(gl_debug_output, nullptr);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    }
+
+    glEnable(GL_DEPTH_TEST);
+
 	glViewport(0, 0, width, height);
 	glfwSetFramebufferSizeCallback(window_, framebuffer_size_callback);
 }
@@ -98,3 +111,4 @@ void game::exit()
 {
 	glfwSetWindowShouldClose(window_, true);
 }
+

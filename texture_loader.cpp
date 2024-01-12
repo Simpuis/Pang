@@ -4,8 +4,9 @@
 #include "texture_loader.h"
 
 #include <stdexcept>
+#include <memory>
 
-texture* texture_loader::load_texture(const std::string& path, GLenum internal_color_format)
+std::shared_ptr<texture> texture_loader::load_texture(const std::string& path, GLenum internal_color_format)
 {
 	int width, height, number_channels;
 
@@ -29,7 +30,7 @@ texture* texture_loader::load_texture(const std::string& path, GLenum internal_c
 	}
 
 	if(data) {
-		texture* loaded_texture = new texture();
+        auto loaded_texture = std::make_shared<texture>();
 		loaded_texture->generate(width, height, data, internal_color_format, color_format);
 
 		stbi_image_free(data);

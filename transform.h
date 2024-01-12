@@ -8,13 +8,16 @@ namespace tinygltf {
     class Node;
 }
 
+class scene_serializer;
+struct deserialization_data;
+
 struct transform
 {
-	transform() : transform_matrix(glm::mat4(0.0f)) {}
+	transform() = default;
 	explicit transform(const glm::mat4& trans) : transform_matrix(trans) {}
 
-	glm::mat4 transform_matrix;
+	glm::mat4 transform_matrix = glm::mat4(0.0f);
 
-    void serialize(tinygltf::Model& model, tinygltf::Node* node) const;
-    static void deserialize(const tinygltf::Node& node, entt::registry& registry, const entt::entity& entity);
+    void serialize(scene_serializer& serializer, tinygltf::Model& model, tinygltf::Node* node) const;
+    static void deserialize(deserialization_data& data);
 };

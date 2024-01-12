@@ -1,5 +1,6 @@
 #include "scene_serializer.h"
 #include "transform.h"
+#include "material.h"
 
 #include <tiny_gltf.h>
 #include <memory>
@@ -19,5 +20,14 @@ void scene_serializer::operator()(std::underlying_type_t<entt::entity> size) {
 scene_serializer::~scene_serializer() {
     tinygltf::TinyGLTF saver;
     saver.WriteGltfSceneToFile(&model, file, false, false, false, false);
+}
+
+std::uint32_t scene_serializer::get_material_index(const material *mat) {
+    if(material_indices.find(mat) == material_indices.end()) {
+        model.materials.push_back(mat->serialize());
+        material_indices[mat] = model.materials.size() - 1;
+    }
+
+    return material_indices[mat];
 }
 

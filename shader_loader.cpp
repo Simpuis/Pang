@@ -3,12 +3,12 @@
 #include <fstream>
 #include <iostream>
 
-shader* shader_loader::load_shader(const std::string& vertex_shader_path, const std::string& fragment_shader_path)
+std::unique_ptr<shader> shader_loader::load_shader(const std::string& vertex_shader_path, const std::string& fragment_shader_path)
 {
 	const std::string vertex_shader_source = read_shader_file(vertex_shader_path);
 	const std::string fragment_shader_source = read_shader_file(fragment_shader_path);
 
-	return new shader(vertex_shader_source.c_str(), fragment_shader_source.c_str());
+	return std::make_unique<shader>(shader(vertex_shader_source.c_str(), fragment_shader_source.c_str()));
 }
 
 std::string shader_loader::read_shader_file(const std::string& shader_path)

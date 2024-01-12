@@ -15,8 +15,9 @@ find_package(EnTT CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(Stb REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
+find_package(Microsoft.GSL CONFIG REQUIRED)
 
-add_executable(OpenGLPong
+add_library(OpenGLPongLib
         cereal_glm_serialization.h
         custom_game_logic.cpp
         custom_game_logic.h
@@ -26,7 +27,6 @@ add_executable(OpenGLPong
         game.h
         input_handler.cpp
         input_handler.h
-        Main.cpp
         material.cpp
         material.h
         material_component.cpp
@@ -49,19 +49,32 @@ add_executable(OpenGLPong
         texture_loader.h
         transform.cpp
         transform.h
-        vec2.h
-        vec3.h
         name.cpp
         name.h
         scene_deserializer.cpp
-        scene_deserializer.h)
+        scene_deserializer.h
+        mesh_component.cpp
+        mesh_component.h
+        mesh.cpp
+        mesh.h
+        tiny_gltf_defines.cpp
+        gl_debug.h
+)
 
-target_include_directories(OpenGLPong PRIVATE ${TINYGLTF_INCLUDE_DIRS})
-target_include_directories(OpenGLPong PRIVATE ${Stb_INCLUDE_DIR})
+find_package(EnTT CONFIG REQUIRED)
+find_package(Stb REQUIRED)
 
-target_link_libraries(OpenGLPong PRIVATE glad::glad)
-target_link_libraries(OpenGLPong PRIVATE glfw)
-target_link_libraries(OpenGLPong PRIVATE imgui::imgui glfw OpenGL::GL)
-target_link_libraries(OpenGLPong PRIVATE EnTT::EnTT)
-target_link_libraries(OpenGLPong PRIVATE glm::glm)
-target_link_libraries(OpenGLPong PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(OpenGLPongLib glad::glad)
+target_link_libraries(OpenGLPongLib glfw)
+target_link_libraries(OpenGLPongLib imgui::imgui glfw OpenGL::GL)
+target_link_libraries(OpenGLPongLib EnTT::EnTT)
+target_link_libraries(OpenGLPongLib glm::glm)
+target_link_libraries(OpenGLPongLib nlohmann_json::nlohmann_json)
+target_link_libraries(OpenGLPongLib Microsoft.GSL::GSL)
+
+add_executable(OpenGLPong Main.cpp)
+
+target_link_libraries(OpenGLPong OpenGLPongLib)
+
+add_subdirectory(tests)
+

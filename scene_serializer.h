@@ -3,10 +3,11 @@
 #include <entt/entt.hpp>
 #include <utility>
 #include <tiny_gltf.h>
+#include "material.h"
 
 class scene_serializer {
 public:
-    explicit scene_serializer(std::string filename) : file(std::move(filename)), active_node(nullptr) {}
+    explicit scene_serializer(std::string&& filename) : active_node(nullptr), file(std::move(filename)) {}
     ~scene_serializer();
 
 public:
@@ -16,7 +17,11 @@ public:
     template<typename T>
     void operator()(const T & comp);
 
+    std::uint32_t get_material_index(const material* mat);
+
 private:
+    std::map<const material*, std::uint32_t> material_indices;
+
     tinygltf::Model model;
     tinygltf::Node* active_node;
 
@@ -25,5 +30,5 @@ private:
 
 template<typename T>
 void scene_serializer::operator()(const T & comp) {
-    comp.serialize(model, active_node);
+    comp.serialize(*this, model, active_node);
 }

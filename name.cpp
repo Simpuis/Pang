@@ -1,11 +1,14 @@
 #include "name.h"
 
 #include <tiny_gltf.h>
+#include "scene_deserializer.h"
 
-void name::serialize(tinygltf::Model &model, tinygltf::Node *node) const {
+void name::serialize(scene_serializer& serializer, tinygltf::Model &model, tinygltf::Node *node) const {
     node->name = name_string;
 }
 
-void name::deserialize(const tinygltf::Node &node, entt::registry &registry, const entt::entity &entity) {
-    auto& name_comp = registry.emplace<name>(entity, node.name);
+void name::deserialize(deserialization_data& data) {
+    if(data.node.name.empty()) return;
+
+    auto& name_comp = data.registry.emplace<name>(data.entity, data.node.name);
 }

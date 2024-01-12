@@ -9,11 +9,14 @@ namespace tinygltf{
     class Node;
 }
 
+class scene_serializer;
+struct deserialization_data;
+
 struct name {
     explicit name(std::string s) : name_string(std::move(s)) {}
 
     std::string name_string;
 
-    void serialize(tinygltf::Model& model, tinygltf::Node* node) const;
-    static void deserialize(const tinygltf::Node& node, entt::registry& registry, const entt::entity& entity);
+    void serialize(scene_serializer& serializer, tinygltf::Model& model, tinygltf::Node* node) const;
+    static void deserialize(deserialization_data& data);
 };
