@@ -4,6 +4,8 @@
 #include <tiny_gltf.h>
 #include <scene_deserializer.h>
 
+#include "material.h"
+
 void mesh::deserialize(deserialization_data& data) {
     if(data.node.mesh < 0) return;
 
@@ -61,7 +63,7 @@ void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& m
             mesh_primitive.mat = std::make_shared<material>();
         }
         else if(material_lookup.count(gltf_primitive.material) <= 0) {
-            material_lookup.insert({gltf_primitive.material, material::deserialize(model.materials[gltf_primitive.material])});
+            material_lookup.insert({gltf_primitive.material, material::deserialize(model, model.materials[gltf_primitive.material])});
             mesh_primitive.mat = material_lookup[gltf_primitive.material];
         }
         else {

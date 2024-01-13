@@ -1,22 +1,8 @@
 #include "texture.h"
 
-void texture::generate(unsigned width, unsigned height, unsigned char* data, GLenum internal_color_format,
-                       GLenum source_color_format)
-{
-	glGenTextures(1, &id_);
-	glBindTexture(GL_TEXTURE_2D, id_);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, internal_color_format, width, height, 0, source_color_format, GL_UNSIGNED_BYTE,
-			data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glBindTexture(GL_TEXTURE_2D, 0);	
-}
+#include <memory>
+#include <tiny_gltf.h>
+#include <glad/glad.h>
 
 void texture::bind(int unit)
 {
@@ -29,4 +15,49 @@ void texture::bind(int unit)
 void texture::unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+std::shared_ptr<texture> texture::deserialize(const tinygltf::Model &model, const tinygltf::Texture &gltf_texture) {
+    auto tex = std::make_shared<texture>();
+
+    const auto& image = model.images[gltf_texture.source];
+
+    glGenTextures(1, &tex->id_);
+    glBindTexture(GL_TEXTURE_2D, tex->id_);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    GLenum format;
+    if(image.component == 1) {
+        format = GL_RED;
+    }
+    else if(image.component == 2) {
+        format = GL_RG;
+    }
+    else if(image.component == 3) {
+        format = GL_RGB;
+    }
+    else if(image.component == 4) {
+        format = GL_RGBA;
+    }
+
+    GLenum type;
+    if(image.bits == 8) {
+        type = GL_UNSIGNED_BYTE;
+    }
+    else if(image.bits == 16) {
+        type = GL_UNSIGNED_SHORT;
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, format, type,
+                 &image.image.at(0));
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    return tex;
 }

@@ -10,6 +10,8 @@
 #include "material_component.h"
 #include "sprite.h"
 #include "transform.h"
+#include "texture.h"
+#include "shader.h"
 #include "mesh.h"
 
 void renderer::render_scene(const entt::registry& registry,

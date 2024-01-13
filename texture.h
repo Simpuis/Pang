@@ -1,14 +1,19 @@
 #pragma once
 #include <string>
-#include <glad/glad.h>
+#include <memory>
+
+namespace tinygltf {
+    class Model;
+    struct Texture;
+}
 
 class texture
 {
 public:
-	void generate(unsigned int width, unsigned int height, unsigned char* data, GLenum internal_color_format, GLenum source_color_format);
-
 	void bind(int unit = -1);
 	void unbind();
+
+    static std::shared_ptr<texture> deserialize(const tinygltf::Model& model, const tinygltf::Texture& gltf_texture);
 
 private:
 	unsigned int id_;

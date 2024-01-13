@@ -1,12 +1,16 @@
 #pragma once
+
 #include <map>
 #include <memory>
+#include <string>
 
 #include "shader.h"
-#include "texture.h"
+
+class texture;
 
 namespace tinygltf {
-    class Material;
+    struct Material;
+    class Model;
 }
 
 class material
@@ -20,12 +24,7 @@ public:
 	void set_texture(const std::string& uniform_name, std::shared_ptr<texture> texture_unit, int unit = 0);
 
     [[nodiscard]] tinygltf::Material& serialize() const;
-    static std::shared_ptr<material> deserialize(const tinygltf::Material& gltf_material);
+    static std::shared_ptr<material> deserialize(const tinygltf::Model& model, const tinygltf::Material& gltf_material);
 private:
 	std::map<unsigned int, std::shared_ptr<texture>> material_texture_units_;
 };
-
-/*
-template<typename Archive>
-void serialize(Archive& )
-*/

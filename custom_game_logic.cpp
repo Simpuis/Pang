@@ -8,7 +8,6 @@
 #include "sprite.h"
 #include "transform.h"
 #include "material.h"
-#include "texture_loader.h"
 #include "shader_loader.h"
 #include "scene_serializer.h"
 #include "name.h"

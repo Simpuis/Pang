@@ -45,8 +45,6 @@ add_library(OpenGLPongLib
         sprite.h
         texture.cpp
         texture.h
-        texture_loader.cpp
-        texture_loader.h
         transform.cpp
         transform.h
         name.cpp
