@@ -18,49 +18,44 @@ find_package(nlohmann_json CONFIG REQUIRED)
 find_package(Microsoft.GSL CONFIG REQUIRED)
 
 add_library(OpenGLPongLib
-        cereal_glm_serialization.h
-        custom_game_logic.cpp
-        custom_game_logic.h
-        editor.cpp
-        editor.h
-        game.cpp
-        game.h
-        input_handler.cpp
-        input_handler.h
-        material.cpp
-        material.h
-        material_component.cpp
-        material_component.h
-        renderer.cpp
-        renderer.h
-        scene_graph.cpp
-        scene_graph.h
-        shader.cpp
-        shader.h
-        shader_loader.cpp
-        shader_loader.h
-        scene_serializer.cpp
-        scene_serializer.h
-        sprite.cpp
-        sprite.h
-        texture.cpp
-        texture.h
-        transform.cpp
-        transform.h
-        name.cpp
-        name.h
-        scene_deserializer.cpp
-        scene_deserializer.h
-        mesh_component.cpp
-        mesh_component.h
-        mesh.cpp
-        mesh.h
-        tiny_gltf_defines.cpp
-        gl_debug.h
-        camera.cpp
-        camera.h
-        freefly_camera.cpp
-        freefly_camera.h
+        src/custom_game_logic.cpp
+        src/custom_game_logic.h
+        src/editor/editor.cpp
+        src/editor/editor.h
+        src/game.cpp
+        src/game.h
+        src/input_handler.cpp
+        src/input_handler.h
+        src/render/material.cpp
+        src/render/material.h
+        src/components/material_component.cpp
+        src/components/material_component.h
+        src/render/renderer.cpp
+        src/render/renderer.h
+        src/render/shader.cpp
+        src/render/shader.h
+        src/serialization/shader_loader.cpp
+        src/serialization/shader_loader.h
+        src/serialization/scene_serializer.cpp
+        src/serialization/scene_serializer.h
+        src/render/texture.cpp
+        src/render/texture.h
+        src/components/transform.cpp
+        src/components/transform.h
+        src/components/name.cpp
+        src/components/name.h
+        src/serialization/scene_deserializer.cpp
+        src/serialization/scene_deserializer.h
+        src/components/mesh_component.cpp
+        src/components/mesh_component.h
+        src/render/mesh.cpp
+        src/render/mesh.h
+        src/tiny_gltf_defines.cpp
+        src/gl_debug.h
+        src/render/camera.cpp
+        src/render/camera.h
+        src/render/freefly_camera.cpp
+        src/render/freefly_camera.h
 )
 
 find_package(EnTT CONFIG REQUIRED)
@@ -74,9 +69,9 @@ target_link_libraries(OpenGLPongLib glm::glm)
 target_link_libraries(OpenGLPongLib nlohmann_json::nlohmann_json)
 target_link_libraries(OpenGLPongLib Microsoft.GSL::GSL)
 
-add_executable(OpenGLPong Main.cpp)
+add_executable(OpenGLPong src/main.cpp)
 
 target_link_libraries(OpenGLPong OpenGLPongLib)
 
-add_subdirectory(tests)
+add_subdirectory(src/tests)
 

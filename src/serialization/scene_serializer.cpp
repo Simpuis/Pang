@@ -1,6 +1,6 @@
 #include "scene_serializer.h"
-#include "transform.h"
-#include "material.h"
+#include "src/components/transform.h"
+#include "src/render/material.h"
 
 #include <tiny_gltf.h>
 #include <memory>

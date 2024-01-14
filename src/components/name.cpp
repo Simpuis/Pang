@@ -1,7 +1,7 @@
 #include "name.h"
 
 #include <tiny_gltf.h>
-#include "scene_deserializer.h"
+#include "src/serialization/scene_deserializer.h"
 
 void name::serialize(scene_serializer& serializer, tinygltf::Model &model, tinygltf::Node *node) const {
     node->name = name_string;

@@ -7,9 +7,8 @@
 #include <iostream>
 
 #include "material.h"
-#include "material_component.h"
-#include "sprite.h"
-#include "transform.h"
+#include "src/components/material_component.h"
+#include "src/components/transform.h"
 #include "texture.h"
 #include "shader.h"
 #include "mesh.h"

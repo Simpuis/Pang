@@ -10,7 +10,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include "transform.h"
+#include "components/transform.h"
 
 #include "custom_game_logic.h"
 #include "gl_debug.h"

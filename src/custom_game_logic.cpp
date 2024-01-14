@@ -6,15 +6,14 @@
 #include <glm/detail/type_quat.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include "material_component.h"
-#include "sprite.h"
-#include "transform.h"
-#include "material.h"
-#include "shader_loader.h"
-#include "scene_serializer.h"
-#include "name.h"
-#include "scene_deserializer.h"
-#include "mesh.h"
+#include "components/material_component.h"
+#include "components/transform.h"
+#include "render/material.h"
+#include "serialization/shader_loader.h"
+#include "serialization/scene_serializer.h"
+#include "components/name.h"
+#include "serialization/scene_deserializer.h"
+#include "render/mesh.h"
 #include "game.h"
 
 void custom_game_logic::init(game& context, entt::registry& registry)

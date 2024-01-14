@@ -1,6 +1,6 @@
 #include <iostream>
 #include "scene_deserializer.h"
-#include "material.h"
+#include "src/render/material.h"
 
 void scene_deserializer::load_scene_into_registry(entt::registry &registry) {
     tinygltf::Model model;

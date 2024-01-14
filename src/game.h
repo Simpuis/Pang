@@ -4,11 +4,11 @@
 #include <memory>
 #include <entt/entity/registry.hpp>
 
-#include "editor.h"
+#include "editor/editor.h"
 #include "input_handler.h"
-#include "renderer.h"
-#include "camera.h"
-#include "freefly_camera.h"
+#include "render/renderer.h"
+#include "render/camera.h"
+#include "render/freefly_camera.h"
 
 class game
 {

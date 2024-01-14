@@ -3,7 +3,7 @@
 #include <entt/entt.hpp>
 #include <utility>
 #include <tiny_gltf.h>
-#include "material.h"
+#include "src/render/material.h"
 
 class scene_serializer {
 public:

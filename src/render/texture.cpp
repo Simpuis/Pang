@@ -48,15 +48,7 @@ std::shared_ptr<texture> texture::deserialize(const tinygltf::Model &model, cons
         format = GL_RGBA;
     }
 
-    GLenum type;
-    if(image.bits == 8) {
-        type = GL_UNSIGNED_BYTE;
-    }
-    else if(image.bits == 16) {
-        type = GL_UNSIGNED_SHORT;
-    }
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, format, type,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, format, image.pixel_type,
                  &image.image.at(0));
     glGenerateMipmap(GL_TEXTURE_2D);
 

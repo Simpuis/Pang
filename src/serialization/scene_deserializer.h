@@ -4,7 +4,7 @@
 #include <entt/entt.hpp>
 #include <utility>
 
-#include "material.h"
+#include "src/render/material.h"
 
 struct deserialization_data {
     deserialization_data(const tinygltf::Model &model, const tinygltf::Node &node, entt::registry &registry,

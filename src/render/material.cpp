@@ -6,7 +6,7 @@
 
 #include "texture.h"
 #include "shader.h"
-#include "shader_loader.h"
+#include "src/serialization/shader_loader.h"
 
 material::material() {
     material_shader = shader_loader::load_shader("vertex_shader.glsl", "fragment_shader.glsl");

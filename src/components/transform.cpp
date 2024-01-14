@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <gsl/gsl_narrow>
-#include <scene_deserializer.h>
+#include "src/serialization/scene_deserializer.h"
 #include <glm/detail/type_quat.hpp>
 #include <glm/gtc/quaternion.hpp>
 

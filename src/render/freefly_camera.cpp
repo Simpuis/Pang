@@ -4,7 +4,7 @@
 #include <glm/detail/type_quat.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include "game.h"
+#include "src/game.h"
 
 void freefly_camera::tick(game& context, double delta) {
     double cursor_x;

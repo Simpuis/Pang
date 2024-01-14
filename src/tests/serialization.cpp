@@ -4,10 +4,10 @@
 
 #include <gtest/gtest.h>
 #include <entt/entt.hpp>
-#include <transform.h>
-#include <name.h>
-#include <scene_serializer.h>
-#include <scene_deserializer.h>
+#include "src/components/transform.h"
+#include "src/components/name.h"
+#include "src/serialization/scene_serializer.h"
+#include "src/serialization/scene_deserializer.h"
 
 TEST(Serialization, SerializeAndUnserializeRegistry) {
     entt::registry source;

@@ -2,7 +2,7 @@
 #include <string>
 #include <memory>
 
-#include "shader.h"
+#include "src/render/shader.h"
 
 class shader_loader
 {
