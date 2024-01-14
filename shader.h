@@ -15,6 +15,7 @@ public:
 
 	void use() const;
 
+    void set_bool(const std::string&, bool) const;
 	void set_int(const std::string& name, int value) const;
 	void set_vector(const std::string& name, glm::vec2 vector) const;
 	void set_vector(const std::string& name, glm::vec3 vector) const;

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <entt/entt.hpp>
+#include <glad/glad.h>
 
 class scene_serializer;
 class material;
@@ -21,6 +22,7 @@ struct primitive {
 
     size_t count;
     size_t byte_offset;
+    GLenum indices_component_type;
 
     std::shared_ptr<material> mat;
 };

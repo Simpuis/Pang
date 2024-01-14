@@ -7,6 +7,8 @@
 #include "editor.h"
 #include "input_handler.h"
 #include "renderer.h"
+#include "camera.h"
+#include "freefly_camera.h"
 
 class game
 {
@@ -17,6 +19,9 @@ public:
 public:
 	void loop();
 
+    freefly_camera main_camera;
+    GLFWwindow* window_;
+
 private:
 	void init_glfw_window(int width, int height, const std::string& title);
 	void exit();
@@ -24,7 +29,6 @@ private:
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 	std::unique_ptr<input_handler> input_;
-	GLFWwindow* window_;
 
 	entt::registry registry_;
 	renderer renderer_;

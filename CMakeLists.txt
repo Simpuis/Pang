@@ -57,6 +57,10 @@ add_library(OpenGLPongLib
         mesh.h
         tiny_gltf_defines.cpp
         gl_debug.h
+        camera.cpp
+        camera.h
+        freefly_camera.cpp
+        freefly_camera.h
 )
 
 find_package(EnTT CONFIG REQUIRED)

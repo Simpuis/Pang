@@ -102,3 +102,8 @@ bool shader::check_program_compile_success(const unsigned program)
 
 	return success;
 }
+
+void shader::set_bool(const std::string & name, bool value) const {
+    const int location = glGetUniformLocation(id_, name.c_str());
+    glUniform1i(location, value);
+}

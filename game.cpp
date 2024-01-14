@@ -41,7 +41,8 @@ void game::loop()
 	ImGui_ImplGlfw_InitForOpenGL(window_, true);
 	ImGui_ImplOpenGL3_Init();
 
-	custom_game_logic::init(registry_);
+    main_camera.init(*this);
+	custom_game_logic::init(*this, registry_);
 
 	double lastFrameTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window_)) {
@@ -58,12 +59,13 @@ void game::loop()
 
 		input_->process_input(window_);
 
-		custom_game_logic::update(registry_, delta);
+		custom_game_logic::update(*this, registry_, delta);
+        main_camera.tick(*this, delta);
 
 		glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		renderer_.render_scene(registry_, window_);
+		renderer_.render_scene(main_camera, registry_, window_);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

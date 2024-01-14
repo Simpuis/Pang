@@ -13,9 +13,10 @@
 #include "texture.h"
 #include "shader.h"
 #include "mesh.h"
+#include "camera.h"
 
-void renderer::render_scene(const entt::registry& registry,
-	GLFWwindow* window) const
+void renderer::render_scene(const camera& main_cam, const entt::registry& registry,
+	GLFWwindow* window) //const
 {
 	glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -34,9 +35,7 @@ void renderer::render_scene(const entt::registry& registry,
             mat->material_shader->use();
             mat->material_shader->set_matrix("model", transform_comp.transform_matrix);
 
-            glm::mat4 view_matrix = glm::mat4x4(1.0f);
-            view_matrix = glm::translate(view_matrix, glm::vec3(0.0f, 0.0f, -5.0f));
-            mat->material_shader->set_matrix("view", view_matrix);
+            mat->material_shader->set_matrix("view", main_cam.get_view_matrix());
 
             glm::mat4 projection_matrix;
             projection_matrix = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -44,7 +43,7 @@ void renderer::render_scene(const entt::registry& registry,
 
             glBindVertexArray(primitive.VAO);
             //glDrawElements(GL_TRIANGLES, primitive.count, GL_UNSIGNED_INT, (char*)NULL + primitive.byte_offset);
-            glDrawElements(GL_TRIANGLES, primitive.count, GL_UNSIGNED_SHORT, nullptr);
+            glDrawElements(GL_TRIANGLES, primitive.count, primitive.indices_component_type, nullptr);
 
             glBindVertexArray(0);
             glUseProgram(0);

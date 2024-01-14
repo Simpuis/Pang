@@ -53,6 +53,7 @@ void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& m
 
             mesh_primitive.count = accessor.count;
             mesh_primitive.byte_offset = buffer_view.byteOffset;
+            mesh_primitive.indices_component_type = accessor.componentType;
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer_view.byteLength, &buffer.data.at(0) + buffer_view.byteOffset,
                          GL_STATIC_DRAW);
         }
