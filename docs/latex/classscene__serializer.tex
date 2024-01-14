@@ -1,0 +1,55 @@
+\doxysection{scene\+\_\+serializer Class Reference}
+\hypertarget{classscene__serializer}{}\label{classscene__serializer}\index{scene\_serializer@{scene\_serializer}}
+
+
+The \doxylink{classscene__serializer}{scene\+\_\+serializer} class is responsible for serializing the scene to a gltf file. It takes entities and entity types given by the () operator and sequentially serializes them. The scene is only fully serialized when the \doxylink{classscene__serializer}{scene\+\_\+serializer} object is destroyed.  
+
+
+
+
+{\ttfamily \#include $<$scene\+\_\+serializer.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classscene__serializer_a7198150469c3b556c16a2a9df6462980}{scene\+\_\+serializer}} (std\+::string filename)
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{classscene__serializer}{scene\+\_\+serializer} object. \end{DoxyCompactList}\item 
+\Hypertarget{classscene__serializer_aba23b8c950088747f4638dc0a263217d}\label{classscene__serializer_aba23b8c950088747f4638dc0a263217d} 
+void {\bfseries operator()} (entt\+::entity e)
+\item 
+\Hypertarget{classscene__serializer_ad8dc07c160415517977d6800e877ec13}\label{classscene__serializer_ad8dc07c160415517977d6800e877ec13} 
+void {\bfseries operator()} (std\+::underlying\+\_\+type\+\_\+t$<$ entt\+::entity $>$ size)
+\item 
+\Hypertarget{classscene__serializer_a87c4d5b1ab955515051fdea823324c2d}\label{classscene__serializer_a87c4d5b1ab955515051fdea823324c2d} 
+{\footnotesize template$<$typename T $>$ }\\void {\bfseries operator()} (const T \&comp)
+\item 
+\Hypertarget{classscene__serializer_a87e00506bf9ae0d2e32af709d4800c07}\label{classscene__serializer_a87e00506bf9ae0d2e32af709d4800c07} 
+std\+::uint32\+\_\+t {\bfseries get\+\_\+material\+\_\+index} (const \mbox{\hyperlink{classmaterial}{material}} \texorpdfstring{$\ast$}{*}mat)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \doxylink{classscene__serializer}{scene\+\_\+serializer} class is responsible for serializing the scene to a gltf file. It takes entities and entity types given by the () operator and sequentially serializes them. The scene is only fully serialized when the \doxylink{classscene__serializer}{scene\+\_\+serializer} object is destroyed. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classscene__serializer_a7198150469c3b556c16a2a9df6462980}\label{classscene__serializer_a7198150469c3b556c16a2a9df6462980} 
+\index{scene\_serializer@{scene\_serializer}!scene\_serializer@{scene\_serializer}}
+\index{scene\_serializer@{scene\_serializer}!scene\_serializer@{scene\_serializer}}
+\doxysubsubsection{\texorpdfstring{scene\_serializer()}{scene\_serializer()}}
+{\footnotesize\ttfamily scene\+\_\+serializer\+::scene\+\_\+serializer (\begin{DoxyParamCaption}\item[{std\+::string}]{filename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Construct a new \doxylink{classscene__serializer}{scene\+\_\+serializer} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & The filename to save the scene to \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/serialization/scene\+\_\+serializer.\+h\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/serialization/scene\+\_\+serializer.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,28 @@
+\doxysection{name.\+h}
+\hypertarget{name_8h_source}{}\label{name_8h_source}\index{C:/Users/simpa/dev/OpenGLPong/src/components/name.h@{C:/Users/simpa/dev/OpenGLPong/src/components/name.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <entt/entt.hpp>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }tinygltf\{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{class\ }Model;}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{class\ }Node;}
+\DoxyCodeLine{00010\ \}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classscene__serializer}{scene\_serializer}};}
+\DoxyCodeLine{00013\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdeserialization__data}{deserialization\_data}};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structname}{name}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{structname}{name}}(std::string\ s)\ :\ name\_string(std::move(s))\ \{\}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ std::string\ name\_string;}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ serialize(\mbox{\hyperlink{classscene__serializer}{scene\_serializer}}\&\ serializer,\ tinygltf::Model\&\ model,\ tinygltf::Node*\ node)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ deserialize(\mbox{\hyperlink{structdeserialization__data}{deserialization\_data}}\&\ data);}
+\DoxyCodeLine{00022\ \};}
+
+\end{DoxyCode}

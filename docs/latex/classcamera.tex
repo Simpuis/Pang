@@ -1,0 +1,83 @@
+\doxysection{camera Class Reference}
+\hypertarget{classcamera}{}\label{classcamera}\index{camera@{camera}}
+
+
+A camera class that can be used to render a scene.  
+
+
+
+
+{\ttfamily \#include $<$camera.\+h$>$}
+
+Inheritance diagram for camera\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classcamera}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classcamera_abc72563193b22c523ad004af04146009}\label{classcamera_abc72563193b22c523ad004af04146009} 
+{\bfseries camera} ()
+\begin{DoxyCompactList}\small\item\em Construct a new camera object Sets its position to the origin. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classcamera_a1f0f4063344dd1a94b16a0913ecd750e}{camera}} (glm\+::mat4x4 transform\+\_\+matrix)
+\begin{DoxyCompactList}\small\item\em Construct a new camera object. \end{DoxyCompactList}\item 
+virtual glm\+::mat4x4 \mbox{\hyperlink{classcamera_a8bd11873919830cd84324c87ccfed7d4}{get\+\_\+view\+\_\+matrix}} () const
+\begin{DoxyCompactList}\small\item\em Get the view matrix of the camera. \end{DoxyCompactList}\item 
+\Hypertarget{classcamera_a29e1d1a45df1872dce919619f1598537}\label{classcamera_a29e1d1a45df1872dce919619f1598537} 
+glm\+::vec3 {\bfseries forward} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classcamera_a42dcb57e36b0870efde35eb17ec725d8}\label{classcamera_a42dcb57e36b0870efde35eb17ec725d8} 
+glm\+::mat4x4 {\bfseries transform\+\_\+matrix}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A camera class that can be used to render a scene. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcamera_a1f0f4063344dd1a94b16a0913ecd750e}\label{classcamera_a1f0f4063344dd1a94b16a0913ecd750e} 
+\index{camera@{camera}!camera@{camera}}
+\index{camera@{camera}!camera@{camera}}
+\doxysubsubsection{\texorpdfstring{camera()}{camera()}}
+{\footnotesize\ttfamily camera\+::camera (\begin{DoxyParamCaption}\item[{glm\+::mat4x4}]{transform\+\_\+matrix }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Construct a new camera object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em transform\+\_\+matrix} & The position and rotation of the camera \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcamera_a8bd11873919830cd84324c87ccfed7d4}\label{classcamera_a8bd11873919830cd84324c87ccfed7d4} 
+\index{camera@{camera}!get\_view\_matrix@{get\_view\_matrix}}
+\index{get\_view\_matrix@{get\_view\_matrix}!camera@{camera}}
+\doxysubsubsection{\texorpdfstring{get\_view\_matrix()}{get\_view\_matrix()}}
+{\footnotesize\ttfamily glm\+::mat4x4 camera\+::get\+\_\+view\+\_\+matrix (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Get the view matrix of the camera. 
+
+\begin{DoxyReturn}{Returns}
+glm\+::mat4x4 The view matrix of the camera 
+\end{DoxyReturn}
+
+
+Reimplemented in \mbox{\hyperlink{classfreefly__camera_a48b917fa219685589df936063573de33}{freefly\+\_\+camera}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/render/camera.\+h\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/render/camera.\+cpp\end{DoxyCompactItemize}

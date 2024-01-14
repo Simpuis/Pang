@@ -1,0 +1,29 @@
+\doxysection{transform.\+h}
+\hypertarget{transform_8h_source}{}\label{transform_8h_source}\index{C:/Users/simpa/dev/OpenGLPong/src/components/transform.h@{C:/Users/simpa/dev/OpenGLPong/src/components/transform.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <glm/glm.hpp>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <entt/entt.hpp>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }tinygltf\ \{}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{keyword}{class\ }Model;}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{class\ }Node;}
+\DoxyCodeLine{00009\ \}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classscene__serializer}{scene\_serializer}};}
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdeserialization__data}{deserialization\_data}};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structtransform}{transform}}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{structtransform_a09a3e1c83fc03a2c9a91cfd4f4355fa5}{transform}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{structtransform_a55ae63e883c492a4d86e706ef018ea04}{transform}}(\textcolor{keyword}{const}\ glm::mat4\&\ trans)\ :\ transform\_matrix(trans)\ \{\}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ glm::mat4\ transform\_matrix\ =\ glm::mat4(1.0f);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ serialize(\mbox{\hyperlink{classscene__serializer}{scene\_serializer}}\&\ serializer,\ tinygltf::Model\&\ model,\ tinygltf::Node*\ node)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ deserialize(\mbox{\hyperlink{structdeserialization__data}{deserialization\_data}}\&\ data);}
+\DoxyCodeLine{00038\ \};}
+
+\end{DoxyCode}

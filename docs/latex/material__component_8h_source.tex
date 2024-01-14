@@ -1,0 +1,23 @@
+\doxysection{material\+\_\+component.\+h}
+\hypertarget{material__component_8h_source}{}\label{material__component_8h_source}\index{C:/Users/simpa/dev/OpenGLPong/src/components/material\_component.h@{C:/Users/simpa/dev/OpenGLPong/src/components/material\_component.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <entt/entt.hpp>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <tiny\_gltf.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmaterial}{material}};}
+\DoxyCodeLine{00007\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classscene__serializer}{scene\_serializer}};}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmaterial__component}{material\_component}}}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{structmaterial__component}{material\_component}}()\ \{\}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ std::shared\_ptr<material>\ \mbox{\hyperlink{classmaterial}{material}};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{void}\ serialize(\mbox{\hyperlink{classscene__serializer}{scene\_serializer}}\&\ serializer,\ tinygltf::Model\&\ model,\ tinygltf::Node*\ node)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ deserialize(\textcolor{keyword}{const}\ tinygltf::Node\&\ node,\ entt::registry\&\ registry,\ \textcolor{keyword}{const}\ entt::entity\&\ entity);}
+\DoxyCodeLine{00017\ \};}
+
+\end{DoxyCode}

@@ -1,0 +1,115 @@
+\doxysection{scene\+\_\+deserializer Class Reference}
+\hypertarget{classscene__deserializer}{}\label{classscene__deserializer}\index{scene\_deserializer@{scene\_deserializer}}
+
+
+The \doxylink{classscene__deserializer}{scene\+\_\+deserializer} class is responsible for deserializing the scene from a gltf file. Entity components that can be deserialized must be registered using register\+\_\+core\+\_\+type or register\+\_\+extension\+\_\+type before calling load\+\_\+scene\+\_\+into\+\_\+registry.  
+
+
+
+
+{\ttfamily \#include $<$scene\+\_\+deserializer.\+h$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classscene__deserializer_a47a1c3535f3d6f5a83ddc36a7727d134}\label{classscene__deserializer_a47a1c3535f3d6f5a83ddc36a7727d134} 
+enum \mbox{\hyperlink{classscene__deserializer_a47a1c3535f3d6f5a83ddc36a7727d134}{gltf\+\_\+file\+\_\+type}} \{ {\bfseries ascii}
+, {\bfseries binary}
+ \}
+\begin{DoxyCompactList}\small\item\em The gltf\+\_\+file\+\_\+type enum is used to specify the type of file to load ascii\+: A gltf file in json format, .gltf binary\+: A gltf file in binary format, .glb. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classscene__deserializer_a42cf9d065c7075785491f2a3172b3546}{scene\+\_\+deserializer}} (\mbox{\hyperlink{classscene__deserializer_a47a1c3535f3d6f5a83ddc36a7727d134}{gltf\+\_\+file\+\_\+type}} file\+\_\+type, std\+::string \&\&filename)
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{classscene__deserializer}{scene\+\_\+deserializer} object. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classscene__deserializer}{scene\+\_\+deserializer}} \& \mbox{\hyperlink{classscene__deserializer_a86bbfb79e985c6102936d6f666cda754}{register\+\_\+core\+\_\+type}} ()
+\begin{DoxyCompactList}\small\item\em Register a core component type for deserialization. The component must have a static deserialize function that takes a \doxylink{structdeserialization__data}{deserialization\+\_\+data} object as its only parameter and constructs its component on the entity. This function is called for every entity in the scene, and should be used for non-\/extension types. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classscene__deserializer}{scene\+\_\+deserializer}} \& \mbox{\hyperlink{classscene__deserializer_a0a0cf3ab3ec57887f25161dcce6079db}{register\+\_\+extension\+\_\+type}} ()
+\begin{DoxyCompactList}\small\item\em Register an extension component type for deserialization. The component must have a static deserialize function that takes a \doxylink{structdeserialization__data}{deserialization\+\_\+data} object as its only parameter and constructs its component on the entity. This function is called for every entity in the scene, and should be used for extension types. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classscene__deserializer_a5e3b0b75089c251f4d5e9c3dd5e84d50}{load\+\_\+scene\+\_\+into\+\_\+registry}} (entt\+::registry \&registry)
+\begin{DoxyCompactList}\small\item\em Load the scene into the registry. Should be called after all component types have been registered. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \doxylink{classscene__deserializer}{scene\+\_\+deserializer} class is responsible for deserializing the scene from a gltf file. Entity components that can be deserialized must be registered using register\+\_\+core\+\_\+type or register\+\_\+extension\+\_\+type before calling load\+\_\+scene\+\_\+into\+\_\+registry. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classscene__deserializer_a42cf9d065c7075785491f2a3172b3546}\label{classscene__deserializer_a42cf9d065c7075785491f2a3172b3546} 
+\index{scene\_deserializer@{scene\_deserializer}!scene\_deserializer@{scene\_deserializer}}
+\index{scene\_deserializer@{scene\_deserializer}!scene\_deserializer@{scene\_deserializer}}
+\doxysubsubsection{\texorpdfstring{scene\_deserializer()}{scene\_deserializer()}}
+{\footnotesize\ttfamily scene\+\_\+deserializer\+::scene\+\_\+deserializer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classscene__deserializer_a47a1c3535f3d6f5a83ddc36a7727d134}{gltf\+\_\+file\+\_\+type}}}]{file\+\_\+type,  }\item[{std\+::string \&\&}]{filename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Construct a new \doxylink{classscene__deserializer}{scene\+\_\+deserializer} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+\_\+type} & The type of file to load \\
+\hline
+{\em filename} & The filename to load the scene from \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classscene__deserializer_a5e3b0b75089c251f4d5e9c3dd5e84d50}\label{classscene__deserializer_a5e3b0b75089c251f4d5e9c3dd5e84d50} 
+\index{scene\_deserializer@{scene\_deserializer}!load\_scene\_into\_registry@{load\_scene\_into\_registry}}
+\index{load\_scene\_into\_registry@{load\_scene\_into\_registry}!scene\_deserializer@{scene\_deserializer}}
+\doxysubsubsection{\texorpdfstring{load\_scene\_into\_registry()}{load\_scene\_into\_registry()}}
+{\footnotesize\ttfamily void scene\+\_\+deserializer\+::load\+\_\+scene\+\_\+into\+\_\+registry (\begin{DoxyParamCaption}\item[{entt\+::registry \&}]{registry }\end{DoxyParamCaption})}
+
+
+
+Load the scene into the registry. Should be called after all component types have been registered. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em registry} & The registry to load the scene into \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classscene__deserializer_a86bbfb79e985c6102936d6f666cda754}\label{classscene__deserializer_a86bbfb79e985c6102936d6f666cda754} 
+\index{scene\_deserializer@{scene\_deserializer}!register\_core\_type@{register\_core\_type}}
+\index{register\_core\_type@{register\_core\_type}!scene\_deserializer@{scene\_deserializer}}
+\doxysubsubsection{\texorpdfstring{register\_core\_type()}{register\_core\_type()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classscene__deserializer}{scene\+\_\+deserializer}} \& scene\+\_\+deserializer\+::register\+\_\+core\+\_\+type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Register a core component type for deserialization. The component must have a static deserialize function that takes a \doxylink{structdeserialization__data}{deserialization\+\_\+data} object as its only parameter and constructs its component on the entity. This function is called for every entity in the scene, and should be used for non-\/extension types. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of component to register \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{classscene__deserializer}{scene\+\_\+deserializer}\& A reference to this object, to chain expressions 
+\end{DoxyReturn}
+\Hypertarget{classscene__deserializer_a0a0cf3ab3ec57887f25161dcce6079db}\label{classscene__deserializer_a0a0cf3ab3ec57887f25161dcce6079db} 
+\index{scene\_deserializer@{scene\_deserializer}!register\_extension\_type@{register\_extension\_type}}
+\index{register\_extension\_type@{register\_extension\_type}!scene\_deserializer@{scene\_deserializer}}
+\doxysubsubsection{\texorpdfstring{register\_extension\_type()}{register\_extension\_type()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classscene__deserializer}{scene\+\_\+deserializer}} \& scene\+\_\+deserializer\+::register\+\_\+extension\+\_\+type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Register an extension component type for deserialization. The component must have a static deserialize function that takes a \doxylink{structdeserialization__data}{deserialization\+\_\+data} object as its only parameter and constructs its component on the entity. This function is called for every entity in the scene, and should be used for extension types. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of component to register \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{classscene__deserializer}{scene\+\_\+deserializer}\& A reference to this object, to chain expressions 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/serialization/scene\+\_\+deserializer.\+h\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/serialization/scene\+\_\+deserializer.\+cpp\end{DoxyCompactItemize}

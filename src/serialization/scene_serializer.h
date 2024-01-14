@@ -5,9 +5,19 @@
 #include <tiny_gltf.h>
 #include "src/render/material.h"
 
+/**
+ * @brief The scene_serializer class is responsible for serializing the scene to a gltf file.
+ * It takes entities and entity types given by the () operator and sequentially serializes them.
+ * The scene is only fully serialized when the scene_serializer object is destroyed.
+ */
 class scene_serializer {
 public:
-    explicit scene_serializer(std::string&& filename) : active_node(nullptr), file(std::move(filename)) {}
+    /**
+     * @brief Construct a new scene_serializer object
+     *
+     * @param filename The filename to save the scene to
+     */
+    explicit scene_serializer(std::string filename) : active_node(nullptr), file(std::move(filename)) {}
     ~scene_serializer();
 
 public:

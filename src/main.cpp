@@ -1,10 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <tiny_gltf.h>
-#include <iostream>
 
 #include "game.h"
-
 
 int main() {
 	glfwInit();

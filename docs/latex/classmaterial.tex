@@ -1,0 +1,68 @@
+\doxysection{material Class Reference}
+\hypertarget{classmaterial}{}\label{classmaterial}\index{material@{material}}
+
+
+A material is a collection of textures units and a shader.  
+
+
+
+
+{\ttfamily \#include $<$material.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmaterial_abcbc2f61c24746fe8923983a4ba39d1e}\label{classmaterial_abcbc2f61c24746fe8923983a4ba39d1e} 
+{\bfseries material} ()
+\begin{DoxyCompactList}\small\item\em Construct a new material object Loads the default shader. \end{DoxyCompactList}\item 
+\Hypertarget{classmaterial_a214449ad1017b1d0a1bfa9824351ce1b}\label{classmaterial_a214449ad1017b1d0a1bfa9824351ce1b} 
+const std\+::map$<$ unsigned int, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classtexture}{texture}} $>$ $>$ \& {\bfseries get\+\_\+texture} () const
+\item 
+void \mbox{\hyperlink{classmaterial_a5cc385bf13167482ed7e13deb1fa9c6b}{set\+\_\+texture}} (const std\+::string \&uniform\+\_\+name, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classtexture}{texture}} $>$ texture\+\_\+unit, int unit=0)
+\begin{DoxyCompactList}\small\item\em Set a texture unit for this material. \end{DoxyCompactList}\item 
+\Hypertarget{classmaterial_a6dbaee9c5921630679f78abc3bc74648}\label{classmaterial_a6dbaee9c5921630679f78abc3bc74648} 
+tinygltf\+::\+Material \& {\bfseries serialize} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmaterial_abf0151236a273b8743d94c433a02492c}\label{classmaterial_abf0151236a273b8743d94c433a02492c} 
+static std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classmaterial}{material}} $>$ {\bfseries deserialize} (const tinygltf\+::\+Model \&model, const tinygltf\+::\+Material \&gltf\+\_\+material)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmaterial_aca4dad01587eb1d497545c1348392f7c}\label{classmaterial_aca4dad01587eb1d497545c1348392f7c} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classshader}{shader}} $>$ {\bfseries material\+\_\+shader}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A material is a collection of textures units and a shader. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classmaterial_a5cc385bf13167482ed7e13deb1fa9c6b}\label{classmaterial_a5cc385bf13167482ed7e13deb1fa9c6b} 
+\index{material@{material}!set\_texture@{set\_texture}}
+\index{set\_texture@{set\_texture}!material@{material}}
+\doxysubsubsection{\texorpdfstring{set\_texture()}{set\_texture()}}
+{\footnotesize\ttfamily void material\+::set\+\_\+texture (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{uniform\+\_\+name,  }\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classtexture}{texture}} $>$}]{texture\+\_\+unit,  }\item[{int}]{unit = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Set a texture unit for this material. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em uniform\+\_\+name} & The name of the uniform in the shader \\
+\hline
+{\em texture\+\_\+unit} & A pointer to the texture \\
+\hline
+{\em unit} & The texture unit to set \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/render/material.\+h\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/render/material.\+cpp\end{DoxyCompactItemize}

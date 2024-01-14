@@ -1,0 +1,48 @@
+\doxysection{shader\+\_\+loader Class Reference}
+\hypertarget{classshader__loader}{}\label{classshader__loader}\index{shader\_loader@{shader\_loader}}
+
+
+Static only class assisting in loading shaders.  
+
+
+
+
+{\ttfamily \#include $<$shader\+\_\+loader.\+h$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classshader}{shader}} $>$ \mbox{\hyperlink{classshader__loader_a71d9c71bf838c3ab3bbe0e8042e46105}{load\+\_\+shader}} (const std\+::string \&vertex\+\_\+shader\+\_\+path, const std\+::string \&fragment\+\_\+shader\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Load a shader from a file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Static only class assisting in loading shaders. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classshader__loader_a71d9c71bf838c3ab3bbe0e8042e46105}\label{classshader__loader_a71d9c71bf838c3ab3bbe0e8042e46105} 
+\index{shader\_loader@{shader\_loader}!load\_shader@{load\_shader}}
+\index{load\_shader@{load\_shader}!shader\_loader@{shader\_loader}}
+\doxysubsubsection{\texorpdfstring{load\_shader()}{load\_shader()}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classshader}{shader}} $>$ shader\+\_\+loader\+::load\+\_\+shader (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{vertex\+\_\+shader\+\_\+path,  }\item[{const std\+::string \&}]{fragment\+\_\+shader\+\_\+path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Load a shader from a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vertex\+\_\+shader\+\_\+path} & The path to the vertex shader \\
+\hline
+{\em fragment\+\_\+shader\+\_\+path} & The path to the fragment shader \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::unique\+\_\+ptr$<$shader$>$ A pointer to the shader 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/serialization/shader\+\_\+loader.\+h\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/serialization/shader\+\_\+loader.\+cpp\end{DoxyCompactItemize}

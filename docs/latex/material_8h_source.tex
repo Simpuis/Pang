@@ -1,0 +1,36 @@
+\doxysection{material.\+h}
+\hypertarget{material_8h_source}{}\label{material_8h_source}\index{C:/Users/simpa/dev/OpenGLPong/src/render/material.h@{C:/Users/simpa/dev/OpenGLPong/src/render/material.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}shader.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classtexture}{texture}};}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }tinygltf\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{struct\ }Material;}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{class\ }Model;}
+\DoxyCodeLine{00014\ \}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmaterial}{material}}}
+\DoxyCodeLine{00021\ \{}
+\DoxyCodeLine{00022\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{classmaterial_abcbc2f61c24746fe8923983a4ba39d1e}{material}}();}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ std::unique\_ptr<shader>\ material\_shader;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ std::map<unsigned\ int,\ std::shared\_ptr<texture>>\&\ get\_texture()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmaterial_a5cc385bf13167482ed7e13deb1fa9c6b}{set\_texture}}(\textcolor{keyword}{const}\ std::string\&\ uniform\_name,\ std::shared\_ptr<texture>\ texture\_unit,\ \textcolor{keywordtype}{int}\ unit\ =\ 0);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ [[nodiscard]]\ tinygltf::Material\&\ serialize()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{static}\ std::shared\_ptr<material>\ deserialize(\textcolor{keyword}{const}\ tinygltf::Model\&\ model,\ \textcolor{keyword}{const}\ tinygltf::Material\&\ gltf\_material);}
+\DoxyCodeLine{00043\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00044\ \ \ \ \ std::map<unsigned\ int,\ std::shared\_ptr<texture>>\ material\_texture\_units\_;}
+\DoxyCodeLine{00045\ \};}
+
+\end{DoxyCode}

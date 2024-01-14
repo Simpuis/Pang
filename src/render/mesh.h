@@ -15,6 +15,10 @@ namespace tinygltf {
     class Mesh;
 }
 
+/**
+ * @brief A primitive holds the VAO, a pointer to the material and some general info about the mesh for the renderer
+ *
+ */
 struct primitive {
     unsigned int VBO = 0;
     unsigned int VAO = 0;
@@ -27,6 +31,10 @@ struct primitive {
     std::shared_ptr<material> mat;
 };
 
+/**
+ * @brief A mesh is a collection of primitives, each primitive has a material and a VAO
+ *
+ */
 class mesh {
 public:
 

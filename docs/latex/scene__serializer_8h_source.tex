@@ -1,0 +1,40 @@
+\doxysection{scene\+\_\+serializer.\+h}
+\hypertarget{scene__serializer_8h_source}{}\label{scene__serializer_8h_source}\index{C:/Users/simpa/dev/OpenGLPong/src/serialization/scene\_serializer.h@{C:/Users/simpa/dev/OpenGLPong/src/serialization/scene\_serializer.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <entt/entt.hpp>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <tiny\_gltf.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}src/render/material.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classscene__serializer}{scene\_serializer}}\ \{}
+\DoxyCodeLine{00014\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classscene__serializer_a7198150469c3b556c16a2a9df6462980}{scene\_serializer}}(std::string\ filename)\ :\ active\_node(nullptr),\ file(std::move(filename))\ \{\}}
+\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{classscene__serializer}{\string~scene\_serializer}}();}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ operator()(entt::entity\ e);}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ operator()(std::underlying\_type\_t<entt::entity>\ size);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ operator()(\textcolor{keyword}{const}\ T\ \&\ comp);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ std::uint32\_t\ get\_material\_index(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmaterial}{material}}*\ mat);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00033\ \ \ \ \ std::map<const\ material*,\ std::uint32\_t>\ material\_indices;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ tinygltf::Model\ model;}
+\DoxyCodeLine{00036\ \ \ \ \ tinygltf::Node*\ active\_node;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{const}\ std::string\ file;}
+\DoxyCodeLine{00039\ \};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{void}\ scene\_serializer::operator()(\textcolor{keyword}{const}\ T\ \&\ comp)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ comp.serialize(*\textcolor{keyword}{this},\ model,\ active\_node);}
+\DoxyCodeLine{00044\ \}}
+
+\end{DoxyCode}

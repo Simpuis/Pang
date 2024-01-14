@@ -7,12 +7,27 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
+/**
+ * @brief A class that represents a shader program.
+ *
+ * This class is responsible for compiling and linking a shader program.
+ * It also provides methods for setting uniforms.
+ */
 class shader
 {
 public:
-
+    /**
+     * @brief Construct a new shader object
+     *
+     * @param vertex_shader_source The source code of the vertex shader. Not the filepath, use shader_loader
+     * @param fragment_shader_source The source code of the fragment shader. Not the filepath, use shader_loader
+     */
 	shader(const char* vertex_shader_source, const char* fragment_shader_source);
 
+    /**
+     * @brief Bind the shader program in the OpenGL context.
+     *
+     */
 	void use() const;
 
     void set_bool(const std::string&, bool) const;

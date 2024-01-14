@@ -1,0 +1,25 @@
+\doxysection{freefly\+\_\+camera.\+h}
+\hypertarget{freefly__camera_8h_source}{}\label{freefly__camera_8h_source}\index{C:/Users/simpa/dev/OpenGLPong/src/render/freefly\_camera.h@{C:/Users/simpa/dev/OpenGLPong/src/render/freefly\_camera.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}camera.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classgame}{game}};}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classfreefly__camera}{freefly\_camera}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classcamera}{camera}}\ \{}
+\DoxyCodeLine{00008\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keywordtype}{void}\ init(\mbox{\hyperlink{classgame}{game}}\&);}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keywordtype}{void}\ tick(\mbox{\hyperlink{classgame}{game}}\&,\ \textcolor{keywordtype}{double});}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ [[nodiscard]]\ glm::mat4x4\ \mbox{\hyperlink{classfreefly__camera_a48b917fa219685589df936063573de33}{get\_view\_matrix}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00015\ \ \ \ \ glm::mat4x4\ local\_trans\ =\ glm::mat4x4(1.0f);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{double}\ cam\_x\ =\ 0.0;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{double}\ cam\_y\ =\ 0.0;}
+\DoxyCodeLine{00019\ \};}
+
+\end{DoxyCode}

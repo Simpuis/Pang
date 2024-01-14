@@ -1,0 +1,68 @@
+\doxysection{shader Class Reference}
+\hypertarget{classshader}{}\label{classshader}\index{shader@{shader}}
+
+
+A class that represents a shader program.  
+
+
+
+
+{\ttfamily \#include $<$shader.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classshader_aa183b1c1748dd6c69321d205e5230e02}{shader}} (const char \texorpdfstring{$\ast$}{*}vertex\+\_\+shader\+\_\+source, const char \texorpdfstring{$\ast$}{*}fragment\+\_\+shader\+\_\+source)
+\begin{DoxyCompactList}\small\item\em Construct a new shader object. \end{DoxyCompactList}\item 
+\Hypertarget{classshader_ac7797b6c5b98fbc040d4b6ac4739f0af}\label{classshader_ac7797b6c5b98fbc040d4b6ac4739f0af} 
+void {\bfseries use} () const
+\begin{DoxyCompactList}\small\item\em Bind the shader program in the Open\+GL context. \end{DoxyCompactList}\item 
+\Hypertarget{classshader_aa5d420d54b5f7d12665b0293b79570a0}\label{classshader_aa5d420d54b5f7d12665b0293b79570a0} 
+void {\bfseries set\+\_\+bool} (const std\+::string \&, bool) const
+\item 
+\Hypertarget{classshader_aba67af8e3641e3f73462b1af1fa068ae}\label{classshader_aba67af8e3641e3f73462b1af1fa068ae} 
+void {\bfseries set\+\_\+int} (const std\+::string \&\mbox{\hyperlink{structname}{name}}, int value) const
+\item 
+\Hypertarget{classshader_aefb7ba52ecc85ccba994fa551693816c}\label{classshader_aefb7ba52ecc85ccba994fa551693816c} 
+void {\bfseries set\+\_\+vector} (const std\+::string \&\mbox{\hyperlink{structname}{name}}, glm\+::vec2 vector) const
+\item 
+\Hypertarget{classshader_ac0bc78749e32ccfc9f5687962c940e64}\label{classshader_ac0bc78749e32ccfc9f5687962c940e64} 
+void {\bfseries set\+\_\+vector} (const std\+::string \&\mbox{\hyperlink{structname}{name}}, glm\+::vec3 vector) const
+\item 
+\Hypertarget{classshader_a6332422aa80cb5c52574b3ab0dfc5b1b}\label{classshader_a6332422aa80cb5c52574b3ab0dfc5b1b} 
+void {\bfseries set\+\_\+vector} (const std\+::string \&\mbox{\hyperlink{structname}{name}}, glm\+::vec4 vector) const
+\item 
+\Hypertarget{classshader_ae53d43fe3046a07a2ed3ab88b71bea95}\label{classshader_ae53d43fe3046a07a2ed3ab88b71bea95} 
+void {\bfseries set\+\_\+matrix} (const std\+::string \&\mbox{\hyperlink{structname}{name}}, glm\+::mat4 matrix) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class that represents a shader program. 
+
+This class is responsible for compiling and linking a shader program. It also provides methods for setting uniforms. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classshader_aa183b1c1748dd6c69321d205e5230e02}\label{classshader_aa183b1c1748dd6c69321d205e5230e02} 
+\index{shader@{shader}!shader@{shader}}
+\index{shader@{shader}!shader@{shader}}
+\doxysubsubsection{\texorpdfstring{shader()}{shader()}}
+{\footnotesize\ttfamily shader\+::shader (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{vertex\+\_\+shader\+\_\+source,  }\item[{const char \texorpdfstring{$\ast$}{*}}]{fragment\+\_\+shader\+\_\+source }\end{DoxyParamCaption})}
+
+
+
+Construct a new shader object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vertex\+\_\+shader\+\_\+source} & The source code of the vertex shader. Not the filepath, use \doxylink{classshader__loader}{shader\+\_\+loader} \\
+\hline
+{\em fragment\+\_\+shader\+\_\+source} & The source code of the fragment shader. Not the filepath, use \doxylink{classshader__loader}{shader\+\_\+loader} \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/render/shader.\+h\item 
+C\+:/\+Users/simpa/dev/\+Open\+GLPong/src/render/shader.\+cpp\end{DoxyCompactItemize}

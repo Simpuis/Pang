@@ -18,19 +18,56 @@ struct deserialization_data {
     std::map<unsigned int, std::shared_ptr<material>>& material_lookup;
 };
 
+/**
+ * @brief The scene_deserializer class is responsible for deserializing the scene from a gltf file.
+ * Entity components that can be deserialized must be registered using register_core_type or register_extension_type
+ * before calling load_scene_into_registry.
+ */
 class scene_deserializer {
 public:
+    /**
+     * @brief The gltf_file_type enum is used to specify the type of file to load
+     * ascii: A gltf file in json format, .gltf
+     * binary: A gltf file in binary format, .glb
+     */
     enum gltf_file_type { ascii, binary };
 
 public:
+    /**
+     * @brief Construct a new scene_deserializer object
+     *
+     * @param file_type The type of file to load
+     * @param filename The filename to load the scene from
+     */
     explicit scene_deserializer(gltf_file_type file_type, std::string&& filename) : scene_path(std::move(filename)), input_type(file_type) {}
 
 public:
+    /**
+     * @brief Register a core component type for deserialization. The component must have a static deserialize function
+     * that takes a deserialization_data object as its only parameter and constructs its component on the entity.
+     * This function is called for every entity in the scene, and should be used for non-extension types.
+     *
+     * @tparam T The type of component to register
+     * @return scene_deserializer& A reference to this object, to chain expressions
+     */
     template<typename T>
     scene_deserializer& register_core_type();
+    /**
+     * @brief Register an extension component type for deserialization. The component must have a static deserialize function
+     * that takes a deserialization_data object as its only parameter and constructs its component on the entity.
+     * This function is called for every entity in the scene, and should be used for extension types.
+     *
+     * @tparam T The type of component to register
+     * @return scene_deserializer& A reference to this object, to chain expressions
+     */
     template<typename T>
     scene_deserializer& register_extension_type();
 
+    /**
+     * @brief Load the scene into the registry. Should be called after all component types have been registered.
+     *
+     * @param registry The registry to load the scene into
+     */
     void load_scene_into_registry(entt::registry& registry);
 
 private:

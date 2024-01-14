@@ -1,0 +1,21 @@
+\doxysection{shader\+\_\+loader.\+h}
+\hypertarget{shader__loader_8h_source}{}\label{shader__loader_8h_source}\index{C:/Users/simpa/dev/OpenGLPong/src/serialization/shader\_loader.h@{C:/Users/simpa/dev/OpenGLPong/src/serialization/shader\_loader.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}src/render/shader.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classshader__loader}{shader\_loader}}}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{static}\ std::unique\_ptr<shader>\ \mbox{\hyperlink{classshader__loader_a71d9c71bf838c3ab3bbe0e8042e46105}{load\_shader}}(\textcolor{keyword}{const}\ std::string\&\ vertex\_shader\_path,\ \textcolor{keyword}{const}\ std::string\&\ fragment\_shader\_path);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ read\_shader\_file(\textcolor{keyword}{const}\ std::string\&\ shader\_path);}
+\DoxyCodeLine{00025\ \};}
+\DoxyCodeLine{00026\ }
+
+\end{DoxyCode}
