@@ -41,8 +41,7 @@ void renderer::render_scene(const camera& main_cam, const entt::registry& regist
             mat->material_shader->set_matrix("projection", projection_matrix);
 
             glBindVertexArray(primitive.VAO);
-            //glDrawElements(GL_TRIANGLES, primitive.count, GL_UNSIGNED_INT, (char*)NULL + primitive.byte_offset);
-            glDrawElements(GL_TRIANGLES, primitive.count, primitive.indices_component_type, nullptr);
+            glDrawElements(primitive.mode, primitive.count, primitive.indices_component_type, nullptr);
 
             glBindVertexArray(0);
             glUseProgram(0);

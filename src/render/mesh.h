@@ -27,6 +27,7 @@ struct primitive {
     size_t count;
     size_t byte_offset;
     GLenum indices_component_type;
+    GLenum mode;
 
     std::shared_ptr<material> mat;
 };

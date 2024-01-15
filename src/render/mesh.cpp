@@ -16,6 +16,7 @@ void mesh::deserialize(deserialization_data& data) {
 void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& mesh_to_load, std::map<unsigned int, std::shared_ptr<material>>& material_lookup) {
     for(const auto& gltf_primitive : mesh_to_load.primitives) {
         primitive mesh_primitive;
+        mesh_primitive.mode = gltf_primitive.mode;
         glGenVertexArrays(1, &mesh_primitive.VAO);
         glBindVertexArray(mesh_primitive.VAO);
 
