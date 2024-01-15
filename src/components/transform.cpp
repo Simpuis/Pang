@@ -10,35 +10,33 @@
 #include <glm/gtc/quaternion.hpp>
 
 void transform::serialize(scene_serializer &serializer, tinygltf::Model &model, tinygltf::Node *node) const {
-    std::vector<double> vectorized_matrix = std::vector<double>(16);
+    std::vector<double> vectorized_position { position.x, position.y, position.z };
+    node->translation = vectorized_position;
 
-    for(int j = 0; j < 4; j++) {
-        for(int i = 0; i < 4; i++) {
-            vectorized_matrix[j * 4 + i] = transform_matrix[i][j];
-        }
-    }
-    node->translation = vectorized_matrix;
+    std::vector<double> vectorized_rotation { rotation.x, rotation.y, rotation.z, rotation.w };
+    node->rotation = vectorized_rotation;
+
+    std::vector<double> vectorized_scale { local_scale.x, local_scale.y, local_scale.z };
+    node->scale = vectorized_scale;
 }
 
 void transform::deserialize(deserialization_data& data) {
     auto& trans = data.registry.emplace<transform>(data.entity);
-    trans.transform_matrix = glm::mat4x4(1.0f);
 
     if(!data.node.translation.empty()) {
         const auto &translation = data.node.translation;
-        trans.transform_matrix = glm::translate(trans.transform_matrix,
-                                                glm::vec3(translation[0], translation[1], translation[2]));
+        trans.position = glm::vec3(translation[0], translation[1], translation[2]);
     }
 
     if(!data.node.rotation.empty()) {
         const auto& rotation = data.node.rotation;
-        glm::quat rot = glm::quat(rotation[3], rotation[0], rotation[1], rotation[2]);
-        trans.transform_matrix *= glm::mat4_cast(rot);
+        trans.rotation = glm::quat(gsl::narrow<float>(rotation[3]), gsl::narrow<float>(rotation[0]),
+                                   gsl::narrow<float>(rotation[1]), gsl::narrow<float>(rotation[2]));
     }
 
     if(!data.node.scale.empty()) {
         const auto& scale = data.node.scale;
-        trans.transform_matrix = glm::scale(trans.transform_matrix, glm::vec3(scale[0], scale[1], scale[2]));
+        trans.local_scale = glm::vec3(scale[0], scale[1], scale[2]);
     }
 }
 

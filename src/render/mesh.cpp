@@ -26,9 +26,9 @@ void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& m
 
             unsigned int VBO;
             glGenBuffers(1, &VBO);
-            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBindBuffer(buffer_view.target, VBO);
 
-            glBufferData(GL_ARRAY_BUFFER, buffer_view.byteLength, &buffer.data.at(0) + buffer_view.byteOffset, GL_STATIC_DRAW);
+            glBufferData(buffer_view.target, buffer_view.byteLength, &buffer.data.at(0) + buffer_view.byteOffset, GL_STATIC_DRAW);
 
             int vertex_attribute_index = -1;
             if(attribute.first == "POSITION") vertex_attribute_index = 0;

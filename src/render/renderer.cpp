@@ -32,7 +32,7 @@ void renderer::render_scene(const camera& main_cam, const entt::registry& regist
                 value->bind(key);
             }
             mat->material_shader->use();
-            mat->material_shader->set_matrix("model", transform_comp.transform_matrix);
+            mat->material_shader->set_matrix("model", transform_comp.get_matrix());
 
             mat->material_shader->set_matrix("view", main_cam.get_view_matrix());
 

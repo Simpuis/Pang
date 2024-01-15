@@ -14,9 +14,12 @@ A transform component.
 \item 
 \Hypertarget{structtransform_a09a3e1c83fc03a2c9a91cfd4f4355fa5}\label{structtransform_a09a3e1c83fc03a2c9a91cfd4f4355fa5} 
 {\bfseries transform} ()=default
-\begin{DoxyCompactList}\small\item\em Default constructor. The transform is set to the identity matrix. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{structtransform_a55ae63e883c492a4d86e706ef018ea04}{transform}} (const glm\+::mat4 \&trans)
-\begin{DoxyCompactList}\small\item\em Construct the transform with a given matrix. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Default constructor. The position is set to origin, the rotation to identity and the scale to 1. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structtransform_aa34f67e2a5285f4451dd7717ad5675e1}{transform}} (const glm\+::vec3 position, const glm\+::quat rotation, const glm\+::vec3 local\+\_\+scale)
+\begin{DoxyCompactList}\small\item\em Constructs the transform from a given position, rotation and scale. \end{DoxyCompactList}\item 
+\Hypertarget{structtransform_ad00c7f34aa03a22c0f2a5a402d46d000}\label{structtransform_ad00c7f34aa03a22c0f2a5a402d46d000} 
+glm\+::mat4x4 {\bfseries get\+\_\+matrix} () const
+\begin{DoxyCompactList}\small\item\em Returns the transform matrix constructed from position, rotation and local\+\_\+scale. \end{DoxyCompactList}\item 
 \Hypertarget{structtransform_a817eedc06b84628f27d06d0dd1a262bc}\label{structtransform_a817eedc06b84628f27d06d0dd1a262bc} 
 void {\bfseries serialize} (\mbox{\hyperlink{classscene__serializer}{scene\+\_\+serializer}} \&serializer, tinygltf\+::\+Model \&model, tinygltf\+::\+Node \texorpdfstring{$\ast$}{*}node) const
 \end{DoxyCompactItemize}
@@ -29,8 +32,14 @@ static void {\bfseries deserialize} (\mbox{\hyperlink{structdeserialization__dat
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\Hypertarget{structtransform_a862ac49e59e515ee78ca0d20165f3bae}\label{structtransform_a862ac49e59e515ee78ca0d20165f3bae} 
-glm\+::mat4 {\bfseries transform\+\_\+matrix} = glm\+::mat4(1.\+0f)
+\Hypertarget{structtransform_abe00b1d46b1af84fb0c92fb217c39c3c}\label{structtransform_abe00b1d46b1af84fb0c92fb217c39c3c} 
+glm\+::vec3 {\bfseries position} = glm\+::vec3(0.\+0f, 0.\+0f, 0.\+0f)
+\item 
+\Hypertarget{structtransform_ae9d30f8ec8877aff7e54f66c14f86edf}\label{structtransform_ae9d30f8ec8877aff7e54f66c14f86edf} 
+glm\+::quat {\bfseries rotation} = glm\+::quat(1.\+0f, 0.\+0f, 0.\+0f, 0.\+0f)
+\item 
+\Hypertarget{structtransform_a794252c4c27816657bac897aebedb3ad}\label{structtransform_a794252c4c27816657bac897aebedb3ad} 
+glm\+::vec3 {\bfseries local\+\_\+scale} = glm\+::vec3(1.\+0f, 1.\+0f, 1.\+0f)
 \end{DoxyCompactItemize}
 
 
@@ -40,19 +49,23 @@ A transform component.
 This component is used to represent the position, rotation, and scale of an entity. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{structtransform_a55ae63e883c492a4d86e706ef018ea04}\label{structtransform_a55ae63e883c492a4d86e706ef018ea04} 
+\Hypertarget{structtransform_aa34f67e2a5285f4451dd7717ad5675e1}\label{structtransform_aa34f67e2a5285f4451dd7717ad5675e1} 
 \index{transform@{transform}!transform@{transform}}
 \index{transform@{transform}!transform@{transform}}
 \doxysubsubsection{\texorpdfstring{transform()}{transform()}}
-{\footnotesize\ttfamily transform\+::transform (\begin{DoxyParamCaption}\item[{const glm\+::mat4 \&}]{trans }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+{\footnotesize\ttfamily transform\+::transform (\begin{DoxyParamCaption}\item[{const glm\+::vec3}]{position,  }\item[{const glm\+::quat}]{rotation,  }\item[{const glm\+::vec3}]{local\+\_\+scale }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
 
 
 
-Construct the transform with a given matrix. 
+Constructs the transform from a given position, rotation and scale. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em trans} & The matrix to use for the transform. \\
+{\em position} & \\
+\hline
+{\em rotation} & \\
+\hline
+{\em local\+\_\+scale} & \\
 \hline
 \end{DoxyParams}
 
