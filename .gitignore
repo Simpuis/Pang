@@ -79,5 +79,5 @@ fabric.properties
 self_notes
 
 # Ignore generated docs and only keep the Doxyfile
-docs/html
-docs/latex
+docs/html/
+docs/latex/
