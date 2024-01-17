@@ -6,6 +6,7 @@
 
 #include "src/render/material.h"
 
+
 struct deserialization_data {
     deserialization_data(const tinygltf::Model &model, const tinygltf::Node &node, entt::registry &registry,
                          const entt::entity &entity, std::map<unsigned int, std::shared_ptr<material>> &materialLookup)
@@ -17,6 +18,9 @@ struct deserialization_data {
     const entt::entity& entity;
     std::map<unsigned int, std::shared_ptr<material>>& material_lookup;
 };
+
+template<typename T>
+concept has_deserialize = requires (T x) { x.deserialize(std::declval<deserialization_data&>()); };
 
 /**
  * @brief The scene_deserializer class is responsible for deserializing the scene from a gltf file.
@@ -51,6 +55,7 @@ public:
      * @return scene_deserializer& A reference to this object, to chain expressions
      */
     template<typename T>
+        requires has_deserialize<T>
     scene_deserializer& register_core_type();
     /**
      * @brief Register an extension component type for deserialization. The component must have a static deserialize function
@@ -61,6 +66,7 @@ public:
      * @return scene_deserializer& A reference to this object, to chain expressions
      */
     template<typename T>
+        requires has_deserialize<T>
     scene_deserializer& register_extension_type();
 
     /**
@@ -80,6 +86,7 @@ private:
 };
 
 template<typename T>
+    requires has_deserialize<T>
 scene_deserializer &scene_deserializer::register_core_type() {
     core_deserializers.push_back(&T::deserialize);
 
@@ -87,6 +94,7 @@ scene_deserializer &scene_deserializer::register_core_type() {
 }
 
 template<typename T>
+    requires has_deserialize<T>
 scene_deserializer &scene_deserializer::register_extension_type() {
     extension_deserializers.insert(T::serialization_label(), &T::deserialize);
 

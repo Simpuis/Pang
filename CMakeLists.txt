@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.27)
 project(OpenGLPong)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 include_directories(.)
 
@@ -16,7 +16,6 @@ find_package(glm CONFIG REQUIRED)
 find_package(Stb REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(Microsoft.GSL CONFIG REQUIRED)
-find_package(flecs CONFIG REQUIRED)
 
 add_library(OpenGLPongLib
         src/custom_game_logic.cpp
@@ -69,7 +68,6 @@ target_link_libraries(OpenGLPongLib EnTT::EnTT)
 target_link_libraries(OpenGLPongLib glm::glm)
 target_link_libraries(OpenGLPongLib nlohmann_json::nlohmann_json)
 target_link_libraries(OpenGLPongLib Microsoft.GSL::GSL)
-target_link_libraries(OpenGLPongLib $<IF:$<TARGET_EXISTS:flecs::flecs>,flecs::flecs,flecs::flecs_static>)
 
 add_executable(OpenGLPong src/main.cpp)
 
