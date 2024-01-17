@@ -20,7 +20,7 @@ game::game(int width, int height, const std::string& title)
 	init_glfw_window(width, height, title);
 	input_ = std::make_unique<input_handler>(input_handler());
 
-	registry_ = entt::registry();
+    world_ = flecs::world();
 }
 
 game::~game()
@@ -42,7 +42,7 @@ void game::loop()
 	ImGui_ImplOpenGL3_Init();
 
     main_camera.init(*this);
-	custom_game_logic::init(*this, registry_);
+	custom_game_logic::init(*this, world_);
 
 	double lastFrameTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window_)) {
@@ -51,7 +51,7 @@ void game::loop()
 		ImGui::NewFrame();
 		ImGui::ShowDemoWindow();
 
-		editor_.update(io, registry_);
+		editor_.update(io, world_);
 
 		const double currentFrameTime = glfwGetTime();
 		const double delta = currentFrameTime - lastFrameTime;
@@ -59,13 +59,13 @@ void game::loop()
 
 		input_->process_input(window_);
 
-		custom_game_logic::update(*this, registry_, delta);
+		custom_game_logic::update(*this, world_, delta);
         main_camera.tick(*this, delta);
 
 		glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		renderer_.render_scene(main_camera, registry_, window_);
+		renderer_.render_scene(main_camera, world_, window_);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

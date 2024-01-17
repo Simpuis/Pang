@@ -14,17 +14,13 @@
 #include "mesh.h"
 #include "camera.h"
 
-void renderer::render_scene(const camera& main_cam, const entt::registry& registry,
+void renderer::render_scene(const camera& main_cam, const flecs::world& world,
 	GLFWwindow* window) //const
 {
 	glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	auto view = registry.view<transform, mesh>();
-	for(auto entity : view)
-	{
-		auto [transform_comp, mesh_comp] = view.get<transform, mesh>(entity);
-
+    world.each([&main_cam](const transform& transform_comp, const mesh& mesh_comp) {
         for(auto& primitive : mesh_comp.primitives) {
             const material *mat = primitive.mat.get();
 
@@ -46,5 +42,5 @@ void renderer::render_scene(const camera& main_cam, const entt::registry& regist
             glBindVertexArray(0);
             glUseProgram(0);
         }
-	}
+    });
 }

@@ -3,19 +3,19 @@
 #include <tiny_gltf.h>
 #include <entt/entt.hpp>
 #include <utility>
+#include <flecs.h>
 
 #include "src/render/material.h"
 
-
 struct deserialization_data {
-    deserialization_data(const tinygltf::Model &model, const tinygltf::Node &node, entt::registry &registry,
-                         const entt::entity &entity, std::map<unsigned int, std::shared_ptr<material>> &materialLookup)
-            : model(model), node(node), registry(registry), entity(entity), material_lookup(materialLookup) {}
+    deserialization_data(const tinygltf::Model &model, const tinygltf::Node &node, flecs::world& world,
+                         flecs::entity& entity, std::map<unsigned int, std::shared_ptr<material>> &materialLookup)
+            : model(model), node(node), world(world), entity(entity), material_lookup(materialLookup) {}
 
     const tinygltf::Model& model;
     const tinygltf::Node& node;
-    entt::registry& registry;
-    const entt::entity& entity;
+    flecs::world& world;
+    flecs::entity& entity;
     std::map<unsigned int, std::shared_ptr<material>>& material_lookup;
 };
 
@@ -74,7 +74,7 @@ public:
      *
      * @param registry The registry to load the scene into
      */
-    void load_scene_into_registry(entt::registry& registry);
+    void load_scene_into_registry(flecs::world& world);
 
 private:
     static bool load_scene_file(tinygltf::Model& model, const std::string& path, gltf_file_type file_type);

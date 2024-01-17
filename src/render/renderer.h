@@ -2,8 +2,8 @@
 #include <functional>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <entt/entt.hpp>
 #include <glm/glm.hpp>
+#include <flecs.h>
 
 class camera;
 
@@ -21,6 +21,6 @@ public:
      * @param registry The registry containing the entities to render
      * @param window The glfw window to render to
      */
-	void render_scene(const camera& main_camera, const entt::registry& registry , GLFWwindow* window);
+	void render_scene(const camera& main_camera, const flecs::world& world, GLFWwindow* window);
 };
 

@@ -9,8 +9,9 @@
 void mesh::deserialize(deserialization_data& data) {
     if(data.node.mesh < 0) return;
 
-    auto& emplaced_mesh = data.registry.emplace<mesh>(data.entity);
-    emplaced_mesh.setup_gltf_mesh(data.model, data.model.meshes[data.node.mesh], data.material_lookup);
+    mesh mesh_comp;
+    mesh_comp.setup_gltf_mesh(data.model, data.model.meshes[data.node.mesh], data.material_lookup);
+    data.entity.set<mesh>(mesh_comp);
 }
 
 void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& mesh_to_load, std::map<unsigned int, std::shared_ptr<material>>& material_lookup) {

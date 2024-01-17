@@ -11,23 +11,21 @@
 #include "render/material.h"
 #include "serialization/shader_loader.h"
 #include "serialization/scene_serializer.h"
-#include "components/name.h"
 #include "serialization/scene_deserializer.h"
 #include "render/mesh.h"
 #include "game.h"
 
-void custom_game_logic::init(game& context, entt::registry& registry)
+void custom_game_logic::init(game& context, flecs::world& world)
 {
     scene_deserializer input = scene_deserializer(scene_deserializer::gltf_file_type::ascii, "untitled.gltf");
     input.register_core_type<transform>()
-            .register_core_type<name>()
             .register_core_type<mesh>()
-            .load_scene_into_registry(registry);
+            .load_scene_into_registry(world);
 
     glm::mat4x4 cam_matrix = glm::mat4x4(1.0f);
 }
 
-void custom_game_logic::update(game& context, entt::registry& registry, double delta)
+void custom_game_logic::update(game& context, flecs::world& world, double delta)
 {
     /*
     auto view = registry.view<transform>();

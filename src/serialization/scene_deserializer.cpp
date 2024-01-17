@@ -2,15 +2,15 @@
 #include "scene_deserializer.h"
 #include "src/render/material.h"
 
-void scene_deserializer::load_scene_into_registry(entt::registry &registry) {
+void scene_deserializer::load_scene_into_registry(flecs::world& world) {
     tinygltf::Model model;
     if(!load_scene_file(model, scene_path, input_type)) return;
 
     std::map<unsigned int, std::shared_ptr<material>> material_lookup;
 
     for(const auto& node : model.nodes) {
-        auto entity = registry.create();
-        deserialization_data data(model, node, registry, entity, material_lookup);
+        auto entity = world.entity(node.name.c_str());
+        deserialization_data data(model, node, world, entity, material_lookup);
 
         for(const auto& core_deserializer : core_deserializers) {
             core_deserializer(data);

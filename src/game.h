@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <entt/entity/registry.hpp>
+#include <flecs.h>
 
 #include "editor/editor.h"
 #include "input_handler.h"
@@ -46,7 +47,7 @@ private:
 
 	std::unique_ptr<input_handler> input_;
 
-	entt::registry registry_;
+    flecs::world world_;
 	renderer renderer_;
 
 	editor editor_;

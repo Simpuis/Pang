@@ -16,6 +16,7 @@ find_package(glm CONFIG REQUIRED)
 find_package(Stb REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(Microsoft.GSL CONFIG REQUIRED)
+find_package(flecs CONFIG REQUIRED)
 
 add_library(OpenGLPongLib
         src/custom_game_logic.cpp
@@ -42,8 +43,6 @@ add_library(OpenGLPongLib
         src/render/texture.h
         src/components/transform.cpp
         src/components/transform.h
-        src/components/name.cpp
-        src/components/name.h
         src/serialization/scene_deserializer.cpp
         src/serialization/scene_deserializer.h
         src/components/mesh_component.cpp
@@ -68,6 +67,7 @@ target_link_libraries(OpenGLPongLib EnTT::EnTT)
 target_link_libraries(OpenGLPongLib glm::glm)
 target_link_libraries(OpenGLPongLib nlohmann_json::nlohmann_json)
 target_link_libraries(OpenGLPongLib Microsoft.GSL::GSL)
+target_link_libraries(OpenGLPongLib $<IF:$<TARGET_EXISTS:flecs::flecs>,flecs::flecs,flecs::flecs_static>)
 
 add_executable(OpenGLPong src/main.cpp)
 

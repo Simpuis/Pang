@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <gsl/gsl_narrow>
+#include <flecs.h>
 #include "src/serialization/scene_deserializer.h"
 #include <glm/detail/type_quat.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -21,7 +22,7 @@ void transform::serialize(scene_serializer &serializer, tinygltf::Model &model, 
 }
 
 void transform::deserialize(deserialization_data& data) {
-    auto& trans = data.registry.emplace<transform>(data.entity);
+    transform trans;
 
     if(!data.node.translation.empty()) {
         const auto &translation = data.node.translation;
@@ -38,5 +39,7 @@ void transform::deserialize(deserialization_data& data) {
         const auto& scale = data.node.scale;
         trans.local_scale = glm::vec3(scale[0], scale[1], scale[2]);
     }
+
+    data.entity.set<transform>(trans);
 }
 

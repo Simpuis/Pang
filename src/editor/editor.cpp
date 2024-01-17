@@ -1,6 +1,6 @@
 #include "editor.h"
 
-void editor::update(ImGuiIO& imgui_io, entt::registry& registry)
+void editor::update(ImGuiIO& imgui_io, flecs::world& registry)
 {
     if(ImGui::BeginMainMenuBar())
     {
