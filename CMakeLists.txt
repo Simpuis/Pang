@@ -41,8 +41,6 @@ add_library(OpenGLPongLib
         src/serialization/scene_serializer.h
         src/render/texture.cpp
         src/render/texture.h
-        src/components/transform.cpp
-        src/components/transform.h
         src/serialization/scene_deserializer.cpp
         src/serialization/scene_deserializer.h
         src/components/mesh_component.cpp
@@ -55,6 +53,9 @@ add_library(OpenGLPongLib
         src/render/camera.h
         src/render/freefly_camera.cpp
         src/render/freefly_camera.h
+        src/utility/transformations.h
+        src/modules/transformation/transformation.cpp
+        src/modules/transformation/transformation.h
 )
 
 find_package(EnTT CONFIG REQUIRED)

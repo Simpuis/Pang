@@ -43,7 +43,7 @@ public:
      * @param file_type The type of file to load
      * @param filename The filename to load the scene from
      */
-    explicit scene_deserializer(gltf_file_type file_type, std::string&& filename) : scene_path(std::move(filename)), input_type(file_type) {}
+    scene_deserializer() = default;
 
 public:
     /**
@@ -57,6 +57,9 @@ public:
     template<typename T>
         requires has_deserialize<T>
     scene_deserializer& register_core_type();
+
+    template<typename T>
+    scene_deserializer& register_core_deserializer(std::function<void(deserialization_data& data)> deserializer);
     /**
      * @brief Register an extension component type for deserialization. The component must have a static deserialize function
      * that takes a deserialization_data object as its only parameter and constructs its component on the entity.
@@ -74,21 +77,26 @@ public:
      *
      * @param registry The registry to load the scene into
      */
-    void load_scene_into_registry(flecs::world& world);
+    void load_scene_into_registry(flecs::world& world, const std::string& filename, gltf_file_type file_type);
 
 private:
-    static bool load_scene_file(tinygltf::Model& model, const std::string& path, gltf_file_type file_type);
+    static bool load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type);
 
     std::vector<std::function<void(deserialization_data& data)>> core_deserializers;
     std::map<std::string, std::function<void(deserialization_data& data)>> extension_deserializers;
-    std::string scene_path;
-    gltf_file_type input_type;
 };
 
 template<typename T>
     requires has_deserialize<T>
 scene_deserializer &scene_deserializer::register_core_type() {
     core_deserializers.push_back(&T::deserialize);
+
+    return *this;
+}
+
+template<typename T>
+scene_deserializer& scene_deserializer::register_core_deserializer(std::function<void(deserialization_data& data)> deserializer) {
+    core_deserializers.push_back(deserializer);
 
     return *this;
 }

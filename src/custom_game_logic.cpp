@@ -7,7 +7,6 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include "components/material_component.h"
-#include "components/transform.h"
 #include "render/material.h"
 #include "serialization/shader_loader.h"
 #include "serialization/scene_serializer.h"
@@ -17,11 +16,6 @@
 
 void custom_game_logic::init(game& context, flecs::world& world)
 {
-    scene_deserializer input = scene_deserializer(scene_deserializer::gltf_file_type::ascii, "untitled.gltf");
-    input.register_core_type<transform>()
-            .register_core_type<mesh>()
-            .load_scene_into_registry(world);
-
     glm::mat4x4 cam_matrix = glm::mat4x4(1.0f);
 }
 

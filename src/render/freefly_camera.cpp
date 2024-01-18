@@ -5,6 +5,7 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include "src/game.h"
+#include "src/utility/transformations.h"
 
 void freefly_camera::tick(game& context, double delta) {
     double cursor_x;
@@ -24,28 +25,24 @@ void freefly_camera::tick(game& context, double delta) {
     cam_x = cursor_x;
     cam_y = cursor_y;
 
-    constexpr glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
-    constexpr glm::vec3 right = glm::vec3(-1.0f, 0.0f, 0.0f);
-    constexpr glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-
     constexpr float camera_speed = 7.5f;
     if(glfwGetKey(context.window_, GLFW_KEY_W) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * forward);
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * transformations::global_forward());
     }
     if(glfwGetKey(context.window_, GLFW_KEY_S) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -forward);
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -transformations::global_forward());
     }
     if(glfwGetKey(context.window_, GLFW_KEY_A) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * right);
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * transformations::global_right());
     }
     if(glfwGetKey(context.window_, GLFW_KEY_D) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -right);
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -transformations::global_right());
     }
     if(glfwGetKey(context.window_, GLFW_KEY_SPACE) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * +up);
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * transformations::global_up());
     }
     if(glfwGetKey(context.window_, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -up);
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -transformations::global_up());
     }
 }
 

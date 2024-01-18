@@ -1,26 +1,26 @@
 #include "game.h"
 
-#include <fstream>
 #include <iostream>
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
-#include <entt/entity/registry.hpp>
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include "components/transform.h"
 
 #include "custom_game_logic.h"
 #include "gl_debug.h"
+#include "src/serialization/scene_deserializer.h"
+#include "src/modules/transformation/transformation.h"
+#include "src/render/mesh.h"
 
 game::game(int width, int height, const std::string& title)
 {
 	init_glfw_window(width, height, title);
 	input_ = std::make_unique<input_handler>(input_handler());
 
-    world_ = flecs::world();
+    setup_world();
 }
 
 game::~game()
@@ -112,5 +112,17 @@ void game::init_glfw_window(const int width, const int height, const std::string
 void game::exit()
 {
 	glfwSetWindowShouldClose(window_, true);
+}
+
+void game::setup_world() {
+    world_ = flecs::world();
+
+    world_.set<scene_deserializer>({});
+    auto deserializer = world_.get_mut<scene_deserializer>();
+
+    world_.import<transformation>();
+
+    deserializer->register_core_type<mesh>()
+                .load_scene_into_registry(world_, "untitled.gltf", scene_deserializer::gltf_file_type::ascii);
 }
 

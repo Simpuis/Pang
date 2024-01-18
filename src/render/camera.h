@@ -28,6 +28,4 @@ public:
      */
     [[nodiscard]] virtual glm::mat4x4 get_view_matrix() const;
     glm::mat4x4 transform_matrix;
-
-    glm::vec3 forward() const;
 };

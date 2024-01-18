@@ -41,6 +41,7 @@ public:
 
 private:
 	void init_glfw_window(int width, int height, const std::string& title);
+    void setup_world();
 	void exit();
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
