@@ -10,6 +10,9 @@
 #include "render/renderer.h"
 #include "render/camera.h"
 #include "render/freefly_camera.h"
+#include "src/serialization/scene_deserializer.h"
+
+class scene_deserializer;
 
 /**
  * @brief The game class is the main class of the engine.
@@ -44,12 +47,21 @@ private:
     void setup_world();
 	void exit();
 
+    template<typename T, typename Deserializer_T>
+    void import_deserializable_module(Deserializer_T& deserializer);
+
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 	std::unique_ptr<input_handler> input_;
 
     flecs::world world_;
 	renderer renderer_;
-
+    scene_deserializer scene_loader;
 	editor editor_;
 };
+
+template<typename T, typename Deserializer_T>
+void game::import_deserializable_module(Deserializer_T& deserializer) {
+    world_.import<T>();
+    T::template register_deserializers<Deserializer_T>(deserializer);
+}

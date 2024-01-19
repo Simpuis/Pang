@@ -4,23 +4,9 @@
 #include <entt/entt.hpp>
 #include <utility>
 #include <flecs.h>
+#include <optional>
 
 #include "src/render/material.h"
-
-struct deserialization_data {
-    deserialization_data(const tinygltf::Model &model, const tinygltf::Node &node, flecs::world& world,
-                         flecs::entity& entity, std::map<unsigned int, std::shared_ptr<material>> &materialLookup)
-            : model(model), node(node), world(world), entity(entity), material_lookup(materialLookup) {}
-
-    const tinygltf::Model& model;
-    const tinygltf::Node& node;
-    flecs::world& world;
-    flecs::entity& entity;
-    std::map<unsigned int, std::shared_ptr<material>>& material_lookup;
-};
-
-template<typename T>
-concept has_deserialize = requires (T x) { x.deserialize(std::declval<deserialization_data&>()); };
 
 /**
  * @brief The scene_deserializer class is responsible for deserializing the scene from a gltf file.
@@ -54,12 +40,21 @@ public:
      * @tparam T The type of component to register
      * @return scene_deserializer& A reference to this object, to chain expressions
      */
-    template<typename T>
-        requires has_deserialize<T>
-    scene_deserializer& register_core_type();
 
-    template<typename T>
-    scene_deserializer& register_core_deserializer(std::function<void(deserialization_data& data)> deserializer);
+    void operator()(std::function<bool(const tinygltf::Node&)> predicate,
+                                        std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&)> deserializer) {
+        core_deserializers.emplace_back(std::move(predicate), std::move(deserializer));
+    }
+
+    void operator()(std::function<void(const tinygltf::Model&, const tinygltf::Node&,
+                                       std::map<unsigned int, std::shared_ptr<material>>&, flecs::entity&)> deserializer) {
+        this->mesh_deserializer = std::move(deserializer);
+    }
+
+    void operator()(const std::string& extension_label,
+                                        std::function<void(const tinygltf::Value&, flecs::entity&)> deserializer) {
+        extension_deserializers.insert({extension_label, std::move(deserializer)});
+    }
     /**
      * @brief Register an extension component type for deserialization. The component must have a static deserialize function
      * that takes a deserialization_data object as its only parameter and constructs its component on the entity.
@@ -68,9 +63,6 @@ public:
      * @tparam T The type of component to register
      * @return scene_deserializer& A reference to this object, to chain expressions
      */
-    template<typename T>
-        requires has_deserialize<T>
-    scene_deserializer& register_extension_type();
 
     /**
      * @brief Load the scene into the registry. Should be called after all component types have been registered.
@@ -82,29 +74,14 @@ public:
 private:
     static bool load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type);
 
-    std::vector<std::function<void(deserialization_data& data)>> core_deserializers;
-    std::map<std::string, std::function<void(deserialization_data& data)>> extension_deserializers;
+    std::vector<std::pair<std::function<bool(const tinygltf::Node&)>,
+             std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&)>>> core_deserializers;
+    std::map<std::string, std::function<void(const tinygltf::Value&, flecs::entity&)>> extension_deserializers;
+    std::function<void(const tinygltf::Model&,
+                       const tinygltf::Node&,
+                       std::map<unsigned int, std::shared_ptr<material>>&,
+                       flecs::entity&)> mesh_deserializer;
+    std::map<unsigned int, std::shared_ptr<material>> material_lookup;
 };
 
-template<typename T>
-    requires has_deserialize<T>
-scene_deserializer &scene_deserializer::register_core_type() {
-    core_deserializers.push_back(&T::deserialize);
 
-    return *this;
-}
-
-template<typename T>
-scene_deserializer& scene_deserializer::register_core_deserializer(std::function<void(deserialization_data& data)> deserializer) {
-    core_deserializers.push_back(deserializer);
-
-    return *this;
-}
-
-template<typename T>
-    requires has_deserialize<T>
-scene_deserializer &scene_deserializer::register_extension_type() {
-    extension_deserializers.insert(T::serialization_label(), &T::deserialize);
-
-    return *this;
-}

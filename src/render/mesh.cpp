@@ -2,16 +2,17 @@
 
 #include <glad/glad.h>
 #include <tiny_gltf.h>
+#include <flecs.h>
+
 #include "src/serialization/scene_deserializer.h"
 
 #include "material.h"
 
-void mesh::deserialize(deserialization_data& data) {
-    if(data.node.mesh < 0) return;
-
+void mesh::deserialize(const tinygltf::Model& model, const tinygltf::Node& node,
+                        std::map<unsigned int, std::shared_ptr<material>>& material_lookup, flecs::entity& entity) {
     mesh mesh_comp;
-    mesh_comp.setup_gltf_mesh(data.model, data.model.meshes[data.node.mesh], data.material_lookup);
-    data.entity.set<mesh>(mesh_comp);
+    mesh_comp.setup_gltf_mesh(model, model.meshes[node.mesh], material_lookup);
+    entity.set<mesh>(mesh_comp);
 }
 
 void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& mesh_to_load, std::map<unsigned int, std::shared_ptr<material>>& material_lookup) {

@@ -15,6 +15,10 @@ namespace tinygltf {
     class Mesh;
 }
 
+namespace flecs {
+    struct entity;
+}
+
 /**
  * @brief A primitive holds the VAO, a pointer to the material and some general info about the mesh for the renderer
  *
@@ -43,7 +47,8 @@ public:
     std::vector<primitive> primitives;
 
     void serialize(scene_serializer& serializer, tinygltf::Model& model, tinygltf::Node* node) const;
-    static void deserialize(deserialization_data& data);
+    static void deserialize(const tinygltf::Model& model, const tinygltf::Node& node,
+                            std::map<unsigned int, std::shared_ptr<material>>& material_lookup, flecs::entity& entity);
 
 private:
     void setup_gltf_mesh(const tinygltf::Model& model, const tinygltf::Mesh& mesh_to_load, std::map<unsigned int, std::shared_ptr<material>>& material_lookup);

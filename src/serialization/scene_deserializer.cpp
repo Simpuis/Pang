@@ -6,14 +6,21 @@ void scene_deserializer::load_scene_into_registry(flecs::world& world, const std
     tinygltf::Model model;
     if(!load_scene_file(model, filename, file_type)) return;
 
-    std::map<unsigned int, std::shared_ptr<material>> material_lookup;
-
     for(const auto& node : model.nodes) {
         auto entity = world.entity(node.name.c_str());
-        deserialization_data data(model, node, world, entity, material_lookup);
 
         for(const auto& core_deserializer : core_deserializers) {
-            core_deserializer(data);
+            if(core_deserializer.first(node))
+                core_deserializer.second(model, node, entity);
+        }
+
+        for(const auto& extension_deserializer : extension_deserializers) {
+            if(node.extensions.find(extension_deserializer.first) != node.extensions.end())
+                extension_deserializer.second(node.extensions.at(extension_deserializer.first), entity);
+        }
+
+        if(node.mesh >= 0) {
+            mesh_deserializer(model, node, material_lookup, entity);
         }
     }
 }
