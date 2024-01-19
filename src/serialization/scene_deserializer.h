@@ -42,13 +42,8 @@ public:
      */
 
     void operator()(std::function<bool(const tinygltf::Node&)> predicate,
-                                        std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&)> deserializer) {
+                                        std::function<void(const tinygltf::Node&, flecs::entity&)> deserializer) {
         core_deserializers.emplace_back(std::move(predicate), std::move(deserializer));
-    }
-
-    void operator()(std::function<void(const tinygltf::Model&, const tinygltf::Node&,
-                                       std::map<unsigned int, std::shared_ptr<material>>&, flecs::entity&)> deserializer) {
-        this->mesh_deserializer = std::move(deserializer);
     }
 
     void operator()(const std::string& extension_label,
@@ -75,12 +70,8 @@ private:
     static bool load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type);
 
     std::vector<std::pair<std::function<bool(const tinygltf::Node&)>,
-             std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&)>>> core_deserializers;
+             std::function<void(const tinygltf::Node&, flecs::entity&)>>> core_deserializers;
     std::map<std::string, std::function<void(const tinygltf::Value&, flecs::entity&)>> extension_deserializers;
-    std::function<void(const tinygltf::Model&,
-                       const tinygltf::Node&,
-                       std::map<unsigned int, std::shared_ptr<material>>&,
-                       flecs::entity&)> mesh_deserializer;
     std::map<unsigned int, std::shared_ptr<material>> material_lookup;
 };
 

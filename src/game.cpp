@@ -119,7 +119,6 @@ void game::setup_world() {
 
     import_deserializable_module<transformation, scene_deserializer>(scene_loader);
 
-    scene_loader(&mesh::deserialize);
     scene_loader.load_scene_into_registry(world_, "untitled.gltf", scene_deserializer::gltf_file_type::ascii);
 }
 

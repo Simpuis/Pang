@@ -1,6 +1,8 @@
 #include <iostream>
+
 #include "scene_deserializer.h"
 #include "src/render/material.h"
+#include "src/render/mesh.h"
 
 void scene_deserializer::load_scene_into_registry(flecs::world& world, const std::string& filename, gltf_file_type file_type) {
     tinygltf::Model model;
@@ -11,7 +13,7 @@ void scene_deserializer::load_scene_into_registry(flecs::world& world, const std
 
         for(const auto& core_deserializer : core_deserializers) {
             if(core_deserializer.first(node))
-                core_deserializer.second(model, node, entity);
+                core_deserializer.second(node, entity);
         }
 
         for(const auto& extension_deserializer : extension_deserializers) {
@@ -20,7 +22,7 @@ void scene_deserializer::load_scene_into_registry(flecs::world& world, const std
         }
 
         if(node.mesh >= 0) {
-            mesh_deserializer(model, node, material_lookup, entity);
+            mesh::deserialize(model, node, material_lookup, entity);
         }
     }
 }

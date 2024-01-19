@@ -24,9 +24,9 @@ struct scale {
 struct transformation {
     explicit transformation(flecs::world& world);
 
-    inline static std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&)> position_deserializer();
-    inline static std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&)> rotation_deserializer();
-    inline static std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&)> scale_deserializer();
+    inline static std::function<void(const tinygltf::Node&, flecs::entity&)> position_deserializer();
+    inline static std::function<void(const tinygltf::Node&, flecs::entity&)> rotation_deserializer();
+    inline static std::function<void(const tinygltf::Node&, flecs::entity&)> scale_deserializer();
 
     template<typename Deserializer_T>
     static void register_deserializers(Deserializer_T& deserializer) {
@@ -36,8 +36,8 @@ struct transformation {
     }
 };
 
-std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&)> transformation::position_deserializer() {
-    return [] (const tinygltf::Model& model, const tinygltf::Node& node, flecs::entity& entity) {
+std::function<void(const tinygltf::Node&, flecs::entity&)> transformation::position_deserializer() {
+    return [] (const tinygltf::Node& node, flecs::entity& entity) {
         if(node.translation.empty()) return;
 
         position position_comp;
@@ -47,8 +47,8 @@ std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&
     };
 }
 
-std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&)> transformation::rotation_deserializer() {
-    return [] (const tinygltf::Model& model, const tinygltf::Node& node, flecs::entity& entity) {
+std::function<void(const tinygltf::Node&, flecs::entity&)> transformation::rotation_deserializer() {
+    return [] (const tinygltf::Node& node, flecs::entity& entity) {
         if(node.rotation.empty()) return;
 
         rotation rotation_comp;
@@ -58,8 +58,8 @@ std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&
     };
 }
 
-std::function<void(const tinygltf::Model&, const tinygltf::Node&, flecs::entity&)> transformation::scale_deserializer() {
-    return [] (const tinygltf::Model& model, const tinygltf::Node& node, flecs::entity& entity) {
+std::function<void(const tinygltf::Node&, flecs::entity&)> transformation::scale_deserializer() {
+    return [] (const tinygltf::Node& node, flecs::entity& entity) {
         if(node.scale.empty()) return;
 
         scale scale_comp;
