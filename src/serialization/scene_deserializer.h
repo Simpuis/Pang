@@ -42,14 +42,20 @@ public:
      * @return scene_deserializer& A reference to this object, to chain expressions
      */
 
+    template<typename T>
     void operator()(std::function<bool(const tinygltf::Node&)> predicate,
-                                        std::function<void(const tinygltf::Node&, flecs::entity&)> deserializer) {
-        core_deserializers.emplace_back(std::move(predicate), std::move(deserializer));
+                    std::function<T(const tinygltf::Node&)> deserializer) {
+        core_deserializers.emplace_back(std::move(predicate), [deserializer](const tinygltf::Node& node, flecs::entity& entity) {
+            entity.set<T>(deserializer(node));
+        });
     }
 
+    template<typename T>
     void operator()(const std::string& extension_label,
-                                        std::function<void(const tinygltf::Value&, flecs::entity&)> deserializer) {
-        extension_deserializers.insert({extension_label, std::move(deserializer)});
+                    std::function<T(const tinygltf::Value&)> deserializer) {
+        extension_deserializers.insert({extension_label, [deserializer](const tinygltf::Value& value, flecs::entity& entity) {
+            entity.set<T>(deserializer(value));
+        }});
     }
 
     /**
