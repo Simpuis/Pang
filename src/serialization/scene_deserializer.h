@@ -14,6 +14,7 @@
  * before calling load_scene_into_registry.
  */
 
+template<typename... Args>
 class scene_deserializer {
 public:
     /**
@@ -42,14 +43,15 @@ public:
      * @return scene_deserializer& A reference to this object, to chain expressions
      */
 
-    void operator()(std::function<bool(const tinygltf::Node&)> predicate,
-                                        std::function<void(const tinygltf::Node&, flecs::entity&)> deserializer) {
-        core_deserializers.emplace_back(std::move(predicate), std::move(deserializer));
+    template<typename T>
+    scene_deserializer<T, Args...> register_deserializable() {
+        return scene_deserializer<T, Args...>();
     }
 
-    void operator()(const std::string& extension_label,
-                                        std::function<void(const tinygltf::Value&, flecs::entity&)> deserializer) {
-        extension_deserializers.insert({extension_label, std::move(deserializer)});
+    template<typename T>
+    scene_deserializer<T, Args...> import_deserializable(flecs::world& world) {
+        world.template import<T>();
+        return scene_deserializer<T, Args...>();
     }
 
     /**
@@ -71,9 +73,6 @@ public:
 private:
     static bool load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type);
 
-    std::vector<std::pair<std::function<bool(const tinygltf::Node&)>,
-             std::function<void(const tinygltf::Node&, flecs::entity&)>>> core_deserializers;
-    std::map<std::string, std::function<void(const tinygltf::Value&, flecs::entity&)>> extension_deserializers;
     std::map<unsigned int, std::shared_ptr<material>> material_lookup;
 };
 

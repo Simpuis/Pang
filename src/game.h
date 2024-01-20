@@ -56,12 +56,11 @@ private:
 
     flecs::world world_;
 	renderer renderer_;
-    scene_deserializer scene_loader;
 	editor editor_;
 };
 
-template<typename T, typename Deserializer_T>
-void game::import_deserializable_module(Deserializer_T& deserializer) {
+template<typename T, typename... Args>
+scene_deserializer<Args...> game::import_deserializable_module() {
     world_.import<T>();
     T::template register_deserializers<Deserializer_T>(deserializer);
 }

@@ -125,6 +125,10 @@ void game::setup_world() {
 
     import_deserializable_module<transformation, scene_deserializer>(scene_loader);
 
+    auto deserializer = scene_deserializer<>()
+            .register_deserializable<game>()
+            .register_deserializable<transformation>()
+            .register_deserializable<position>();
     scene_loader.load_scene_into_registry(world_, "untitled.gltf", scene_deserializer::gltf_file_type::ascii);
 }
 
