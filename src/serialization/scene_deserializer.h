@@ -58,14 +58,6 @@ public:
         }});
     }
 
-    /**
-     * @brief Register an extension component type for deserialization. The component must have a static deserialize function
-     * that takes a deserialization_data object as its only parameter and constructs its component on the entity.
-     * This function is called for every entity in the scene, and should be used for extension types.
-     *
-     * @tparam T The type of component to register
-     * @return scene_deserializer& A reference to this object, to chain expressions
-     */
 
     /**
      * @brief Load the scene into the registry. Should be called after all component types have been registered.
