@@ -14,7 +14,6 @@
  * before calling load_scene_into_registry.
  */
 
-template<typename... Args>
 class scene_deserializer {
 public:
     /**
@@ -44,14 +43,19 @@ public:
      */
 
     template<typename T>
-    scene_deserializer<T, Args...> register_deserializable() {
-        return scene_deserializer<T, Args...>();
+    void operator()(std::function<bool(const tinygltf::Node&)> predicate,
+                    std::function<T(const tinygltf::Node&)> deserializer) {
+        core_deserializers.emplace_back(std::move(predicate), [deserializer](const tinygltf::Node& node, flecs::entity& entity) {
+            entity.set<T>(deserializer(node));
+        });
     }
 
     template<typename T>
-    scene_deserializer<T, Args...> import_deserializable(flecs::world& world) {
-        world.template import<T>();
-        return scene_deserializer<T, Args...>();
+    void operator()(const std::string& extension_label,
+                    std::function<T(const tinygltf::Value&)> deserializer) {
+        extension_deserializers.insert({extension_label, [deserializer](const tinygltf::Value& value, flecs::entity& entity) {
+            entity.set<T>(deserializer(value));
+        }});
     }
 
     /**
@@ -72,6 +76,9 @@ public:
 
 private:
     static bool load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type);
+
+    std::vector<std::pair<std::function<bool(const tinygltf::Node&)>, std::function<void(const tinygltf::Node&, flecs::entity&)>>> core_deserializers;
+    std::map<std::string, std::function<void(const tinygltf::Value&, flecs::entity&)>> extension_deserializers;
 
     std::map<unsigned int, std::shared_ptr<material>> material_lookup;
 };

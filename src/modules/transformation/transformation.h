@@ -25,9 +25,9 @@ struct scale {
 struct transformation {
     explicit transformation(flecs::world& world);
 
-    inline static std::function<void(const tinygltf::Node&, flecs::entity&)> position_deserializer();
-    inline static std::function<void(const tinygltf::Node&, flecs::entity&)> rotation_deserializer();
-    inline static std::function<void(const tinygltf::Node&, flecs::entity&)> scale_deserializer();
+    inline static std::function<position(const tinygltf::Node&)> position_deserializer();
+    inline static std::function<rotation(const tinygltf::Node&)> rotation_deserializer();
+    inline static std::function<scale(const tinygltf::Node&)> scale_deserializer();
 
     template<typename Deserializer_T>
     static void register_deserializers(Deserializer_T& deserializer) {
@@ -70,35 +70,28 @@ struct transformation {
     }
 };
 
-std::function<void(const tinygltf::Node&, flecs::entity&)> transformation::position_deserializer() {
-    return [] (const tinygltf::Node& node, flecs::entity& entity) {
-        if(node.translation.empty()) return;
-
+std::function<position(const tinygltf::Node&)> transformation::position_deserializer() {
+    return [] (const tinygltf::Node& node) {
         position position_comp;
         position_comp.pos = glm::vec3(node.translation[0], node.translation[1], node.translation[2]);
 
-        entity.set<position>(position_comp);
+        return position_comp;
     };
 }
 
-std::function<void(const tinygltf::Node&, flecs::entity&)> transformation::rotation_deserializer() {
-    return [] (const tinygltf::Node& node, flecs::entity& entity) {
-        if(node.rotation.empty()) return;
-
+std::function<rotation(const tinygltf::Node&)> transformation::rotation_deserializer() {
+    return [] (const tinygltf::Node& node) {
         rotation rotation_comp;
         rotation_comp.rot = glm::quat(node.rotation[3], node.rotation[0], node.rotation[1], node.rotation[2]);
 
-        entity.set<rotation>(rotation_comp);
+        return rotation_comp;
     };
 }
-
-std::function<void(const tinygltf::Node&, flecs::entity&)> transformation::scale_deserializer() {
-    return [] (const tinygltf::Node& node, flecs::entity& entity) {
-        if(node.scale.empty()) return;
-
+std::function<scale(const tinygltf::Node&)> transformation::scale_deserializer() {
+    return [] (const tinygltf::Node& node) {
         scale scale_comp;
         scale_comp.local_scale = glm::vec3(node.scale[0], node.scale[1], node.scale[2]);
 
-        entity.set<scale>(scale_comp);
+        return scale_comp;
     };
 }

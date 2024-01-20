@@ -53,14 +53,14 @@ private:
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 	std::unique_ptr<input_handler> input_;
-
+    scene_deserializer scene_loader;
     flecs::world world_;
 	renderer renderer_;
 	editor editor_;
 };
 
-template<typename T, typename... Args>
-scene_deserializer<Args...> game::import_deserializable_module() {
+template<typename T, typename Deserializer_T>
+void game::import_deserializable_module(Deserializer_T& deserializer) {
     world_.import<T>();
     T::template register_deserializers<Deserializer_T>(deserializer);
 }
