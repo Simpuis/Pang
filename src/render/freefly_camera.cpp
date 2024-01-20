@@ -5,7 +5,7 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include "src/game.h"
-#include "src/utility/transformations.h"
+#include "src/modules/transformation/transformation.h"
 
 void freefly_camera::tick(game& context, double delta) {
     double cursor_x;
@@ -27,22 +27,22 @@ void freefly_camera::tick(game& context, double delta) {
 
     constexpr float camera_speed = 7.5f;
     if(glfwGetKey(context.window_, GLFW_KEY_W) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * transformations::global_forward());
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * transformation::global_forward());
     }
     if(glfwGetKey(context.window_, GLFW_KEY_S) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -transformations::global_forward());
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -transformation::global_forward());
     }
     if(glfwGetKey(context.window_, GLFW_KEY_A) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * transformations::global_right());
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * transformation::global_right());
     }
     if(glfwGetKey(context.window_, GLFW_KEY_D) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -transformations::global_right());
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -transformation::global_right());
     }
     if(glfwGetKey(context.window_, GLFW_KEY_SPACE) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * transformations::global_up());
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * transformation::global_up());
     }
     if(glfwGetKey(context.window_, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -transformations::global_up());
+        transform_matrix = glm::translate(transform_matrix, camera_speed * (float)delta * -transformation::global_up());
     }
 }
 

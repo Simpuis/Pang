@@ -13,6 +13,7 @@
  * Entity components that can be deserialized must be registered using register_core_type or register_extension_type
  * before calling load_scene_into_registry.
  */
+
 class scene_deserializer {
 public:
     /**
@@ -50,6 +51,7 @@ public:
                                         std::function<void(const tinygltf::Value&, flecs::entity&)> deserializer) {
         extension_deserializers.insert({extension_label, std::move(deserializer)});
     }
+
     /**
      * @brief Register an extension component type for deserialization. The component must have a static deserialize function
      * that takes a deserialization_data object as its only parameter and constructs its component on the entity.

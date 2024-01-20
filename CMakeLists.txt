@@ -53,7 +53,6 @@ add_library(OpenGLPongLib
         src/render/camera.h
         src/render/freefly_camera.cpp
         src/render/freefly_camera.h
-        src/utility/transformations.h
         src/modules/transformation/transformation.cpp
         src/modules/transformation/transformation.h
 )

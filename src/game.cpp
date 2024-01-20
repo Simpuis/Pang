@@ -17,7 +17,13 @@
 
 game::game(int width, int height, const std::string& title)
 {
-	init_glfw_window(width, height, title);
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    init_glfw_window(width, height, title);
 	input_ = std::make_unique<input_handler>(input_handler());
 
     setup_world();
