@@ -123,8 +123,9 @@ void game::exit()
 void game::setup_world() {
     world_ = flecs::world();
 
-    import_deserializable_module<transformation, scene_deserializer>(scene_loader);
+    world_.import<transformation>();
 
-    scene_loader.load_scene_into_registry(world_, "untitled.gltf", scene_deserializer::gltf_file_type::ascii);
+    scene_loader.load_scene_into_registry<position, rotation, scale>
+    (world_, "untitled.gltf", scene_deserializer::gltf_file_type::ascii);
 }
 

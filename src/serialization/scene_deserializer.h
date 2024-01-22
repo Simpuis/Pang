@@ -7,6 +7,8 @@
 #include <optional>
 
 #include "src/render/material.h"
+#include "src/render/mesh.h"
+#include "src/modules/transformation/transformation.h"
 
 /**
  * @brief The scene_deserializer class is responsible for deserializing the scene from a gltf file.
@@ -42,37 +44,52 @@ public:
      * @return scene_deserializer& A reference to this object, to chain expressions
      */
 
-    template<typename T>
-    void operator()(std::function<bool(const tinygltf::Node&)> predicate,
-                    std::function<T(const tinygltf::Node&)> deserializer) {
-        core_deserializers.emplace_back(std::move(predicate), [deserializer](const tinygltf::Node& node, flecs::entity& entity) {
-            entity.set<T>(deserializer(node));
-        });
+    template<typename T, typename U>
+        requires std::convertible_to<T, U> && std::convertible_to<U, T>
+    void operator()(T& node_serializable, U& component_serializable) const {
+        write_mode ? node_serializable = (T)component_serializable : component_serializable = (U)node_serializable;
     }
 
-    template<typename T>
-    void operator()(const std::string& extension_label,
-                    std::function<T(const tinygltf::Value&)> deserializer) {
-        extension_deserializers.insert({extension_label, [deserializer](const tinygltf::Value& value, flecs::entity& entity) {
-            entity.set<T>(deserializer(value));
-        }});
-    }
-
-
-    /**
-     * @brief Load the scene into the registry. Should be called after all component types have been registered.
-     *
-     * @param registry The registry to load the scene into
-     */
+    template<typename... Serializable_Ts>
     void load_scene_into_registry(flecs::world& world, const std::string& filename, gltf_file_type file_type);
+
+    template<typename T, typename... Serializable_Ts>
+    void serialize_type(flecs::entity& entity, tinygltf::Node& node);
 
 private:
     static bool load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type);
-
-    std::vector<std::pair<std::function<bool(const tinygltf::Node&)>, std::function<void(const tinygltf::Node&, flecs::entity&)>>> core_deserializers;
-    std::map<std::string, std::function<void(const tinygltf::Value&, flecs::entity&)>> extension_deserializers;
+    bool write_mode = false;
 
     std::map<unsigned int, std::shared_ptr<material>> material_lookup;
 };
 
+template<typename... Serializable_Ts>
+void scene_deserializer::load_scene_into_registry(flecs::world &world, const std::string &filename,
+                                                  scene_deserializer::gltf_file_type file_type) {
+    write_mode = false;
+    tinygltf::Model model;
+    if(!load_scene_file(model, filename, file_type)) return;
 
+    for(auto& node : model.nodes) {
+        auto entity = world.entity(node.name.c_str());
+
+        serialize_type<Serializable_Ts...>(entity, node);
+
+        if(node.mesh >= 0) {
+            mesh::deserialize(model, node, material_lookup, entity);
+        }
+    }
+}
+
+template<typename T, typename... Serializable_Ts>
+void scene_deserializer::serialize_type(flecs::entity& entity, tinygltf::Node& node) {
+    T component_serializable;
+
+    serialize<scene_deserializer>(*this, node, component_serializable);
+
+    entity.set<T>(component_serializable);
+
+    if constexpr(sizeof...(Serializable_Ts) > 0) {
+        serialize_type<Serializable_Ts...>(entity, node);
+    }
+}

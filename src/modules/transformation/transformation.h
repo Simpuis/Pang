@@ -14,27 +14,38 @@ struct position {
     glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
 };
 
+template<typename Archive>
+void serialize(Archive& archive, tinygltf::Node& node, position& position_comp) {
+    archive(node.translation[0], position_comp.pos.x);
+    archive(node.translation[1], position_comp.pos.y);
+    archive(node.translation[2], position_comp.pos.z);
+}
+
 struct rotation {
     glm::quat rot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 };
+
+template<typename Archive>
+void serialize(Archive& archive, tinygltf::Node& node, rotation& rotation_comp) {
+    archive(node.rotation[0], rotation_comp.rot.x);
+    archive(node.rotation[1], rotation_comp.rot.y);
+    archive(node.rotation[2], rotation_comp.rot.z);
+    archive(node.rotation[3], rotation_comp.rot.w);
+}
 
 struct scale {
     glm::vec3 local_scale = glm::vec3(1.0f, 1.0f, 1.0f);
 };
 
+template<typename Archive>
+void serialize(Archive& archive, tinygltf::Node& node, scale& scale_comp) {
+    archive(node.scale[0], scale_comp.local_scale.x);
+    archive(node.scale[1], scale_comp.local_scale.y);
+    archive(node.scale[2], scale_comp.local_scale.z);
+}
+
 struct transformation {
     explicit transformation(flecs::world& world);
-
-    inline static std::function<position(const tinygltf::Node&)> position_deserializer();
-    inline static std::function<rotation(const tinygltf::Node&)> rotation_deserializer();
-    inline static std::function<scale(const tinygltf::Node&)> scale_deserializer();
-
-    template<typename Deserializer_T>
-    static void register_deserializers(Deserializer_T& deserializer) {
-        deserializer([](const tinygltf::Node& node){ return !node.translation.empty(); }, position_deserializer());
-        deserializer([](const tinygltf::Node& node){ return !node.rotation.empty(); }, rotation_deserializer());
-        deserializer([](const tinygltf::Node& node){ return !node.scale.empty(); }, scale_deserializer());
-    }
 
     inline static glm::mat4x4 model(const position& pos, const rotation& rot, const scale& scale) {
         glm::mat4x4 transform = glm::mat4x4(1.0f);
@@ -69,29 +80,3 @@ struct transformation {
         return model(pos, rot, scale) * glm::vec4(global_right(), 0.0f);
     }
 };
-
-std::function<position(const tinygltf::Node&)> transformation::position_deserializer() {
-    return [] (const tinygltf::Node& node) {
-        position position_comp;
-        position_comp.pos = glm::vec3(node.translation[0], node.translation[1], node.translation[2]);
-
-        return position_comp;
-    };
-}
-
-std::function<rotation(const tinygltf::Node&)> transformation::rotation_deserializer() {
-    return [] (const tinygltf::Node& node) {
-        rotation rotation_comp;
-        rotation_comp.rot = glm::quat(node.rotation[3], node.rotation[0], node.rotation[1], node.rotation[2]);
-
-        return rotation_comp;
-    };
-}
-std::function<scale(const tinygltf::Node&)> transformation::scale_deserializer() {
-    return [] (const tinygltf::Node& node) {
-        scale scale_comp;
-        scale_comp.local_scale = glm::vec3(node.scale[0], node.scale[1], node.scale[2]);
-
-        return scale_comp;
-    };
-}
