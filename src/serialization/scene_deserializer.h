@@ -50,11 +50,14 @@ public:
         write_mode ? node_serializable = (T)component_serializable : component_serializable = (U)node_serializable;
     }
 
-    template<typename... Serializable_Ts>
+    template<typename... Serializable_Extension_Ts>
     void load_scene_into_registry(flecs::world& world, const std::string& filename, gltf_file_type file_type);
 
-    template<typename T, typename... Serializable_Ts>
+    template<typename T>
     void serialize_type(flecs::entity& entity, tinygltf::Node& node);
+
+    template<typename T, typename... Serializable_Ts>
+    void serialize_extension(flecs::entity& entity, tinygltf::Node& node);
 
 private:
     static bool load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type);
@@ -63,7 +66,7 @@ private:
     std::map<unsigned int, std::shared_ptr<material>> material_lookup;
 };
 
-template<typename... Serializable_Ts>
+template<typename... Serializable_Extension_Ts>
 void scene_deserializer::load_scene_into_registry(flecs::world &world, const std::string &filename,
                                                   scene_deserializer::gltf_file_type file_type) {
     write_mode = false;
@@ -73,7 +76,21 @@ void scene_deserializer::load_scene_into_registry(flecs::world &world, const std
     for(auto& node : model.nodes) {
         auto entity = world.entity(node.name.c_str());
 
-        serialize_type<Serializable_Ts...>(entity, node);
+        if constexpr(sizeof...(Serializable_Extension_Ts) > 0) {
+            serialize_extension<Serializable_Extension_Ts...>(entity, node);
+        }
+
+        if(!node.translation.empty()) {
+            serialize_type<position>(entity, node);
+        }
+
+        if(!node.rotation.empty()) {
+            serialize_type<rotation>(entity, node);
+        }
+
+        if(!node.scale.empty()) {
+            serialize_type<scale>(entity, node);
+        }
 
         if(node.mesh >= 0) {
             mesh::deserialize(model, node, material_lookup, entity);
@@ -81,8 +98,17 @@ void scene_deserializer::load_scene_into_registry(flecs::world &world, const std
     }
 }
 
-template<typename T, typename... Serializable_Ts>
+template<typename T>
 void scene_deserializer::serialize_type(flecs::entity& entity, tinygltf::Node& node) {
+    T component_serializable;
+
+    serialize<scene_deserializer>(*this, node, component_serializable);
+
+    entity.set<T>(component_serializable);
+}
+
+template<typename T, typename... Serializable_Ts>
+void scene_deserializer::serialize_extension(flecs::entity& entity, tinygltf::Node& node) {
     T component_serializable;
 
     serialize<scene_deserializer>(*this, node, component_serializable);

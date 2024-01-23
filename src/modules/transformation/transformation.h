@@ -3,8 +3,7 @@
 #include <glm/vec3.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
-
-#include "src/serialization/scene_deserializer.h"
+#include <tiny_gltf.h>
 
 namespace flecs {
     struct world;

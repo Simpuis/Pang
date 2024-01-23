@@ -125,7 +125,7 @@ void game::setup_world() {
 
     world_.import<transformation>();
 
-    scene_loader.load_scene_into_registry<position, rotation, scale>
+    scene_loader.load_scene_into_registry<>
     (world_, "untitled.gltf", scene_deserializer::gltf_file_type::ascii);
 }
 
