@@ -36,6 +36,7 @@ add_library(OpenGLPongLib
         src/gl_debug.h
         src/render/camera.ixx
         src/flecs_modules/transformation/transformation.ixx
+        src/context_builder.ixx
 )
 
 find_package(EnTT CONFIG REQUIRED)

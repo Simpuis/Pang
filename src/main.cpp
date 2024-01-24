@@ -1,10 +1,13 @@
 #include <memory>
 
-import game;
+import context_builder;
 
 int main() {
-    auto game_context = std::make_unique<game>(2560, 1440, "Pong");
-	game_context->loop();
+    auto context = context_builder()
+                    .set_window_size(2560, 1440)
+                    .set_window_title("Pong")
+                    .set_editor(true)
+                    .launch();
 
 	return 0;
 }
