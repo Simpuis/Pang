@@ -1,8 +1,9 @@
 #pragma once
+
 #include <string>
 #include <memory>
 
-#include "src/render/shader.h"
+import shader;
 
 /**
  * @brief Static only class assisting in loading shaders.

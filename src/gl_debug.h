@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 void APIENTRY gl_debug_output(GLenum source,
 GLenum type,
 unsigned int id,

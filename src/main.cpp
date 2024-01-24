@@ -1,4 +1,6 @@
-#include "game.h"
+#include <memory>
+
+import game;
 
 int main() {
     auto game_context = std::make_unique<game>(2560, 1440, "Pong");

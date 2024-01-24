@@ -34,9 +34,9 @@
 # .idea/artifacts
 # .idea/compiler.xml
 # .idea/jarRepositories.xml
-# .idea/modules.xml
+# .idea/flecs_modules.xml
 # .idea/*.iml
-# .idea/modules
+# .idea/flecs_modules
 # *.iml
 # *.ipr
 

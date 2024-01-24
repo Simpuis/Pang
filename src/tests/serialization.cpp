@@ -6,7 +6,6 @@
 #include <entt/entt.hpp>
 #include "src/components/transform.h"
 #include "src/serialization/scene_serializer.h"
-#include "src/serialization/scene_deserializer.h"
 
 TEST(Serialization, SerializeAndUnserializeRegistry) {
     entt::registry source;

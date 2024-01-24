@@ -19,42 +19,23 @@ find_package(Microsoft.GSL CONFIG REQUIRED)
 find_package(flecs CONFIG REQUIRED)
 
 add_library(OpenGLPongLib
-        src/custom_game_logic.cpp
-        src/custom_game_logic.h
         src/editor/editor.cpp
         src/editor/editor.h
-        src/game.cpp
-        src/game.h
+        src/game.ixx
         src/input_handler.cpp
         src/input_handler.h
-        src/render/material.cpp
-        src/render/material.h
-        src/components/material_component.cpp
-        src/components/material_component.h
-        src/render/renderer.cpp
-        src/render/renderer.h
-        src/render/shader.cpp
-        src/render/shader.h
+        src/render/material.ixx
+        src/render/renderer.ixx
+        src/render/shader.ixx
         src/serialization/shader_loader.cpp
         src/serialization/shader_loader.h
-        src/serialization/scene_serializer.cpp
-        src/serialization/scene_serializer.h
-        src/render/texture.cpp
-        src/render/texture.h
-        src/serialization/scene_deserializer.cpp
-        src/serialization/scene_deserializer.h
-        src/components/mesh_component.cpp
-        src/components/mesh_component.h
-        src/render/mesh.cpp
-        src/render/mesh.h
+        src/render/texture.ixx
+        src/serialization/serializer.ixx
+        src/render/mesh.ixx
         src/tiny_gltf_defines.cpp
         src/gl_debug.h
-        src/render/camera.cpp
-        src/render/camera.h
-        src/render/freefly_camera.cpp
-        src/render/freefly_camera.h
-        src/modules/transformation/transformation.cpp
-        src/modules/transformation/transformation.h
+        src/render/camera.ixx
+        src/flecs_modules/transformation/transformation.ixx
 )
 
 find_package(EnTT CONFIG REQUIRED)
@@ -69,7 +50,8 @@ target_link_libraries(OpenGLPongLib nlohmann_json::nlohmann_json)
 target_link_libraries(OpenGLPongLib Microsoft.GSL::GSL)
 target_link_libraries(OpenGLPongLib $<IF:$<TARGET_EXISTS:flecs::flecs>,flecs::flecs,flecs::flecs_static>)
 
-add_executable(OpenGLPong src/main.cpp)
+add_executable(OpenGLPong src/main.cpp
+        src/render/freefly_camera.ixx)
 
 target_link_libraries(OpenGLPong OpenGLPongLib)
 
