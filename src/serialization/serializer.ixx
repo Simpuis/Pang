@@ -53,6 +53,22 @@ public:
     }
 
     template<typename... Serializable_Extension_Ts>
+    void save_scene_from_world(flecs::world& world, const std::string& filename, gltf_file_type file_type) {
+        write_mode = true;
+        tinygltf::Model model;
+
+        std::map<flecs::entity, tinygltf::Node&> entity_node_map;
+        world.each<flecs::entity>([&](flecs::entity entity) {
+           auto node = tinygltf::Node();
+           node.name = entity.name().c_str();
+           model.nodes.push_back(node);
+        });
+
+        tinygltf::TinyGLTF saver;
+        saver.WriteGltfSceneToFile(&model, filename.c_str(), true, true, true, false);
+    }
+
+    template<typename... Serializable_Extension_Ts>
     void load_scene_into_registry(flecs::world& world, const std::string& filename, gltf_file_type file_type) {
         write_mode = false;
         tinygltf::Model model;

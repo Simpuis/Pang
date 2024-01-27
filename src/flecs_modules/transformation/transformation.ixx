@@ -9,6 +9,10 @@ module;
 export module transformation;
 
 export struct position {
+    position() = default;
+    explicit position(glm::vec3 pos) : pos(pos) {}
+    position(float x, float y, float z) : pos(x, y, z) {}
+
     glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
 };
 

@@ -13,19 +13,19 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-find_package(EnTT CONFIG REQUIRED)
+find_package(flecs CONFIG REQUIRED)
 find_package(Stb REQUIRED)
 
 add_executable(tests
-        serialization.cpp
+        scene_io.cpp
 )
 
 target_include_directories(tests PRIVATE ${TINYGLTF_INCLUDE_DIRS})
 target_include_directories(tests PRIVATE ${Stb_INCLUDE_DIR})
 
 target_link_libraries(tests gtest_main)
-target_link_libraries(tests EnTT::EnTT)
 target_link_libraries(tests OpenGLPongLib)
+target_link_libraries(tests $<IF:$<TARGET_EXISTS:flecs::flecs>,flecs::flecs,flecs::flecs_static>)
 
 include(GoogleTest)
 gtest_discover_tests(tests)
