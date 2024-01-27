@@ -21,22 +21,32 @@ find_package(flecs CONFIG REQUIRED)
 add_library(OpenGLPongLib
         src/editor/editor.cpp
         src/editor/editor.h
-        src/game.ixx
         src/input_handler.cpp
         src/input_handler.h
-        src/render/material.ixx
-        src/render/renderer.ixx
-        src/render/shader.ixx
         src/serialization/shader_loader.cpp
         src/serialization/shader_loader.h
-        src/render/texture.ixx
-        src/serialization/serializer.ixx
-        src/render/mesh.ixx
         src/tiny_gltf_defines.cpp
         src/gl_debug.h
-        src/render/camera.ixx
-        src/flecs_modules/transformation/transformation.ixx
-        src/context_builder.ixx
+        src/flecs_modules/transformation/transformation.h
+        src/render/camera.h
+        src/render/freefly_camera.cpp
+        src/render/freefly_camera.h
+        src/render/material.cpp
+        src/render/material.h
+        src/render/mesh.cpp
+        src/render/mesh.h
+        src/render/renderer.cpp
+        src/render/renderer.h
+        src/render/shader.cpp
+        src/render/shader.h
+        src/render/texture.cpp
+        src/render/texture.h
+        src/serialization/serializer.cpp
+        src/serialization/serializer.h
+        src/game.cpp
+        src/game.h
+        src/context_builder.cpp
+        src/context_builder.h
 )
 
 find_package(EnTT CONFIG REQUIRED)
@@ -52,7 +62,7 @@ target_link_libraries(OpenGLPongLib Microsoft.GSL::GSL)
 target_link_libraries(OpenGLPongLib $<IF:$<TARGET_EXISTS:flecs::flecs>,flecs::flecs,flecs::flecs_static>)
 
 add_executable(OpenGLPong src/main.cpp
-        src/render/freefly_camera.ixx)
+)
 
 target_link_libraries(OpenGLPong OpenGLPongLib)
 

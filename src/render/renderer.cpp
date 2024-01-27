@@ -1,36 +1,11 @@
-module;
+#include "renderer.h"
 
-#include <functional>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <flecs.h>
-
-export module renderer;
-
-import camera;
-import transformation;
-import mesh;
-import material;
-
-/**
- * @brief The renderer class is responsible for rendering the scene.
- *
- */
-export class renderer
-{
-public:
-    /**
-     * @brief Render the scene
-     *
-     * @param main_camera The camera to use to render the scene
-     * @param registry The registry containing the entities to render
-     * @param window The glfw window to render to
-     */
-	void render_scene(const camera& main_camera, const flecs::world& world, GLFWwindow* window);
-};
+#include "camera.h"
+#include "material.h"
+#include "mesh.h"
+#include "shader.h"
+#include "texture.h"
+#include "src/flecs_modules/transformation/transformation.h"
 
 void renderer::render_scene(const camera& main_cam, const flecs::world& world,
                             GLFWwindow* window) //const

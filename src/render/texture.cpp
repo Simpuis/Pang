@@ -1,23 +1,4 @@
-module;
-
-#include <string>
-#include <memory>
-#include <tiny_gltf.h>
-#include <glad/glad.h>
-
-export module texture;
-
-export class texture
-{
-public:
-	void bind(int unit = -1);
-	void unbind();
-
-    static std::shared_ptr<texture> deserialize(const tinygltf::Model& model, const tinygltf::Texture& gltf_texture);
-
-private:
-	unsigned int id_;
-};
+#include "texture.h"
 
 void texture::bind(int unit)
 {

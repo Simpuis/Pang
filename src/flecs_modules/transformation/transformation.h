@@ -1,4 +1,4 @@
-module;
+#pragma once
 
 #include <glm/vec3.hpp>
 #include <glm/ext/matrix_transform.hpp>
@@ -6,9 +6,7 @@ module;
 #include <tiny_gltf.h>
 #include <flecs.h>
 
-export module transformation;
-
-export struct position {
+struct position {
     position() = default;
     explicit position(glm::vec3 pos) : pos(pos) {}
     position(float x, float y, float z) : pos(x, y, z) {}
@@ -16,18 +14,18 @@ export struct position {
     glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
 };
 
-export template<typename Archive>
+template<typename Archive>
 void serialize(Archive& archive, tinygltf::Node& node, position& position_comp) {
     archive(node.translation[0], position_comp.pos.x);
     archive(node.translation[1], position_comp.pos.y);
     archive(node.translation[2], position_comp.pos.z);
 }
 
-export struct rotation {
+struct rotation {
     glm::quat rot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 };
 
-export template<typename Archive>
+template<typename Archive>
 void serialize(Archive& archive, tinygltf::Node& node, rotation& rotation_comp) {
     archive(node.rotation[0], rotation_comp.rot.x);
     archive(node.rotation[1], rotation_comp.rot.y);
@@ -35,18 +33,18 @@ void serialize(Archive& archive, tinygltf::Node& node, rotation& rotation_comp) 
     archive(node.rotation[3], rotation_comp.rot.w);
 }
 
-export struct scale {
+struct scale {
     glm::vec3 local_scale = glm::vec3(1.0f, 1.0f, 1.0f);
 };
 
-export template<typename Archive>
+template<typename Archive>
 void serialize(Archive& archive, tinygltf::Node& node, scale& scale_comp) {
     archive(node.scale[0], scale_comp.local_scale.x);
     archive(node.scale[1], scale_comp.local_scale.y);
     archive(node.scale[2], scale_comp.local_scale.z);
 }
 
-export struct transformation {
+struct transformation {
     explicit transformation(flecs::world& world);
 
     inline static glm::mat4x4 model(const position& pos, const rotation& rot, const scale& scale) {
@@ -83,7 +81,7 @@ export struct transformation {
     }
 };
 
-transformation::transformation(flecs::world &world) {
+inline transformation::transformation(flecs::world &world) {
     world.component<position>("position");
     world.component<rotation>("rotation");
     world.component<scale>("scale");

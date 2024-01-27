@@ -1,14 +1,12 @@
-module;
+#pragma once
 
 #include <glm/glm.hpp>
-
-export module camera;
 
 /**
  * @brief A camera class that can be used to render a scene.
  *
  */
-export class camera {
+class camera {
 public:
     /**
      * @brief Construct a new camera object
@@ -27,11 +25,8 @@ public:
      *
      * @return glm::mat4x4 The view matrix of the camera
      */
-    [[nodiscard]] virtual glm::mat4x4 get_view_matrix() const;
+    [[nodiscard]] virtual glm::mat4x4 get_view_matrix() const {
+        return glm::inverse(transform_matrix);
+    }
     glm::mat4x4 transform_matrix;
 };
-
-glm::mat4x4 camera::get_view_matrix() const {
-    return glm::inverse(transform_matrix);
-}
-

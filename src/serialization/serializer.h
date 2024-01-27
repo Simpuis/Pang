@@ -1,4 +1,4 @@
-module;
+#pragma once
 
 #include <tiny_gltf.h>
 #include <flecs.h>
@@ -6,11 +6,8 @@ module;
 #include <iostream>
 #include <map>
 
-export module serializer;
-
-import transformation;
-import mesh;
-import material;
+#include "src/flecs_modules/transformation/transformation.h"
+#include "src/render/mesh.h"
 
 /**
  * @brief The scene_deserializer class is responsible for deserializing the scene from a gltf file.
@@ -18,7 +15,7 @@ import material;
  * before calling load_scene_into_registry.
  */
 
-export class scene_deserializer {
+class scene_deserializer {
 public:
     /**
      * @brief The gltf_file_type enum is used to specify the type of file to load
@@ -47,7 +44,7 @@ public:
      */
 
     template<typename T, typename U>
-        requires std::convertible_to<T, U> && std::convertible_to<U, T>
+    requires std::convertible_to<T, U> && std::convertible_to<U, T>
     void operator()(T& node_serializable, U& component_serializable) const {
         write_mode ? node_serializable = (T)component_serializable : component_serializable = (U)node_serializable;
     }
@@ -59,9 +56,9 @@ public:
 
         std::map<flecs::entity, tinygltf::Node&> entity_node_map;
         world.each<flecs::entity>([&](flecs::entity entity) {
-           auto node = tinygltf::Node();
-           node.name = entity.name().c_str();
-           model.nodes.push_back(node);
+            auto node = tinygltf::Node();
+            node.name = entity.name().c_str();
+            model.nodes.push_back(node);
         });
 
         tinygltf::TinyGLTF saver;
@@ -127,27 +124,3 @@ private:
 
     std::map<unsigned int, std::shared_ptr<material>> material_lookup;
 };
-
-bool scene_deserializer::load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type) {
-    tinygltf::TinyGLTF loader;
-    std::string error_message;
-    std::string warning_message;
-
-    bool result = false;
-    if(file_type == gltf_file_type::ascii) {
-        result = loader.LoadASCIIFromFile(&model, &error_message, &warning_message, filename);
-    }
-    else if(file_type == gltf_file_type::binary) {
-        result = loader.LoadBinaryFromFile(&model, &error_message, &warning_message, filename);
-    }
-
-    if(!error_message.empty()) {
-        std::cout << "TinyGLTF Error loading scene file " << std::endl << "Error Message: " << error_message;
-    }
-
-    if(!warning_message.empty()) {
-        std::cout << "TinyGLTF Warning loading scene file " << std::endl << "Warning Message: " << warning_message;
-    }
-
-    return result;
-}

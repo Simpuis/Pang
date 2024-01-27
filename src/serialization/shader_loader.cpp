@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "src/render/shader.h"
+
 std::unique_ptr<shader> shader_loader::load_shader(const std::string& vertex_shader_path, const std::string& fragment_shader_path)
 {
 	const std::string vertex_shader_source = read_shader_file(vertex_shader_path);

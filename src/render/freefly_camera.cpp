@@ -1,28 +1,6 @@
-module;
+#include "freefly_camera.h"
 
-#include <glm/glm.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <GLFW/glfw3.h>
-
-export module freefly_camera;
-
-import camera;
-import transformation;
-
-export class freefly_camera : public camera {
-public:
-    void init(GLFWwindow* window);
-    void tick(GLFWwindow* window, double delta);
-
-    [[nodiscard]] glm::mat4x4 get_view_matrix() const override;
-
-private:
-    glm::mat4x4 local_trans = glm::mat4x4(1.0f);
-
-    double cam_x = 0.0;
-    double cam_y = 0.0;
-};
+#include "src/flecs_modules/transformation/transformation.h"
 
 void freefly_camera::tick(GLFWwindow* window, double delta) {
     double cursor_x;
@@ -69,8 +47,4 @@ void freefly_camera::init(GLFWwindow* window) {
 
     glfwGetCursorPos(window, &cam_x, &cam_y);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-}
-
-glm::mat4x4 freefly_camera::get_view_matrix() const {
-    return glm::inverse(transform_matrix * local_trans);
 }

@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 
-import shader;
+class shader;
 
 /**
  * @brief Static only class assisting in loading shaders.
