@@ -3,11 +3,11 @@
 #include "material.h"
 #include "shader.h"
 
-void mesh::deserialize(const tinygltf::Model& model, const tinygltf::Node& node,
-                       std::map<unsigned int, std::shared_ptr<material>>& material_lookup, flecs::entity& entity) {
-    mesh mesh_comp;
-    mesh_comp.setup_gltf_mesh(model, model.meshes[node.mesh], material_lookup);
-    entity.set<mesh>(mesh_comp);
+std::shared_ptr<mesh> mesh::deserialize(const tinygltf::Model& model, const tinygltf::Node& node,
+                       std::map<unsigned int, std::shared_ptr<material>>& material_lookup) {
+    auto deserialized_mesh = std::make_shared<mesh>();
+    deserialized_mesh->setup_gltf_mesh(model, model.meshes[node.mesh], material_lookup);
+    return deserialized_mesh;
 }
 
 void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& mesh_to_load, std::map<unsigned int, std::shared_ptr<material>>& material_lookup) {

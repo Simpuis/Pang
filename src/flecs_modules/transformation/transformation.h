@@ -12,37 +12,51 @@ struct position {
     position(float x, float y, float z) : pos(x, y, z) {}
 
     glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    void save(tinygltf::Node& node) {
+        node.translation.push_back(pos.x);
+        node.translation.push_back(pos.y);
+        node.translation.push_back(pos.z);
+    }
+
+    void load(const tinygltf::Node& node) {
+        pos = glm::vec3(node.translation[0]);
+        pos = glm::vec3(node.translation[1]);
+        pos = glm::vec3(node.translation[2]);
+    }
 };
 
-template<typename Archive>
-void serialize(Archive& archive, tinygltf::Node& node, position& position_comp) {
-    archive(node.translation[0], position_comp.pos.x);
-    archive(node.translation[1], position_comp.pos.y);
-    archive(node.translation[2], position_comp.pos.z);
-}
 
 struct rotation {
     glm::quat rot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+
+    void save(tinygltf::Node& node) {
+        node.rotation.push_back(rot.x);
+        node.rotation.push_back(rot.y);
+        node.rotation.push_back(rot.z);
+        node.rotation.push_back(rot.w);
+    }
+
+    void load(const tinygltf::Node& node) {
+        rot = glm::quat(node.rotation[3], node.rotation[0], node.rotation[1], node.rotation[2]);
+    }
 };
 
-template<typename Archive>
-void serialize(Archive& archive, tinygltf::Node& node, rotation& rotation_comp) {
-    archive(node.rotation[0], rotation_comp.rot.x);
-    archive(node.rotation[1], rotation_comp.rot.y);
-    archive(node.rotation[2], rotation_comp.rot.z);
-    archive(node.rotation[3], rotation_comp.rot.w);
-}
 
 struct scale {
     glm::vec3 local_scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+    void save(tinygltf::Node& node) {
+        node.scale.push_back(local_scale.x);
+        node.scale.push_back(local_scale.y);
+        node.scale.push_back(local_scale.z);
+    }
+
+    void load(const tinygltf::Node& node) {
+        local_scale = glm::vec3(node.scale[0], node.scale[1], node.scale[2]);
+    }
 };
 
-template<typename Archive>
-void serialize(Archive& archive, tinygltf::Node& node, scale& scale_comp) {
-    archive(node.scale[0], scale_comp.local_scale.x);
-    archive(node.scale[1], scale_comp.local_scale.y);
-    archive(node.scale[2], scale_comp.local_scale.z);
-}
 
 struct transformation {
     explicit transformation(flecs::world& world);
@@ -82,7 +96,19 @@ struct transformation {
 };
 
 inline transformation::transformation(flecs::world &world) {
-    world.component<position>("position");
-    world.component<rotation>("rotation");
-    world.component<scale>("scale");
+    world.component<glm::vec3>()
+            .member<float>("x")
+            .member<float>("y")
+            .member<float>("z");
+    world.component<glm::quat>()
+            .member<float>("x")
+            .member<float>("y")
+            .member<float>("z")
+            .member<float>("w");
+    world.component<position>("position")
+            .member<glm::vec3>("pos");
+    world.component<rotation>("rotation")
+            .member<glm::quat>("rot");
+    world.component<scale>("scale")
+            .member<glm::vec3>("local_scale");
 }

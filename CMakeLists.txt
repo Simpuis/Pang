@@ -47,6 +47,8 @@ add_library(OpenGLPongLib
         src/game.h
         src/context_builder.cpp
         src/context_builder.h
+        src/flecs_modules/rendering/rendering.cpp
+        src/flecs_modules/rendering/rendering.h
 )
 
 find_package(EnTT CONFIG REQUIRED)

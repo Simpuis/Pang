@@ -36,8 +36,8 @@ public:
 public:
     std::vector<primitive> primitives;
 
-    static void deserialize(const tinygltf::Model& model, const tinygltf::Node& node,
-                            std::map<unsigned int, std::shared_ptr<material>>& material_lookup, flecs::entity& entity);
+    static std::shared_ptr<mesh> deserialize(const tinygltf::Model& model, const tinygltf::Node& node,
+                            std::map<unsigned int, std::shared_ptr<material>>& material_lookup);
 
 private:
     void setup_gltf_mesh(const tinygltf::Model& model, const tinygltf::Mesh& mesh_to_load, std::map<unsigned int, std::shared_ptr<material>>& material_lookup);

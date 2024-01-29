@@ -46,5 +46,5 @@ void freefly_camera::init(GLFWwindow* window) {
     transform_matrix = cam_matrix;
 
     glfwGetCursorPos(window, &cam_x, &cam_y);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }

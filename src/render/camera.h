@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 /**
- * @brief A camera class that can be used to render a scene.
+ * @brief A camera class that can be used to rendering a scene.
  *
  */
 class camera {

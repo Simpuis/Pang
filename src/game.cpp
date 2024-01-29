@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include <nlohmann/json.hpp>
+
 #include "gl_debug.h"
 
 game::game(int width, int height, const std::string& title)
@@ -109,7 +111,11 @@ void game::setup_world() {
     world_ = flecs::world();
 
     world_.import<transformation>();
+    world_.import<rendering>();
 
     scene_loader.load_scene_into_registry<>
-            (world_, "untitled.gltf", scene_deserializer::gltf_file_type::ascii);
+            (world_, "untitled1.gltf", scene_deserializer::gltf_file_type::ascii, renderer_.meshes);
+    world_.set<freefly_camera>(main_camera);
+
+    scene_loader.save_scene_from_world<>(world_, "test_save.gltf", scene_deserializer::gltf_file_type::ascii);
 }

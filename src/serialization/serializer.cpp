@@ -5,6 +5,8 @@ bool scene_deserializer::load_scene_file(tinygltf::Model& model, const std::stri
     std::string error_message;
     std::string warning_message;
 
+    std::cout << "Loading scene from file " << filename << std::endl;
+
     bool result = false;
     if(file_type == gltf_file_type::ascii) {
         result = loader.LoadASCIIFromFile(&model, &error_message, &warning_message, filename);

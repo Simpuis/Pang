@@ -6,6 +6,7 @@
 #include "shader.h"
 #include "texture.h"
 #include "src/flecs_modules/transformation/transformation.h"
+#include "src/flecs_modules/rendering/rendering.h"
 
 void renderer::render_scene(const camera& main_cam, const flecs::world& world,
                             GLFWwindow* window) //const
@@ -13,8 +14,8 @@ void renderer::render_scene(const camera& main_cam, const flecs::world& world,
     glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    world.each([&main_cam](const position& pos, const rotation& rot, const scale& local_scale, const mesh& mesh_comp) {
-        for(auto& primitive : mesh_comp.primitives) {
+    world.each([&main_cam, this](const position& pos, const rotation& rot, const scale& local_scale, const mesh_component& mesh_comp) {
+        for(auto& primitive : meshes.map().at(mesh_comp.mesh)->primitives) {
             const material *mat = primitive.mat.get();
 
             for (auto &[key, value]: mat->get_texture()) {

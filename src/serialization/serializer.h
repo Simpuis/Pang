@@ -8,6 +8,16 @@
 
 #include "src/flecs_modules/transformation/transformation.h"
 #include "src/render/mesh.h"
+#include "src/render/renderer.h"
+#include "src/flecs_modules/rendering/rendering.h"
+
+class scene_deserializer;
+
+template<typename T>
+concept saveable = requires(T a, tinygltf::Node n) { a.save(n); };
+
+template<typename T>
+concept loadable = requires(T a, tinygltf::Node n) { a.load(n); };
 
 /**
  * @brief The scene_deserializer class is responsible for deserializing the scene from a gltf file.
@@ -55,9 +65,17 @@ public:
         tinygltf::Model model;
 
         std::map<flecs::entity, tinygltf::Node&> entity_node_map;
-        world.each<flecs::entity>([&](flecs::entity entity) {
+        world.each<position>([&](flecs::entity entity, position& pos) {
             auto node = tinygltf::Node();
             node.name = entity.name().c_str();
+            if constexpr(sizeof...(Serializable_Extension_Ts) > 0) {
+                serialize_extension<Serializable_Extension_Ts...>(entity, node);
+            }
+
+            serialize_type<position>(entity, node);
+            serialize_type<rotation>(entity, node);
+            serialize_type<scale>(entity, node);
+
             model.nodes.push_back(node);
         });
 
@@ -66,7 +84,7 @@ public:
     }
 
     template<typename... Serializable_Extension_Ts>
-    void load_scene_into_registry(flecs::world& world, const std::string& filename, gltf_file_type file_type) {
+    void load_scene_into_registry(flecs::world& world, const std::string& filename, gltf_file_type file_type, mesh_lookup& meshes) {
         write_mode = false;
         tinygltf::Model model;
         if(!load_scene_file(model, filename, file_type)) return;
@@ -81,42 +99,83 @@ public:
             if(!node.translation.empty()) {
                 serialize_type<position>(entity, node);
             }
+            else {
+                entity.set<position>({});
+            }
 
             if(!node.rotation.empty()) {
                 serialize_type<rotation>(entity, node);
+            }
+            else {
+                entity.set<rotation>({});
             }
 
             if(!node.scale.empty()) {
                 serialize_type<scale>(entity, node);
             }
+            else {
+                entity.set<scale>({});
+            }
 
             if(node.mesh >= 0) {
-                mesh::deserialize(model, node, material_lookup, entity);
+                const auto& mesh_map_mesh = meshes.map().find(node.mesh);
+                if(mesh_map_mesh == meshes.map().end()) {
+                    unsigned int mesh_index = meshes.add(mesh::deserialize(model, node, material_lookup));
+                    entity.set<mesh_component>(mesh_component(mesh_index));
+                }
+                else {
+                    entity.set<mesh_component>(mesh_component(mesh_map_mesh->first));
+                }
             }
         }
     }
 
     template<typename T>
+        requires saveable<T> &&
+                 loadable<T>
     void serialize_type(flecs::entity& entity, tinygltf::Node& node) {
-        T component_serializable;
+        if(write_mode) {
+            T* component_serializable = entity.get_mut<T>();
 
-        serialize<scene_deserializer>(*this, node, component_serializable);
+            if(component_serializable) {
+                component_serializable->save(node);
+            }
+        }
+        else {
+            T component_serializable;
 
-        entity.set<T>(component_serializable);
+            component_serializable.load(node);
+
+            entity.set<T>(component_serializable);
+        }
     }
 
     template<typename T, typename... Serializable_Ts>
     void serialize_extension(flecs::entity& entity, tinygltf::Node& node) {
-        T component_serializable;
+        if(write_mode) {
+            T* component_serializable = entity.get_mut<T>();
 
-        serialize<scene_deserializer>(*this, node, component_serializable);
+            if(component_serializable) {
+                serialize<scene_deserializer>(*this, node, *component_serializable);
+            }
 
-        entity.set<T>(component_serializable);
+            if constexpr (sizeof...(Serializable_Ts) > 0) {
+                serialize_type<Serializable_Ts...>(entity, node);
+            }
+        }
+        else {
+            T component_serializable;
 
-        if constexpr(sizeof...(Serializable_Ts) > 0) {
-            serialize_type<Serializable_Ts...>(entity, node);
+            serialize<scene_deserializer>(*this, node, component_serializable);
+
+            entity.set<T>(component_serializable);
+
+            if constexpr (sizeof...(Serializable_Ts) > 0) {
+                serialize_type<Serializable_Ts...>(entity, node);
+            }
         }
     }
+
 
 private:
     static bool load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type);
