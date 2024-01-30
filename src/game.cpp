@@ -4,6 +4,8 @@
 
 #include "gl_debug.h"
 #include "src/serialization/serializers/gltf_core_node_serializer.h"
+#include "src/serialization/serializers/buffer_serializer.h"
+#include "src/serialization/serializers/mesh_serializer.h"
 
 game::game(int width, int height, const std::string& title)
 {
@@ -114,8 +116,12 @@ void game::setup_world() {
     world_.import<transformation>();
     world_.import<rendering>();
 
-    scene_loader.load_scene_from_file<gltf_core_node_serializer>(world_, "untitled1.gltf", scene_serializer::gltf_file_type::ascii);
+    scene_loader.load_scene_from_file<gltf_core_node_serializer,
+                                      buffer_serializer,
+                                      mesh_serializer>(world_, "untitled.gltf", scene_serializer::gltf_file_type::ascii);
     world_.set<freefly_camera>(main_camera);
 
-    //scene_loader.save_scene_to_file<gltf_core_node_serializer>(world_, "untitled.gltf");
+    scene_loader.save_scene_to_file<gltf_core_node_serializer,
+                                    buffer_serializer,
+                                    mesh_serializer>(world_, "untitled1.gltf");
 }

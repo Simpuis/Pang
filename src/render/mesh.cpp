@@ -3,10 +3,10 @@
 #include "material.h"
 #include "shader.h"
 
-std::shared_ptr<mesh> mesh::deserialize(const tinygltf::Model& model, const tinygltf::Node& node,
+std::shared_ptr<mesh> mesh::deserialize(const tinygltf::Model& model, const tinygltf::Mesh& mesh_to_load,
                        std::map<unsigned int, std::shared_ptr<material>>& material_lookup) {
     auto deserialized_mesh = std::make_shared<mesh>();
-    deserialized_mesh->setup_gltf_mesh(model, model.meshes[node.mesh], material_lookup);
+    deserialized_mesh->setup_gltf_mesh(model, mesh_to_load, material_lookup);
     return deserialized_mesh;
 }
 

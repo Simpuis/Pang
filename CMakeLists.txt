@@ -53,6 +53,10 @@ add_library(OpenGLPongLib
         src/serialization/serializers/node_extension_serializer.h
         src/serialization/serializers/gltf_core_node_serializer.cpp
         src/serialization/serializers/gltf_core_node_serializer.h
+        src/serialization/serializers/mesh_serializer.cpp
+        src/serialization/serializers/mesh_serializer.h
+        src/serialization/serializers/buffer_serializer.cpp
+        src/serialization/serializers/buffer_serializer.h
 )
 
 find_package(EnTT CONFIG REQUIRED)

@@ -36,7 +36,7 @@ public:
 public:
     std::vector<primitive> primitives;
 
-    static std::shared_ptr<mesh> deserialize(const tinygltf::Model& model, const tinygltf::Node& node,
+    static std::shared_ptr<mesh> deserialize(const tinygltf::Model& model, const tinygltf::Mesh& mesh_to_load,
                             std::map<unsigned int, std::shared_ptr<material>>& material_lookup);
 
 private:
