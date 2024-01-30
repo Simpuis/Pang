@@ -12,49 +12,22 @@ struct position {
     position(float x, float y, float z) : pos(x, y, z) {}
 
     glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
-
-    void save(tinygltf::Node& node) {
-        node.translation.push_back(pos.x);
-        node.translation.push_back(pos.y);
-        node.translation.push_back(pos.z);
-    }
-
-    void load(const tinygltf::Node& node) {
-        pos = glm::vec3(node.translation[0]);
-        pos = glm::vec3(node.translation[1]);
-        pos = glm::vec3(node.translation[2]);
-    }
 };
 
 
 struct rotation {
+    rotation() = default;
+    rotation(float x, float y, float z, float w) : rot(w, x, y, z) {}
+
     glm::quat rot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-
-    void save(tinygltf::Node& node) {
-        node.rotation.push_back(rot.x);
-        node.rotation.push_back(rot.y);
-        node.rotation.push_back(rot.z);
-        node.rotation.push_back(rot.w);
-    }
-
-    void load(const tinygltf::Node& node) {
-        rot = glm::quat(node.rotation[3], node.rotation[0], node.rotation[1], node.rotation[2]);
-    }
 };
 
 
 struct scale {
+    scale() = default;
+    scale(float x, float y, float z) : local_scale(x, y, z) {}
+
     glm::vec3 local_scale = glm::vec3(1.0f, 1.0f, 1.0f);
-
-    void save(tinygltf::Node& node) {
-        node.scale.push_back(local_scale.x);
-        node.scale.push_back(local_scale.y);
-        node.scale.push_back(local_scale.z);
-    }
-
-    void load(const tinygltf::Node& node) {
-        local_scale = glm::vec3(node.scale[0], node.scale[1], node.scale[2]);
-    }
 };
 
 

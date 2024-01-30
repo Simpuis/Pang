@@ -13,7 +13,7 @@
 #include "editor/editor.h"
 #include "input_handler.h"
 #include "src/render/freefly_camera.h"
-#include "src/serialization/serializer.h"
+#include "src/serialization/scene_serializer.h"
 #include "src/render/renderer.h"
 
 /**
@@ -52,7 +52,7 @@ private:
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
     std::unique_ptr<input_handler> input_;
-    scene_deserializer scene_loader;
+    scene_serializer scene_loader;
     flecs::world world_;
     renderer renderer_;
     editor editor_;

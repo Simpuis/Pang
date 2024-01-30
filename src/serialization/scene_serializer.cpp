@@ -1,6 +1,6 @@
-#include "serializer.h"
+#include "scene_serializer.h"
 
-bool scene_deserializer::load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type) {
+bool scene_serializer::load_scene_file(tinygltf::Model& model, const std::string& filename, gltf_file_type file_type) {
     tinygltf::TinyGLTF loader;
     std::string error_message;
     std::string warning_message;
