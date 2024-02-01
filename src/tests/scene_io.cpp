@@ -13,6 +13,4 @@ TEST(Serialization, SerializeAndUnserializeRegistry) {
     source.import<transformation>();
     source.import<rendering>();
 
-    mesh_lookup meshes;
-
 }

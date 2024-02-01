@@ -22,6 +22,7 @@ std::shared_ptr<material> material::deserialize(const tinygltf::Model& model, co
 
     if(pbr_metallic_roughness.baseColorTexture.index >= 0) {
         mat->textures["baseColorTexture"] = texture_info(pbr_metallic_roughness.baseColorTexture);
+        mat->set_int("baseColorTexture", 0);
         mat->set_bool("useBaseColorTexture", true);
     }
     else {
@@ -30,6 +31,7 @@ std::shared_ptr<material> material::deserialize(const tinygltf::Model& model, co
 
     if(pbr_metallic_roughness.metallicRoughnessTexture.index >= 0) {
         mat->textures["metallicRoughnessTexture"] = texture_info(pbr_metallic_roughness.metallicRoughnessTexture);
+        mat->set_int("metallicRoughnessTexture", 1);
         mat->set_bool("useMetallicRoughnessTexture", true);
     }
     else {
@@ -47,8 +49,12 @@ tinygltf::Material material::serialize() {
     pbr_metallic_roughness.baseColorFactor = std::vector<double>({base_color.x, base_color.y, base_color.z, base_color.w});
     pbr_metallic_roughness.metallicFactor = get_uniform("metallicFactor").float_value;
     pbr_metallic_roughness.roughnessFactor = get_uniform("roughnessFactor").float_value;
-    pbr_metallic_roughness.baseColorTexture = (tinygltf::TextureInfo)textures["baseColorTexture"];
-    pbr_metallic_roughness.metallicRoughnessTexture = (tinygltf::TextureInfo)textures["metallicRoughnessTexture"];
+    if(textures.find("baseColorTexture") != textures.end()) {
+        pbr_metallic_roughness.baseColorTexture = (tinygltf::TextureInfo) textures["baseColorTexture"];
+    }
+    if(textures.find("metallicRoughnessTexture") != textures.end()) {
+        pbr_metallic_roughness.metallicRoughnessTexture = (tinygltf::TextureInfo) textures["metallicRoughnessTexture"];
+    }
 
     return serialized_material;
 }

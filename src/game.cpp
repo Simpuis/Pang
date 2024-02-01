@@ -10,6 +10,9 @@
 #include "src/serialization/serializers/material_serializer.h"
 #include "src/serialization/serializers/sampler_serializer.h"
 #include "src/serialization/serializers/texture_serializer.h"
+#include "src/render/material.h"
+#include "src/render/texture.h"
+#include "src/render/shader.h"
 
 game::game(int width, int height, const std::string& title)
 {
@@ -44,6 +47,18 @@ void game::loop()
     ImGui_ImplOpenGL3_Init();
 
     main_camera.init(window_);
+
+    /*
+    if(auto* materials = world_.get_mut<material_table>(); materials) {
+        if(const auto* textures = world_.get<texture_table>(); textures) {
+            for(auto& material : materials->table) {
+                for(auto pair : material->textures) {
+                    auto tex = textures->table[pair.second.index];
+                    material->material_shader->set_int(pair.first, )
+                }
+            }
+        }
+    }*/
 
     double lastFrameTime = glfwGetTime();
     while (!glfwWindowShouldClose(window_)) {

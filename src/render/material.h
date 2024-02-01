@@ -79,7 +79,7 @@ public:
 
     std::map<std::string, texture_info> textures;
     std::unique_ptr<shader> material_shader;
-private:
     std::map<std::string, uniform_value> uniforms;
+private:
 
 };

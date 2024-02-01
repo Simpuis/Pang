@@ -29,7 +29,7 @@ void renderer::render_scene(const camera& main_cam, const flecs::world& world,
             const material *mat = material_lookup->table.at(primitive.material_index).get();
 
             for (auto &[key, value]: mat->textures) {
-                texture_lookup->table.at(value.index)->bind(0);
+                texture_lookup->table.at(value.index)->bind(mat->uniforms.at(key).int_value);
             }
             mat->material_shader->use();
 
