@@ -1,3 +1,4 @@
+#include <gsl/util>
 #include "material.h"
 
 #include "texture.h"
@@ -5,18 +6,6 @@
 
 material::material() {
     material_shader = shader_loader::load_shader("vertex_shader.glsl", "fragment_shader.glsl");
-}
-
-const std::map<unsigned, std::shared_ptr<texture>>& material::get_texture() const
-{
-    return material_texture_units_;
-}
-
-void material::set_texture(const std::string& uniform_name, std::shared_ptr<texture> texture_unit, int unit) {
-    material_texture_units_[unit] = std::move(texture_unit);
-
-    material_shader->use();
-    material_shader->set_int(uniform_name, unit);
 }
 
 std::shared_ptr<material> material::deserialize(const tinygltf::Model& model, const tinygltf::Material& gltf_material) {
@@ -27,17 +16,100 @@ std::shared_ptr<material> material::deserialize(const tinygltf::Model& model, co
     mat->material_shader->use();
 
     const auto& base_color = pbr_metallic_roughness.baseColorFactor;
-    mat->material_shader->set_vector("baseColor", glm::vec4(base_color[0], base_color[1], base_color[2], base_color[3]));
+    mat->set_vector("baseColor", glm::vec4(base_color[0], base_color[1], base_color[2], base_color[3]));
+    mat->set_float("metallicFactor", gsl::narrow_cast<float>(pbr_metallic_roughness.metallicFactor));
+    mat->set_float("roughnessFactor", gsl::narrow_cast<float>(pbr_metallic_roughness.roughnessFactor));
+
     if(pbr_metallic_roughness.baseColorTexture.index >= 0) {
-        mat->set_texture("baseColorTexture" + std::to_string(pbr_metallic_roughness.baseColorTexture.texCoord),
-                         texture::deserialize(model, model.textures[pbr_metallic_roughness.baseColorTexture.index]),
-                         pbr_metallic_roughness.baseColorTexture.texCoord);
-        mat->material_shader->set_bool("useBaseColorTexture", true);
+        mat->textures["baseColorTexture"] = texture_info(pbr_metallic_roughness.baseColorTexture);
+        mat->set_bool("useBaseColorTexture", true);
     }
     else {
-        mat->material_shader->set_bool("useBaseColorTexture", false);
+        mat->set_bool("useBaseColorTexture", false);
     }
 
+    if(pbr_metallic_roughness.metallicRoughnessTexture.index >= 0) {
+        mat->textures["metallicRoughnessTexture"] = texture_info(pbr_metallic_roughness.metallicRoughnessTexture);
+        mat->set_bool("useMetallicRoughnessTexture", true);
+    }
+    else {
+        mat->set_bool("useMetallicRoughnessTexture", false);
+    }
 
     return mat;
 }
+
+tinygltf::Material material::serialize() {
+    tinygltf::Material serialized_material;
+    tinygltf::PbrMetallicRoughness pbr_metallic_roughness;
+
+    const glm::vec4 base_color = get_uniform("baseColor").vec4_value;
+    pbr_metallic_roughness.baseColorFactor = std::vector<double>({base_color.x, base_color.y, base_color.z, base_color.w});
+    pbr_metallic_roughness.metallicFactor = get_uniform("metallicFactor").float_value;
+    pbr_metallic_roughness.roughnessFactor = get_uniform("roughnessFactor").float_value;
+    pbr_metallic_roughness.baseColorTexture = (tinygltf::TextureInfo)textures["baseColorTexture"];
+    pbr_metallic_roughness.metallicRoughnessTexture = (tinygltf::TextureInfo)textures["metallicRoughnessTexture"];
+
+    return serialized_material;
+}
+
+uniform_value &material::get_uniform(const std::string &name) {
+    return uniforms[name];
+}
+
+void material::set_bool(const std::string &name, bool value) {
+    auto uniform = uniform_value();
+    uniform.bool_value = value;
+    uniforms[name] = uniform;
+    material_shader->use();
+    material_shader->set_bool(name, value);
+}
+
+void material::set_int(const std::string &name, int value) {
+    auto uniform = uniform_value();
+    uniform.int_value = value;
+    uniforms[name] = uniform;
+    material_shader->use();
+    material_shader->set_int(name, value);
+}
+
+void material::set_float(const std::string &name, float value) {
+    auto uniform = uniform_value();
+    uniform.float_value = value;
+    uniforms[name] = uniform;
+    material_shader->use();
+    material_shader->set_float(name, value);
+}
+
+void material::set_vector(const std::string &name, glm::vec2 value) {
+    auto uniform = uniform_value();
+    uniform.vec2_value = value;
+    uniforms[name] = uniform;
+    material_shader->use();
+    material_shader->set_vector(name, value);
+}
+
+void material::set_vector(const std::string &name, glm::vec3 value) {
+    auto uniform = uniform_value();
+    uniform.vec3_value = value;
+    uniforms[name] = uniform;
+    material_shader->use();
+    material_shader->set_vector(name, value);
+}
+
+void material::set_vector(const std::string &name, glm::vec4 value) {
+    auto uniform = uniform_value();
+    uniform.vec4_value = value;
+    uniforms[name] = uniform;
+    material_shader->use();
+    material_shader->set_vector(name, value);
+}
+
+void material::set_matrix(const std::string &name, glm::mat4 value) {
+    auto uniform = uniform_value();
+    uniform.mat4_value = value;
+    uniforms[name] = uniform;
+    material_shader->use();
+    material_shader->set_matrix(name, value);
+}
+

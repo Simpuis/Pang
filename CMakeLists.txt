@@ -57,6 +57,12 @@ add_library(OpenGLPongLib
         src/serialization/serializers/mesh_serializer.h
         src/serialization/serializers/buffer_serializer.cpp
         src/serialization/serializers/buffer_serializer.h
+        src/serialization/serializers/material_serializer.cpp
+        src/serialization/serializers/material_serializer.h
+        src/serialization/serializers/texture_serializer.cpp
+        src/serialization/serializers/texture_serializer.h
+        src/serialization/serializers/sampler_serializer.h
+        src/serialization/serializers/image_serializer.h
 )
 
 find_package(EnTT CONFIG REQUIRED)

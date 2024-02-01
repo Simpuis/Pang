@@ -8,6 +8,8 @@
 #include "src/flecs_modules/transformation/transformation.h"
 #include "src/flecs_modules/rendering/rendering.h"
 #include "src/serialization/serializers/mesh_serializer.h"
+#include "src/serialization/serializers/material_serializer.h"
+#include "src/serialization/serializers/texture_serializer.h"
 
 void renderer::render_scene(const camera& main_cam, const flecs::world& world,
                             GLFWwindow* window) //const
@@ -16,16 +18,18 @@ void renderer::render_scene(const camera& main_cam, const flecs::world& world,
     glClear(GL_COLOR_BUFFER_BIT);
 
     const auto* mesh_lookup = world.get<mesh_table>();
+    auto* material_lookup = world.get_mut<material_table>();
+    auto* texture_lookup = world.get_mut<texture_table>();
     world.each([&](
             const position& pos,
             const rotation& rot,
             const scale& local_scale,
             const mesh_component& mesh_comp) {
         for(auto& primitive : mesh_lookup->table.at(mesh_comp.mesh)->primitives) {
-            const material *mat = primitive.mat.get();
+            const material *mat = material_lookup->table.at(primitive.material_index).get();
 
-            for (auto &[key, value]: mat->get_texture()) {
-                value->bind(key);
+            for (auto &[key, value]: mat->textures) {
+                texture_lookup->table.at(value.index)->bind(0);
             }
             mat->material_shader->use();
 

@@ -1,3 +1,4 @@
+#include <gsl/util>
 #include "texture.h"
 
 void texture::bind(int unit)
@@ -13,9 +14,21 @@ void texture::unbind()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+tinygltf::Texture texture::serialize() {
+    tinygltf::Texture serialized_texture;
+
+    serialized_texture.source = gsl::narrow_cast<int>(source_index);
+    serialized_texture.sampler = gsl::narrow_cast<int>(sampler_index);
+    serialized_texture.name = name;
+
+    return serialized_texture;
+}
+
 std::shared_ptr<texture> texture::deserialize(const tinygltf::Model &model, const tinygltf::Texture &gltf_texture) {
     auto tex = std::make_shared<texture>();
-
+    tex->source_index = gltf_texture.source;
+    tex->sampler_index = gltf_texture.sampler;
+    tex->name = gltf_texture.name;
     const auto& image = model.images[gltf_texture.source];
 
     glGenTextures(1, &tex->id_);

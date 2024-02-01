@@ -18,12 +18,15 @@ struct primitive {
     unsigned int VAO = 0;
     unsigned int EBO = 0;
 
+    std::map<std::string, int> attributes;
+    unsigned int indices;
+
     size_t count;
     size_t byte_offset;
     unsigned int indices_component_type;
     unsigned int mode;
 
-    std::shared_ptr<material> mat;
+    unsigned int material_index;
 };
 
 /**
@@ -36,9 +39,9 @@ public:
 public:
     std::vector<primitive> primitives;
 
-    static std::shared_ptr<mesh> deserialize(const tinygltf::Model& model, const tinygltf::Mesh& mesh_to_load,
-                            std::map<unsigned int, std::shared_ptr<material>>& material_lookup);
+    tinygltf::Mesh serialize();
+    static std::shared_ptr<mesh> deserialize(const tinygltf::Model& model, const tinygltf::Mesh& mesh_to_load);
 
 private:
-    void setup_gltf_mesh(const tinygltf::Model& model, const tinygltf::Mesh& mesh_to_load, std::map<unsigned int, std::shared_ptr<material>>& material_lookup);
+    void setup_gltf_mesh(const tinygltf::Model& model, const tinygltf::Mesh& mesh_to_load);
 };

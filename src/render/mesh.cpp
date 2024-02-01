@@ -3,21 +3,21 @@
 #include "material.h"
 #include "shader.h"
 
-std::shared_ptr<mesh> mesh::deserialize(const tinygltf::Model& model, const tinygltf::Mesh& mesh_to_load,
-                       std::map<unsigned int, std::shared_ptr<material>>& material_lookup) {
+std::shared_ptr<mesh> mesh::deserialize(const tinygltf::Model& model, const tinygltf::Mesh& mesh_to_load) {
     auto deserialized_mesh = std::make_shared<mesh>();
-    deserialized_mesh->setup_gltf_mesh(model, mesh_to_load, material_lookup);
+    deserialized_mesh->setup_gltf_mesh(model, mesh_to_load);
     return deserialized_mesh;
 }
 
-void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& mesh_to_load, std::map<unsigned int, std::shared_ptr<material>>& material_lookup) {
+void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& mesh_to_load) {
     for(const auto& gltf_primitive : mesh_to_load.primitives) {
         primitive mesh_primitive;
         mesh_primitive.mode = gltf_primitive.mode;
+        mesh_primitive.attributes = gltf_primitive.attributes;
         glGenVertexArrays(1, &mesh_primitive.VAO);
         glBindVertexArray(mesh_primitive.VAO);
 
-        for(const auto& attribute : gltf_primitive.attributes) {
+        for(const auto& attribute : mesh_primitive.attributes) {
             const auto& accessor = model.accessors[attribute.second];
             const auto& buffer_view = model.bufferViews[accessor.bufferView];
             const auto& buffer = model.buffers[buffer_view.buffer];
@@ -45,6 +45,7 @@ void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& m
             glGenBuffers(1, &mesh_primitive.EBO);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_primitive.EBO);
 
+            mesh_primitive.indices = gltf_primitive.indices;
             const auto &accessor = model.accessors[gltf_primitive.indices];
             const auto &buffer_view = model.bufferViews[accessor.bufferView];
             const auto &buffer = model.buffers[buffer_view.buffer];
@@ -58,17 +59,21 @@ void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& m
 
         glBindVertexArray(0);
 
-        if(gltf_primitive.material < 0) {
-            mesh_primitive.mat = std::make_shared<material>();
-        }
-        else if(material_lookup.count(gltf_primitive.material) <= 0) {
-            material_lookup.insert({gltf_primitive.material, material::deserialize(model, model.materials[gltf_primitive.material])});
-            mesh_primitive.mat = material_lookup[gltf_primitive.material];
-        }
-        else {
-            mesh_primitive.mat = material_lookup[gltf_primitive.material];
-        }
+        mesh_primitive.material_index = gltf_primitive.material;
 
         primitives.push_back(mesh_primitive);
     }
+}
+
+tinygltf::Mesh mesh::serialize() {
+    tinygltf::Mesh serialized_mesh;
+    for(const auto& primitive : primitives) {
+        tinygltf::Primitive serialized_primitive;
+        serialized_primitive.mode = primitive.mode;
+        serialized_primitive.attributes = primitive.attributes;
+        serialized_primitive.indices = primitive.indices;
+        serialized_primitive.material = primitive.material_index;
+    }
+
+    return serialized_mesh;
 }

@@ -5,15 +5,16 @@
 #include <memory>
 #include <tiny_gltf.h>
 #include <flecs.h>
+#include "src/serialization/scene_serializer.h"
 
 class mesh;
 
 struct mesh_table {
-    std::map<unsigned int, std::shared_ptr<mesh>> table;
+    std::vector<std::shared_ptr<mesh>> table;
 };
 
 class mesh_serializer {
 public:
-    static void save(const flecs::world& world, tinygltf::Model& model, std::map<const flecs::entity, gsl::index>& entity_node_map);
-    static void load(flecs::world& world, const tinygltf::Model& model, std::map<gsl::index, flecs::entity>& node_entity_map);
+    static void save(serializer_save_data& save_data);
+    static void load(serializer_load_data& load_data);
 };

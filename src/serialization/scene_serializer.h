@@ -12,16 +12,33 @@
 #include "src/render/renderer.h"
 #include "src/flecs_modules/rendering/rendering.h"
 
+struct serializer_save_data {
+    serializer_save_data(tinygltf::Model& model,
+                         std::map<const flecs::entity, gsl::index>& entity_node_map,
+                         const flecs::world& world)
+                         : model(model), entity_node_map(entity_node_map), world(world) {}
+
+    tinygltf::Model& model;
+    std::map<const flecs::entity, gsl::index>& entity_node_map;
+    const flecs::world& world;
+};
+
+struct serializer_load_data {
+    serializer_load_data(const tinygltf::Model& model,
+                         std::map<gsl::index, flecs::entity>& node_entity_map,
+                         flecs::world& world)
+                         : model(model), node_entity_map(node_entity_map), world(world) {}
+
+    const tinygltf::Model& model;
+    std::map<gsl::index, flecs::entity>& node_entity_map;
+    flecs::world& world;
+};
+
 template<typename T>
-concept serializer_type = requires(tinygltf::Model &model_save,
-        std::map<const flecs::entity, gsl::index> & map_save,
-        const flecs::world &world_save,
-        const tinygltf::Model &model_load,
-        std::map<gsl::index, flecs::entity>& map_load,
-        flecs::world &world_load)
+concept serializer_type = requires(serializer_save_data& save_data, serializer_load_data& load_data)
 {
-    T::save(world_save, model_save, map_save);
-    T::load(world_load, model_load, map_load);
+    T::save(save_data);
+    T::load(load_data);
 };
 
 class scene_serializer {
@@ -54,19 +71,19 @@ public:
             entity_node_map.insert({entity, node_index});
         });
 
-        save<Serializer_Ts...>(world, model, entity_node_map);
+        serializer_save_data save_data(model, entity_node_map, world);
+        save<Serializer_Ts...>(save_data);
 
         tinygltf::TinyGLTF saver;
         saver.WriteGltfSceneToFile(&model, filename.c_str(), true, true, true, false);
     }
 
     template<serializer_type T, serializer_type... Serializer_Ts>
-    void save(const flecs::world &world, tinygltf::Model &model,
-              std::map<const flecs::entity, gsl::index> &entity_node_map) {
-        T::save(world, model, entity_node_map);
+    void save(serializer_save_data& save_data) {
+        T::save(save_data);
 
         if constexpr (sizeof...(Serializer_Ts) > 0) {
-            save<Serializer_Ts...>(world, model, entity_node_map);
+            save<Serializer_Ts...>(save_data);
         }
     }
 
@@ -80,16 +97,16 @@ public:
             node_entity_map.insert({i, entity});
         }
 
-        load<Serializer_Ts...>(world, model, node_entity_map);
+        serializer_load_data load_data(model, node_entity_map, world);
+        load<Serializer_Ts...>(load_data);
     }
 
     template<serializer_type T, serializer_type... Serializer_Ts>
-    void load(flecs::world &world, tinygltf::Model &model,
-              std::map<gsl::index, flecs::entity> &node_entity_map) {
-        T::load(world, model, node_entity_map);
+    void load(serializer_load_data& load_data) {
+        T::load(load_data);
 
         if constexpr (sizeof...(Serializer_Ts) > 0) {
-            load<Serializer_Ts...>(world, model, node_entity_map);
+            load<Serializer_Ts...>(load_data);
         }
     }
 
