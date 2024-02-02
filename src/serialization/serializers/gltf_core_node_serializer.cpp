@@ -23,6 +23,10 @@ void gltf_core_node_serializer::save(serializer_save_data& save_data) {
             node->scale.push_back(local_scale->local_scale.y);
             node->scale.push_back(local_scale->local_scale.z);
         }
+
+        if(auto* mesh_comp = pair.first.get<mesh_component>(); mesh_comp) {
+            node->mesh = mesh_comp->mesh;
+        }
     }
 }
 

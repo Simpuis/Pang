@@ -53,6 +53,8 @@ tinygltf::Material material::serialize() {
         pbr_metallic_roughness.metallicRoughnessTexture = (tinygltf::TextureInfo) textures["metallicRoughnessTexture"];
     }
 
+    serialized_material.pbrMetallicRoughness = pbr_metallic_roughness;
+
     return serialized_material;
 }
 

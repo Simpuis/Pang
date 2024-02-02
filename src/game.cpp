@@ -141,7 +141,7 @@ void game::setup_world() {
                                       image_serializer,
                                       material_serializer,
                                       sampler_serializer,
-                                      texture_serializer>(world_, "untitled.gltf", scene_serializer::gltf_file_type::ascii);
+                                      texture_serializer>(world_, "untitled1.gltf", scene_serializer::gltf_file_type::ascii);
     world_.set<freefly_camera>(main_camera);
 
     scene_loader.save_scene_to_file<gltf_core_node_serializer,
@@ -150,5 +150,5 @@ void game::setup_world() {
                                     image_serializer,
                                     material_serializer,
                                     sampler_serializer,
-                                    texture_serializer>(world_, "untitled1.gltf");
+                                    texture_serializer>(world_, "untitled2.gltf");
 }

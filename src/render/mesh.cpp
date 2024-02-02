@@ -73,6 +73,7 @@ tinygltf::Mesh mesh::serialize() {
         serialized_primitive.attributes = primitive.attributes;
         serialized_primitive.indices = primitive.indices;
         serialized_primitive.material = primitive.material_index;
+        serialized_mesh.primitives.push_back(std::move(serialized_primitive));
     }
 
     return serialized_mesh;
