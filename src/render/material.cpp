@@ -20,25 +20,22 @@ std::shared_ptr<material> material::deserialize(const tinygltf::Model& model, co
     mat->set_float("metallicFactor", gsl::narrow_cast<float>(pbr_metallic_roughness.metallicFactor));
     mat->set_float("roughnessFactor", gsl::narrow_cast<float>(pbr_metallic_roughness.roughnessFactor));
 
-    if(pbr_metallic_roughness.baseColorTexture.index >= 0) {
-        mat->textures["baseColorTexture"] = texture_info(pbr_metallic_roughness.baseColorTexture);
-        mat->set_int("baseColorTexture", 0);
-        mat->set_bool("useBaseColorTexture", true);
-    }
-    else {
-        mat->set_bool("useBaseColorTexture", false);
-    }
-
-    if(pbr_metallic_roughness.metallicRoughnessTexture.index >= 0) {
-        mat->textures["metallicRoughnessTexture"] = texture_info(pbr_metallic_roughness.metallicRoughnessTexture);
-        mat->set_int("metallicRoughnessTexture", 1);
-        mat->set_bool("useMetallicRoughnessTexture", true);
-    }
-    else {
-        mat->set_bool("useMetallicRoughnessTexture", false);
-    }
+    mat->apply_texture_uniform("baseColorTexture", "useBaseColorTexture", pbr_metallic_roughness.baseColorTexture);
+    mat->apply_texture_uniform("metallicRoughnessTexture", "useMetallicRoughnessTexture", pbr_metallic_roughness.metallicRoughnessTexture);
 
     return mat;
+}
+
+void material::apply_texture_uniform(const std::string &texture_uniform, const std::string &use_uniform,
+                                     const tinygltf::TextureInfo &tex) {
+    if(tex.index > 0) {
+        textures[texture_uniform] = texture_info(tex);
+        set_int(texture_uniform, 0);
+        set_bool(use_uniform, true);
+    }
+    else {
+        set_bool(use_uniform, false);
+    }
 }
 
 tinygltf::Material material::serialize() {

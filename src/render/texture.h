@@ -19,4 +19,8 @@ public:
     unsigned int sampler_index;
 private:
     unsigned int id_;
+
+    static GLenum get_texture_format(int component);
+
+    static void configure_sampling(const tinygltf::Sampler &sampler);
 };

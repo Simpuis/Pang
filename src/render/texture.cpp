@@ -34,28 +34,9 @@ std::shared_ptr<texture> texture::deserialize(const tinygltf::Model &model, cons
     glGenTextures(1, &tex->id_);
     glBindTexture(GL_TEXTURE_2D, tex->id_);
 
-    {
-        const auto &sampler = model.samplers[gltf_texture.sampler];
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, sampler.wrapS);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, sampler.wrapT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampler.minFilter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampler.magFilter);
-    }
+    configure_sampling(model.samplers[gltf_texture.sampler]);
 
-    GLenum format;
-    if(image.component == 1) {
-        format = GL_RED;
-    }
-    else if(image.component == 2) {
-        format = GL_RG;
-    }
-    else if(image.component == 3) {
-        format = GL_RGB;
-    }
-    else if(image.component == 4) {
-        format = GL_RGBA;
-    }
+    GLenum format = get_texture_format(image.component);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, format, image.pixel_type,
                  &image.image.at(0));
@@ -64,4 +45,29 @@ std::shared_ptr<texture> texture::deserialize(const tinygltf::Model &model, cons
     glBindTexture(GL_TEXTURE_2D, 0);
 
     return tex;
+}
+
+void texture::configure_sampling(const tinygltf::Sampler &sampler) {
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, sampler.wrapS);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, sampler.wrapT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampler.minFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampler.magFilter);
+}
+
+GLenum texture::get_texture_format(int component) {
+    GLenum format;
+    if(component == 1) {
+        format = GL_RED;
+    }
+    else if(component == 2) {
+        format = GL_RG;
+    }
+    else if(component == 3) {
+        format = GL_RGB;
+    }
+    else if(component == 4) {
+        format = GL_RGBA;
+    }
+    return format;
 }

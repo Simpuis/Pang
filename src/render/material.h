@@ -81,5 +81,6 @@ public:
     std::unique_ptr<shader> material_shader;
     std::map<std::string, uniform_value> uniforms;
 private:
-
+    void apply_texture_uniform(const std::string &texture_uniform, const std::string &use_uniform,
+                               const tinygltf::TextureInfo &tex);
 };
