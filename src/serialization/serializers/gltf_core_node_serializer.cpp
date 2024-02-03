@@ -1,6 +1,7 @@
 #include "gltf_core_node_serializer.h"
 
 #include "src/flecs_modules/transformation/transformation.h"
+#include "src/flecs_modules/rendering/rendering.h"
 
 void gltf_core_node_serializer::save(serializer_save_data& save_data) {
     for(auto pair : save_data.entity_node_map) {

@@ -9,12 +9,22 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <tiny_gltf.h>
+#include <optional>
 
 #include "editor/editor.h"
 #include "input_handler.h"
 #include "src/render/freefly_camera.h"
 #include "src/serialization/scene_serializer.h"
 #include "src/render/renderer.h"
+#include "src/serialization/scene_manager.h"
+#include "src/serialization/serializers/gltf_core_node_serializer.h"
+#include "src/serialization/serializers/buffer_serializer.h"
+#include "src/serialization/serializers/mesh_serializer.h"
+#include "src/serialization/serializers/image_serializer.h"
+#include "src/serialization/serializers/material_serializer.h"
+#include "src/serialization/serializers/sampler_serializer.h"
+#include "src/serialization/serializers/texture_serializer.h"
+#include "src/serialization/serializers/extension_serializer.h"
 
 /**
  * @brief The game class is the main class of the engine.
@@ -39,7 +49,11 @@ public:
      * @brief The main loop of the game
      *
      */
-    void loop();
+    void loop(unsigned int startup_scene = 0);
+    void setup_scenes(std::initializer_list<std::pair<unsigned int, std::string>> scene_filenames);
+    template<typename... Extension_Serializer_Ts>
+    void register_extension_types();
+    void setup_editor();
 
     freefly_camera main_camera;
     GLFWwindow* window_;
@@ -52,8 +66,17 @@ private:
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
     std::unique_ptr<input_handler> input_;
-    scene_serializer scene_loader;
+    std::unique_ptr<scene_manager> scene_manager_;
     flecs::world world_;
     renderer renderer_;
-    editor editor_;
+    std::optional<editor> editor_;
 };
+
+template<typename... Extension_Serializer_Ts>
+void game::register_extension_types() {
+    if(editor_) {
+        editor_->register_serializables<mesh_component, Extension_Serializer_Ts...>();
+    }
+
+    scene_manager_->get_serializer().register_serializer(std::make_unique<extension_serializer<Extension_Serializer_Ts...>>());
+}

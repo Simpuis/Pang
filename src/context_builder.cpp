@@ -21,9 +21,12 @@ context_builder &context_builder::set_editor(bool is_editor) {
     return *this;
 }
 
-context_builder &context_builder::launch() {
+std::unique_ptr<game> context_builder::build() {
     auto context = std::make_unique<game>(window_width_, window_height_, window_title_);
-    context->loop();
 
-    return *this;
+    if(is_editor_) {
+        context->setup_editor();
+    }
+
+    return context;
 }

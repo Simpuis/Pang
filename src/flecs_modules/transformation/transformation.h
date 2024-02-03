@@ -6,6 +6,8 @@
 #include <tiny_gltf.h>
 #include <flecs.h>
 
+#include "src/serialization/serializable.h"
+
 struct position {
     position() = default;
     explicit position(glm::vec3 pos) : pos(pos) {}
@@ -13,6 +15,16 @@ struct position {
 
     glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
 };
+
+REFL_TYPE(glm::vec3, bases<>)
+    REFL_FIELD(x, serializable())
+    REFL_FIELD(y, serializable())
+    REFL_FIELD(z, serializable())
+REFL_END
+
+REFL_TYPE(position, bases<>)
+    REFL_FIELD(pos, serializable())
+REFL_END
 
 
 struct rotation {
@@ -22,6 +34,17 @@ struct rotation {
     glm::quat rot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 };
 
+REFL_TYPE(glm::quat, bases<>)
+        REFL_FIELD(x, serializable())
+        REFL_FIELD(y, serializable())
+        REFL_FIELD(z, serializable())
+        REFL_FIELD(w, serializable())
+REFL_END
+
+REFL_TYPE(rotation, bases<>)
+        REFL_FIELD(rot, serializable())
+REFL_END
+
 
 struct scale {
     scale() = default;
@@ -30,6 +53,9 @@ struct scale {
     glm::vec3 local_scale = glm::vec3(1.0f, 1.0f, 1.0f);
 };
 
+REFL_TYPE(scale, bases<>)
+        REFL_FIELD(local_scale, serializable())
+REFL_END
 
 struct transformation {
     explicit transformation(flecs::world& world);

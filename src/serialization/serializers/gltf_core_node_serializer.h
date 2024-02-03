@@ -4,10 +4,11 @@
 #include <gsl/gsl>
 #include <tiny_gltf.h>
 #include <flecs.h>
-#include "src/serialization/scene_serializer.h"
 
-class gltf_core_node_serializer {
+#include "serializer.h"
+
+class gltf_core_node_serializer : public serializer{
 public:
-    static void save(serializer_save_data& save_data);
-    static void load(serializer_load_data& load_data);
+    void save(serializer_save_data& save_data) override;
+    void load(serializer_load_data& load_data) override;
 };

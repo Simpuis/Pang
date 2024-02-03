@@ -49,8 +49,7 @@ add_library(OpenGLPongLib
         src/context_builder.h
         src/flecs_modules/rendering/rendering.cpp
         src/flecs_modules/rendering/rendering.h
-        src/serialization/serializers/node_extension_serializer.cpp
-        src/serialization/serializers/node_extension_serializer.h
+        src/serialization/serializers/extension_serializer.h
         src/serialization/serializers/gltf_core_node_serializer.cpp
         src/serialization/serializers/gltf_core_node_serializer.h
         src/serialization/serializers/mesh_serializer.cpp
@@ -63,6 +62,8 @@ add_library(OpenGLPongLib
         src/serialization/serializers/texture_serializer.h
         src/serialization/serializers/sampler_serializer.h
         src/serialization/serializers/image_serializer.h
+        src/serialization/scene_manager.h
+        src/serialization/scene_manager.cpp
 )
 
 find_package(EnTT CONFIG REQUIRED)

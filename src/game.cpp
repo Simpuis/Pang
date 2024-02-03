@@ -3,13 +3,6 @@
 #include <nlohmann/json.hpp>
 
 #include "gl_debug.h"
-#include "src/serialization/serializers/gltf_core_node_serializer.h"
-#include "src/serialization/serializers/buffer_serializer.h"
-#include "src/serialization/serializers/mesh_serializer.h"
-#include "src/serialization/serializers/image_serializer.h"
-#include "src/serialization/serializers/material_serializer.h"
-#include "src/serialization/serializers/sampler_serializer.h"
-#include "src/serialization/serializers/texture_serializer.h"
 #include "src/render/material.h"
 #include "src/render/texture.h"
 #include "src/render/shader.h"
@@ -37,8 +30,12 @@ void game::framebuffer_size_callback(GLFWwindow* window, const int width, const 
     glViewport(0, 0, width, height);
 }
 
-void game::loop()
+void game::loop(unsigned int startup_scene)
 {
+    if(scene_manager_) {
+        scene_manager_->load_scene(world_, startup_scene);
+    }
+
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
@@ -48,26 +45,16 @@ void game::loop()
 
     main_camera.init(window_);
 
-    /*
-    if(auto* materials = world_.get_mut<material_table>(); materials) {
-        if(const auto* textures = world_.get<texture_table>(); textures) {
-            for(auto& material : materials->table) {
-                for(auto pair : material->textures) {
-                    auto tex = textures->table[pair.second.index];
-                    material->material_shader->set_int(pair.first, )
-                }
-            }
-        }
-    }*/
-
     double lastFrameTime = glfwGetTime();
     while (!glfwWindowShouldClose(window_)) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::ShowDemoWindow();
 
-        editor_.update(io, world_);
+        if(editor_) {
+            ImGui::ShowDemoWindow();
+            editor_->update(io, world_);
+        }
 
         const double currentFrameTime = glfwGetTime();
         const double delta = currentFrameTime - lastFrameTime;
@@ -134,21 +121,14 @@ void game::setup_world() {
 
     world_.import<transformation>();
     world_.import<rendering>();
-
-    scene_loader.load_scene_from_file<gltf_core_node_serializer,
-                                      buffer_serializer,
-                                      mesh_serializer,
-                                      image_serializer,
-                                      material_serializer,
-                                      sampler_serializer,
-                                      texture_serializer>(world_, "untitled1.gltf", scene_serializer::gltf_file_type::ascii);
     world_.set<freefly_camera>(main_camera);
-
-    scene_loader.save_scene_to_file<gltf_core_node_serializer,
-                                    buffer_serializer,
-                                    mesh_serializer,
-                                    image_serializer,
-                                    material_serializer,
-                                    sampler_serializer,
-                                    texture_serializer>(world_, "untitled2.gltf");
 }
+
+void game::setup_scenes(std::initializer_list<std::pair<unsigned int, std::string>> scene_filenames) {
+    scene_manager_ = std::make_unique<scene_manager>(scene_filenames);
+}
+
+void game::setup_editor() {
+    editor_ = editor();
+}
+
