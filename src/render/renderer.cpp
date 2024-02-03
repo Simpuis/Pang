@@ -25,27 +25,29 @@ void renderer::render_scene(const camera& main_cam, const flecs::world& world,
             const rotation& rot,
             const scale& local_scale,
             const mesh_component& mesh_comp) {
-        for(auto& primitive : mesh_lookup->table.at(mesh_comp.mesh)->primitives) {
-            const material *mat = material_lookup->table.at(primitive.material_index).get();
+        if(mesh_comp.mesh >= 0 && mesh_comp.mesh < mesh_lookup->table.size()) {
+            for (auto &primitive: mesh_lookup->table.at(mesh_comp.mesh)->primitives) {
+                const material *mat = material_lookup->table.at(primitive.material_index).get();
 
-            for (auto &[key, value]: mat->textures) {
-                texture_lookup->table.at(value.index)->bind(mat->uniforms.at(key).int_value);
+                for (auto &[key, value]: mat->textures) {
+                    texture_lookup->table.at(value.index)->bind(mat->uniforms.at(key).int_value);
+                }
+                mat->material_shader->use();
+
+                mat->material_shader->set_matrix("model", transformation::model(pos, rot, local_scale));
+
+                mat->material_shader->set_matrix("view", main_cam.get_view_matrix());
+
+                glm::mat4 projection_matrix;
+                projection_matrix = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+                mat->material_shader->set_matrix("projection", projection_matrix);
+
+                glBindVertexArray(primitive.VAO);
+                glDrawElements(primitive.mode, primitive.count, primitive.indices_component_type, nullptr);
+
+                glBindVertexArray(0);
+                glUseProgram(0);
             }
-            mat->material_shader->use();
-
-            mat->material_shader->set_matrix("model", transformation::model(pos, rot, local_scale));
-
-            mat->material_shader->set_matrix("view", main_cam.get_view_matrix());
-
-            glm::mat4 projection_matrix;
-            projection_matrix = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-            mat->material_shader->set_matrix("projection", projection_matrix);
-
-            glBindVertexArray(primitive.VAO);
-            glDrawElements(primitive.mode, primitive.count, primitive.indices_component_type, nullptr);
-
-            glBindVertexArray(0);
-            glUseProgram(0);
         }
     });
 }
