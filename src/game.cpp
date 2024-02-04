@@ -39,6 +39,8 @@ void game::loop(unsigned int startup_scene)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     ImGui_ImplGlfw_InitForOpenGL(window_, true);
     ImGui_ImplOpenGL3_Init();
@@ -52,7 +54,6 @@ void game::loop(unsigned int startup_scene)
         ImGui::NewFrame();
 
         if(editor_) {
-            ImGui::ShowDemoWindow();
             editor_->update(io, world_);
         }
 

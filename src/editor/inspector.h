@@ -70,31 +70,17 @@ class inspector : public editor_element {
         }
     }
 
-    void tick(flecs::world& world) override {
+    void tick(flecs::world& world, shared_editor_state& shared_state) override {
         if(ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_MenuBar)) {
-            static flecs::entity selected;
-            {
-                ImGui::BeginChild("left pane", ImVec2(150, 0), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeX);
-                world.each<position>([&](flecs::entity e, position &pos) {
-                    if (e.name().size() > 0) {
-                        if (ImGui::Selectable(e.name(), e == selected)) {
-                            selected = e;
-                        }
-                    }
-                });
-                ImGui::EndChild();
-            }
-            ImGui::SameLine();
-
             static bool has_changed_entity = false;
-            if(selected) {
+            if(shared_state.selected_entity) {
                 ImGui::BeginGroup();
                 ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
-                ImGui::Text("%s", selected.name().c_str());
+                ImGui::Text("%s", shared_state.selected_entity.name().c_str());
                 ImGui::Separator();
                 if(ImGui::BeginTabBar("#Tabs", ImGuiTabBarFlags_None)) {
                     if(ImGui::BeginTabItem("Inspect")) {
-                        draw_serializables<Serializable_Ts...>(selected);
+                        draw_serializables<Serializable_Ts...>(shared_state.selected_entity);
                         ImGui::EndTabItem();
                     }
                     ImGui::EndTabBar();
