@@ -42,6 +42,7 @@ void scene_manager::update() {
         else {
             serializer.save_scene_to_file(main_world, scenes[loaded_scene]);
         }
+        main_world.remove<scene_save_command>();
     }
     if(main_world.has<new_scene_command>()) {
         load_scene("default.gltf");
