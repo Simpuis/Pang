@@ -6,6 +6,7 @@
 #include <refl.hpp>
 
 editor::editor() {
+    file_menu_element = std::make_unique<file_menu>();
     hierarchy = std::make_unique<scene_hierarchy>();
 }
 
@@ -17,7 +18,7 @@ void editor::update(ImGuiIO& imgui_io, flecs::world& registry)
     {
 	    if(ImGui::BeginMenu("File"))
 	    {
-		    
+            file_menu_element->tick(registry, shared_state);
 			ImGui::EndMenu();
 	    }
 

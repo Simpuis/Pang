@@ -17,8 +17,6 @@ game::game(int width, int height, const std::string& title)
 
     init_glfw_window(width, height, title);
     input_ = std::make_unique<input_handler>(input_handler());
-
-    setup_world();
 }
 
 game::~game()
@@ -33,7 +31,11 @@ void game::framebuffer_size_callback(GLFWwindow* window, const int width, const 
 void game::loop(unsigned int startup_scene)
 {
     if(scene_manager_) {
-        scene_manager_->load_scene(world_, startup_scene);
+        scene_manager_->load_scene(startup_scene);
+
+        scene_manager_->get_world().import<transformation>();
+        scene_manager_->get_world().import<rendering>();
+        scene_manager_->get_world().set<freefly_camera>(main_camera);
     }
 
     IMGUI_CHECKVERSION();
@@ -41,6 +43,7 @@ void game::loop(unsigned int startup_scene)
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.Fonts->AddFontFromFileTTF("InterVariable.ttf", 18);
 
     ImGui_ImplGlfw_InitForOpenGL(window_, true);
     ImGui_ImplOpenGL3_Init();
@@ -54,7 +57,7 @@ void game::loop(unsigned int startup_scene)
         ImGui::NewFrame();
 
         if(editor_) {
-            editor_->update(io, world_);
+            editor_->update(io, scene_manager_->get_world());
         }
 
         const double currentFrameTime = glfwGetTime();
@@ -68,10 +71,12 @@ void game::loop(unsigned int startup_scene)
         glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        renderer_.render_scene(main_camera, world_, window_);
+        renderer_.render_scene(main_camera, scene_manager_->get_world(), window_);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        scene_manager_->update();
 
         glfwSwapBuffers(window_);
         glfwPollEvents();
@@ -115,14 +120,6 @@ void game::init_glfw_window(const int width, const int height, const std::string
 void game::exit()
 {
     glfwSetWindowShouldClose(window_, true);
-}
-
-void game::setup_world() {
-    world_ = flecs::world();
-
-    world_.import<transformation>();
-    world_.import<rendering>();
-    world_.set<freefly_camera>(main_camera);
 }
 
 void game::setup_scenes(std::initializer_list<std::pair<unsigned int, std::string>> scene_filenames) {

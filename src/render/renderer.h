@@ -9,6 +9,14 @@
 #include <map>
 #include <memory>
 
+struct position;
+struct rotation;
+struct scale;
+struct mesh_component;
+struct mesh_table;
+struct material_table;
+struct texture_table;
+
 class mesh;
 class camera;
 
@@ -26,5 +34,16 @@ public:
      * @param registry The registry containing the entities to rendering
      * @param window The glfw window to rendering to
      */
-    void render_scene(const camera& main_camera, const flecs::world& world, GLFWwindow* window);
+    void render_scene(const camera& main_camera, flecs::world& world, GLFWwindow* window);
+
+private:
+    void rebuild_query(flecs::world& world);
+
+    flecs::query<const position,
+                 const rotation,
+                 const scale,
+                 const mesh_component,
+                 const mesh_table,
+                 const material_table,
+                 const texture_table> render_query;
 };

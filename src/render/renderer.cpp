@@ -11,26 +11,30 @@
 #include "src/serialization/serializers/material_serializer.h"
 #include "src/serialization/serializers/texture_serializer.h"
 
-void renderer::render_scene(const camera& main_cam, const flecs::world& world,
+void renderer::render_scene(const camera& main_cam, flecs::world& world,
                             GLFWwindow* window) //const
 {
     glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    const auto* mesh_lookup = world.get<mesh_table>();
-    auto* material_lookup = world.get_mut<material_table>();
-    auto* texture_lookup = world.get_mut<texture_table>();
-    world.each([&](
+    if(render_query.world() != world) {
+        rebuild_query(world);
+    }
+
+    render_query.each([&](
             const position& pos,
             const rotation& rot,
             const scale& local_scale,
-            const mesh_component& mesh_comp) {
-        if(mesh_comp.mesh >= 0 && mesh_comp.mesh < mesh_lookup->table.size()) {
-            for (auto &primitive: mesh_lookup->table.at(mesh_comp.mesh)->primitives) {
-                const material *mat = material_lookup->table.at(primitive.material_index).get();
+            const mesh_component& mesh_comp,
+            const mesh_table& mesh_lookup,
+            const material_table& material_lookup,
+            const texture_table& texture_lookup) {
+        if(mesh_comp.mesh >= 0 && mesh_comp.mesh < mesh_lookup.table.size()) {
+            for (auto &primitive: mesh_lookup.table.at(mesh_comp.mesh)->primitives) {
+                const material *mat = material_lookup.table.at(primitive.material_index).get();
 
                 for (auto &[key, value]: mat->textures) {
-                    texture_lookup->table.at(value.index)->bind(mat->uniforms.at(key).int_value);
+                    texture_lookup.table.at(value.index)->bind(mat->uniforms.at(key).int_value);
                 }
                 mat->material_shader->use();
 
@@ -50,4 +54,18 @@ void renderer::render_scene(const camera& main_cam, const flecs::world& world,
             }
         }
     });
+}
+
+void renderer::rebuild_query(flecs::world& world) {
+    render_query = world.query_builder<const position,
+                                       const rotation,
+                                       const scale,
+                                       const mesh_component,
+                                       const mesh_table,
+                                       const material_table,
+                                       const texture_table>()
+                                       .term_at(5).singleton()
+                                       .term_at(6).singleton()
+                                       .term_at(7).singleton()
+                                       .build();
 }

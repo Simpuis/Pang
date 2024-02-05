@@ -9,12 +9,18 @@ void freefly_camera::tick(GLFWwindow* window, double delta) {
     double delta_x = cam_x - cursor_x;
     double delta_y = cam_y - cursor_y;
 
-    if(abs(delta_x) > 0.00001 || abs(delta_y) > 0.00001) {
-        constexpr float rot_speed = 0.0000001f;
-        glm::quat rot1 = glm::angleAxis((float)(delta_x * rot_speed * delta), glm::vec3(0.0, 1.0, 0.0));
-        transform_matrix *= glm::mat4_cast(rot1);
-        glm::quat rot2 = glm::angleAxis((float)(delta_y * rot_speed * delta), glm::vec3(1.0, 0.0, 0.0));
-        local_trans *= glm::mat4_cast(rot2);
+    if(glfwGetMouseButton(window, 1) == GLFW_PRESS) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        if (abs(delta_x) > 0.00001 || abs(delta_y) > 0.00001) {
+            constexpr float rot_speed = 0.1f;
+            glm::quat rot1 = glm::angleAxis((float) (delta_x * rot_speed * delta), glm::vec3(0.0, 1.0, 0.0));
+            transform_matrix *= glm::mat4_cast(rot1);
+            glm::quat rot2 = glm::angleAxis((float) (delta_y * rot_speed * delta), glm::vec3(1.0, 0.0, 0.0));
+            local_trans *= glm::mat4_cast(rot2);
+        }
+    }
+    else if(glfwGetMouseButton(window, 1) == GLFW_RELEASE) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
     cam_x = cursor_x;
@@ -46,5 +52,4 @@ void freefly_camera::init(GLFWwindow* window) {
     transform_matrix = cam_matrix;
 
     glfwGetCursorPos(window, &cam_x, &cam_y);
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }

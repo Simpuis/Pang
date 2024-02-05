@@ -81,6 +81,12 @@ class inspector : public editor_element {
                 if(ImGui::BeginTabBar("#Tabs", ImGuiTabBarFlags_None)) {
                     if(ImGui::BeginTabItem("Inspect")) {
                         draw_serializables<Serializable_Ts...>(shared_state.selected_entity);
+                        if(ImGui::Button("Add Component##AddButton"))
+                            ImGui::OpenPopup("add_component_popup");
+                        if(ImGui::BeginPopup("add_component_popup")) {
+                            draw_add_component_options<Serializable_Ts...>(shared_state.selected_entity);
+                            ImGui::EndPopup();
+                        }
                         ImGui::EndTabItem();
                     }
                     ImGui::EndTabBar();
@@ -94,9 +100,18 @@ class inspector : public editor_element {
 
     template<typename Head_T, typename... Tail_Ts>
     void draw_serializables(flecs::entity selected_entity, int i = 0) {
-        if(Head_T* component = selected_entity.get_mut<Head_T>(); component) {
+        if(selected_entity.has<Head_T>()) {
+            Head_T* component = selected_entity.get_mut<Head_T>();
             constexpr auto type = refl::reflect<Head_T>();
             ImGui::Text("%s", type.name);
+            if(ImGui::BeginPopupContextItem(("Remove Component Popup " + std::to_string(i)).c_str())) {
+                if(ImGui::Selectable("Remove Component")) {
+                    selected_entity.remove<Head_T>();
+                    ImGui::EndPopup();
+                    return;
+                }
+                ImGui::EndPopup();
+            }
             for_each(refl::reflect(*component).members, [&](auto member) {
                 if constexpr (is_readable(member) && refl::descriptor::has_attribute<serializable>(member)) {
                     ImGui::Text("%s", get_display_name(member));
@@ -110,6 +125,23 @@ class inspector : public editor_element {
         }
         if constexpr (sizeof...(Tail_Ts) > 0) {
             draw_serializables<Tail_Ts...>(selected_entity, i + 1);
+        }
+    }
+
+    template<typename Head_T, typename... Tail_Ts>
+    void draw_add_component_options(flecs::entity selected_entity, int i = 0) {
+        const Head_T* component = selected_entity.get<Head_T>();
+        if(component) ImGui::BeginDisabled(true);
+
+        constexpr auto type = refl::reflect<Head_T>();
+        if(ImGui::Selectable(type.name.c_str())) {
+            selected_entity.add<Head_T>();
+        }
+
+        if(component) ImGui::EndDisabled();
+
+        if constexpr(sizeof...(Tail_Ts) > 0) {
+            draw_add_component_options<Tail_Ts...>(selected_entity, i + 1);
         }
     }
 };

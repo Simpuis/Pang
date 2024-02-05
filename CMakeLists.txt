@@ -18,6 +18,7 @@ find_package(nlohmann_json CONFIG REQUIRED)
 find_package(Microsoft.GSL CONFIG REQUIRED)
 find_package(flecs CONFIG REQUIRED)
 find_package(imguizmo CONFIG REQUIRED)
+find_package(unofficial-nativefiledialog CONFIG REQUIRED)
 
 add_library(OpenGLPongLib
         src/editor/editor.cpp
@@ -66,6 +67,9 @@ add_library(OpenGLPongLib
         src/serialization/scene_manager.h
         src/serialization/scene_manager.cpp
         src/editor/scene_hierarchy.h
+        src/editor/file_menu.h
+        src/world.h
+        src/world.cpp
 )
 
 find_package(EnTT CONFIG REQUIRED)
@@ -80,6 +84,7 @@ target_link_libraries(OpenGLPongLib nlohmann_json::nlohmann_json)
 target_link_libraries(OpenGLPongLib Microsoft.GSL::GSL)
 target_link_libraries(OpenGLPongLib $<IF:$<TARGET_EXISTS:flecs::flecs>,flecs::flecs,flecs::flecs_static>)
 target_link_libraries(OpenGLPongLib imguizmo::imguizmo)
+target_link_libraries(OpenGLPongLib unofficial::nativefiledialog::nfd)
 
 add_executable(OpenGLPong src/main.cpp
 )
