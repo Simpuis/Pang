@@ -1,6 +1,7 @@
 #include "texture_serializer.h"
 
 #include "src/render/texture.h"
+#include "src/flecs_modules/rendering/rendering.h"
 
 void texture_serializer::save(serializer_save_data& save_data) {
     if(!save_data.world.has<texture_table>()) return;

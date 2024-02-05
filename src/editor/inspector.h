@@ -73,7 +73,7 @@ class inspector : public editor_element {
     void tick(flecs::world& world, shared_editor_state& shared_state) override {
         if(ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_MenuBar)) {
             static bool has_changed_entity = false;
-            if(shared_state.selected_entity) {
+            if(world.is_valid(shared_state.selected_entity)) {
                 ImGui::BeginGroup();
                 ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
                 ImGui::Text("%s", shared_state.selected_entity.name().c_str());

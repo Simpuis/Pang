@@ -6,6 +6,7 @@
 #include "src/render/material.h"
 #include "src/render/texture.h"
 #include "src/render/shader.h"
+#include "src/flecs_modules/freefly_camera/freefly.h"
 
 game::game(int width, int height, const std::string& title)
 {
@@ -34,8 +35,9 @@ void game::loop(unsigned int startup_scene)
         scene_manager_->load_scene(startup_scene);
 
         scene_manager_->get_world().import<transformation>();
+        scene_manager_->get_world().import<freefly>();
         scene_manager_->get_world().import<rendering>();
-        scene_manager_->get_world().set<freefly_camera>(main_camera);
+        scene_manager_->get_world().set<freefly_camera>({});
     }
 
     IMGUI_CHECKVERSION();
@@ -48,13 +50,13 @@ void game::loop(unsigned int startup_scene)
     ImGui_ImplGlfw_InitForOpenGL(window_, true);
     ImGui_ImplOpenGL3_Init();
 
-    main_camera.init(window_);
-
     double lastFrameTime = glfwGetTime();
     while (!glfwWindowShouldClose(window_)) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        input_->process_input(scene_manager_->get_world(), window_);
 
         if(editor_) {
             editor_->update(io, scene_manager_->get_world());
@@ -64,14 +66,7 @@ void game::loop(unsigned int startup_scene)
         const double delta = currentFrameTime - lastFrameTime;
         lastFrameTime = currentFrameTime;
 
-        input_->process_input(window_);
-
-        main_camera.tick(window_, delta);
-
-        glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        renderer_.render_scene(main_camera, scene_manager_->get_world(), window_);
+        scene_manager_->get_world().progress(delta);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -86,6 +81,7 @@ void game::loop(unsigned int startup_scene)
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
+
 
 void game::init_glfw_window(const int width, const int height, const std::string& title)
 {
@@ -129,4 +125,5 @@ void game::setup_scenes(std::initializer_list<std::pair<unsigned int, std::strin
 void game::setup_editor() {
     editor_ = editor();
 }
+
 

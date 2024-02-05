@@ -86,7 +86,7 @@ struct transformation {
     }
 
     inline constexpr static glm::vec3 global_right() {
-        constexpr glm::vec3 global_right = glm::vec3(-1.0f, 0.0f, 0.0f);
+        constexpr glm::vec3 global_right = glm::vec3(1.0f, 0.0f, 0.0f);
         return global_right;
     }
     inline static glm::vec3 right(const position& pos, const rotation& rot, const scale& scale) {

@@ -9,7 +9,6 @@
 
 #include "src/flecs_modules/transformation/transformation.h"
 #include "src/render/mesh.h"
-#include "src/render/renderer.h"
 #include "src/flecs_modules/rendering/rendering.h"
 #include "serializers/serializer.h"
 

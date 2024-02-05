@@ -8,12 +8,6 @@
 
 #include "serializer.h"
 
-class mesh;
-
-struct mesh_table {
-    std::vector<std::shared_ptr<mesh>> table;
-};
-
 class mesh_serializer : public serializer {
 public:
     void save(serializer_save_data& save_data) override;

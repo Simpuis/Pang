@@ -8,12 +8,6 @@
 
 #include "serializer.h"
 
-class material;
-
-struct material_table {
-    std::vector<std::shared_ptr<material>> table;
-};
-
 class material_serializer : public serializer {
 public:
     void save(serializer_save_data& save_data) override;

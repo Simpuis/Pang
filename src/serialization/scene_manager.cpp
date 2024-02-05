@@ -8,6 +8,7 @@
 #include "src/serialization/serializers/material_serializer.h"
 #include "src/serialization/serializers/sampler_serializer.h"
 #include "src/serialization/serializers/texture_serializer.h"
+#include "src/flecs_modules/freefly_camera/freefly.h"
 
 scene_manager::scene_manager(std::initializer_list<std::pair<unsigned int, std::string>> scene_filenames) {
     for(const auto& scene : scene_filenames) {
@@ -55,6 +56,7 @@ void scene_manager::load_scene(std::string scene_filename) {
     unload_scene();
 
     serializer.load_scene_from_file(main_world, scene_filename);
+    main_world.set<freefly_camera>({});
 }
 
 

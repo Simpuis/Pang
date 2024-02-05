@@ -12,7 +12,8 @@ class scene_hierarchy : public editor_element {
                 ImGui::BeginChild("left pane", ImVec2(0, 0), ImGuiChildFlags_Border);
                 world.each<position>([&](flecs::entity e, position &pos) {
                     if (e.name().size() > 0) {
-                        if (ImGui::Selectable(e.name(), e == shared_state.selected_entity)) {
+                        if (ImGui::Selectable(e.name(), world.is_valid(shared_state.selected_entity) &&
+                                                        e == shared_state.selected_entity)) {
                             shared_state.selected_entity = e;
                         }
                     }

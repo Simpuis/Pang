@@ -1,7 +1,11 @@
 #pragma once
 
+#include <memory>
 #include <flecs.h>
 
+#include "src/render/mesh.h"
+#include "src/render/material.h"
+#include "src/render/texture.h"
 #include "src/serialization/serializable.h"
 
 struct mesh_component {
@@ -14,6 +18,18 @@ struct mesh_component {
 REFL_TYPE(mesh_component, bases<>)
         REFL_FIELD(mesh, serializable())
 REFL_END
+
+struct mesh_table {
+    std::vector<std::shared_ptr<mesh>> table;
+};
+
+struct material_table {
+    std::vector<std::shared_ptr<material>> table;
+};
+
+struct texture_table {
+    std::vector<std::shared_ptr<texture>> table;
+};
 
 struct rendering {
     explicit rendering(flecs::world& world);

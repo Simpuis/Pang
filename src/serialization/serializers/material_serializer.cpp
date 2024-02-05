@@ -2,6 +2,8 @@
 
 #include <src/render/material.h>
 
+#include "src/flecs_modules/rendering/rendering.h"
+
 void material_serializer::save(serializer_save_data& save_data) {
     if(!save_data.world.has<material_table>()) return;
     auto* materials = save_data.world.get<material_table>();

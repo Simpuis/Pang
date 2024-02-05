@@ -9,6 +9,7 @@
 #include "src/serialization/serializers/mesh_serializer.h"
 #include "src/serialization/serializers/sampler_serializer.h"
 #include "src/serialization/serializers/texture_serializer.h"
+#include "src/flecs_modules/freefly_camera/freefly.h"
 
 
 void scene_serializer::save_scene_to_file(flecs::world &world, const std::string &filename) {
@@ -34,6 +35,9 @@ void scene_serializer::save_scene_to_file(flecs::world &world, const std::string
 }
 
 void scene_serializer::load_scene_from_file(flecs::world &world, const std::string &filename) {
+    world.import<transformation>();
+    world.import<rendering>();
+    world.import<freefly>();
     tinygltf::Model model;
     if (!load_scene_file(model, filename)) return;
     std::map<gsl::index, flecs::entity> node_entity_map;

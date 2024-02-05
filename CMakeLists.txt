@@ -30,15 +30,10 @@ add_library(OpenGLPongLib
         src/tiny_gltf_defines.cpp
         src/gl_debug.h
         src/flecs_modules/transformation/transformation.h
-        src/render/camera.h
-        src/render/freefly_camera.cpp
-        src/render/freefly_camera.h
         src/render/material.cpp
         src/render/material.h
         src/render/mesh.cpp
         src/render/mesh.h
-        src/render/renderer.cpp
-        src/render/renderer.h
         src/render/shader.cpp
         src/render/shader.h
         src/render/texture.cpp
@@ -70,6 +65,8 @@ add_library(OpenGLPongLib
         src/editor/file_menu.h
         src/world.h
         src/world.cpp
+        src/flecs_modules/freefly_camera/freefly.h
+        src/flecs_modules/freefly_camera/freefly.cpp
 )
 
 find_package(EnTT CONFIG REQUIRED)

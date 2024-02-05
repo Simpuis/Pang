@@ -13,9 +13,7 @@
 
 #include "editor/editor.h"
 #include "input_handler.h"
-#include "src/render/freefly_camera.h"
 #include "src/serialization/scene_serializer.h"
-#include "src/render/renderer.h"
 #include "src/serialization/scene_manager.h"
 #include "src/serialization/serializers/gltf_core_node_serializer.h"
 #include "src/serialization/serializers/buffer_serializer.h"
@@ -55,7 +53,6 @@ public:
     void register_extension_types();
     void setup_editor();
 
-    freefly_camera main_camera;
     GLFWwindow* window_;
 
 private:
@@ -66,7 +63,6 @@ private:
 
     std::unique_ptr<input_handler> input_;
     std::unique_ptr<scene_manager> scene_manager_;
-    renderer renderer_;
     std::optional<editor> editor_;
 };
 
