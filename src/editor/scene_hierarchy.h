@@ -7,9 +7,12 @@
 
 class scene_hierarchy : public editor_element {
     void tick(flecs::world& world, shared_editor_state& shared_state) override {
-        if(ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_MenuBar)) {
+        if(ImGui::Begin("Hierarchy", nullptr)) {
             {
                 ImGui::BeginChild("left pane", ImVec2(0, 0), ImGuiChildFlags_Border);
+                if(ImGui::BeginPopupContextItem()) {
+                    ImGui::EndPopup();
+                }
                 world.each<position>([&](flecs::entity e, position &pos) {
                     if (e.name().size() > 0) {
                         if (ImGui::Selectable(e.name(), world.is_valid(shared_state.selected_entity) &&
