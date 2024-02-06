@@ -12,6 +12,10 @@
 #include "src/flecs_modules/rendering/rendering.h"
 #include "serializers/serializer.h"
 
+struct scene_root {
+    flecs::entity root_entity;
+};
+
 class scene_serializer {
 public:
     enum gltf_file_type {

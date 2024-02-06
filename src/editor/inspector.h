@@ -10,6 +10,9 @@
 #include "src/flecs_modules/rendering/rendering.h"
 #include "src/serialization/serializable.h"
 
+template<typename T>
+concept simple_pair = requires (T t) { T::first_type(); T::second_type(); };
+
 template<typename... Serializable_Ts>
 class inspector;
 
@@ -100,29 +103,7 @@ class inspector : public editor_element {
 
     template<typename Head_T, typename... Tail_Ts>
     void draw_serializables(flecs::entity selected_entity, int i = 0) {
-        if(selected_entity.has<Head_T>()) {
-            Head_T* component = selected_entity.get_mut<Head_T>();
-            constexpr auto type = refl::reflect<Head_T>();
-            ImGui::Text("%s", type.name);
-            if(ImGui::BeginPopupContextItem(("Remove Component Popup " + std::to_string(i)).c_str())) {
-                if(ImGui::Selectable("Remove Component")) {
-                    selected_entity.remove<Head_T>();
-                    ImGui::EndPopup();
-                    return;
-                }
-                ImGui::EndPopup();
-            }
-            for_each(refl::reflect(*component).members, [&](auto member) {
-                if constexpr (is_readable(member) && refl::descriptor::has_attribute<serializable>(member)) {
-                    ImGui::Text("%s", get_display_name(member));
-                    ImGui::PushID(i);
-                    component_input(member(*component));
-                    ImGui::PopID();
-                    ImGui::Separator();
-                }
-            });
-            ImGui::Separator();
-        }
+        draw_serializable<Head_T>(selected_entity, i);
         if constexpr (sizeof...(Tail_Ts) > 0) {
             draw_serializables<Tail_Ts...>(selected_entity, i + 1);
         }
@@ -142,6 +123,63 @@ class inspector : public editor_element {
 
         if constexpr(sizeof...(Tail_Ts) > 0) {
             draw_add_component_options<Tail_Ts...>(selected_entity, i + 1);
+        }
+    }
+
+    template<typename T>
+        requires (!simple_pair<T>)
+    void draw_serializable(flecs::entity selected_entity, int i) {
+        if(selected_entity.has<T>()) {
+            T* component = selected_entity.get_mut<T>();
+            constexpr auto type = refl::reflect<T>();
+            ImGui::Text("%s", type.name);
+            if(ImGui::BeginPopupContextItem(("Remove Component Popup " + std::to_string(i)).c_str())) {
+                if(ImGui::Selectable("Remove Component")) {
+                    selected_entity.remove<T>();
+                    ImGui::EndPopup();
+                    return;
+                }
+                ImGui::EndPopup();
+            }
+            for_each(refl::reflect(*component).members, [&](auto member) {
+                if constexpr (is_readable(member) && refl::descriptor::has_attribute<serializable>(member)) {
+                    ImGui::Text("%s", get_display_name(member));
+                    ImGui::PushID(i);
+                    component_input(member(*component));
+                    ImGui::PopID();
+                    ImGui::Separator();
+                }
+            });
+            ImGui::Separator();
+        }
+    }
+
+    template<typename T>
+        requires simple_pair<T>
+    void draw_serializable(flecs::entity selected_entity, int i) {
+        if(selected_entity.has<T::first_type, T::second_type>()) {
+            auto* component = selected_entity.get_mut<T::first_type, T::second_type>();
+            constexpr auto type1 = refl::reflect<T::first_type>();
+            constexpr auto type2 = refl::reflect<T::second_type>();
+            ImGui::Text("%s, %s", type1.name, type2.name);
+            if(ImGui::BeginPopupContextItem(("Remove Component Popup " + std::to_string(i)).c_str())) {
+                if(ImGui::Selectable("Remove Component")) {
+                    selected_entity.remove<T::first_type, T::second_type>();
+                    ImGui::EndPopup();
+                    return;
+                }
+                ImGui::EndPopup();
+            }
+            for_each(refl::reflect(*component).members, [&](auto member) {
+                if constexpr (is_readable(member) && refl::descriptor::has_attribute<serializable>(member)) {
+                    ImGui::Text("%s", get_display_name(member));
+                    ImGui::PushID(i);
+                    component_input(member(*component));
+                    ImGui::PopID();
+                    ImGui::Separator();
+                }
+            });
+            ImGui::Separator();
         }
     }
 };

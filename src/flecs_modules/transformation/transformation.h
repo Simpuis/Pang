@@ -8,6 +8,16 @@
 
 #include "src/serialization/serializable.h"
 
+struct local_space {};
+
+REFL_TYPE(local_space, bases<>)
+REFL_END
+
+struct world_space {};
+
+REFL_TYPE(world_space, bases<>)
+REFL_END
+
 struct position {
     position() = default;
     explicit position(glm::vec3 pos) : pos(pos) {}
@@ -48,14 +58,18 @@ REFL_END
 
 struct scale {
     scale() = default;
-    scale(float x, float y, float z) : local_scale(x, y, z) {}
+    scale(float x, float y, float z) : vec(x, y, z) {}
 
-    glm::vec3 local_scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec3 vec = glm::vec3(1.0f, 1.0f, 1.0f);
 };
 
 REFL_TYPE(scale, bases<>)
-        REFL_FIELD(local_scale, serializable())
+        REFL_FIELD(vec, serializable())
 REFL_END
+
+struct transform_matrix {
+    glm::mat4x4 transform;
+};
 
 struct transformation {
     explicit transformation(flecs::world& world);
@@ -64,7 +78,7 @@ struct transformation {
         glm::mat4x4 transform = glm::mat4x4(1.0f);
         transform = glm::translate(transform, pos.pos);
         transform *= glm::mat4_cast(rot.rot);
-        transform = glm::scale(transform, scale.local_scale);
+        transform = glm::scale(transform, scale.vec);
 
         return transform;
     }
@@ -109,5 +123,7 @@ inline transformation::transformation(flecs::world &world) {
     world.component<rotation>("rotation")
             .member<glm::quat>("rot");
     world.component<scale>("scale")
-            .member<glm::vec3>("local_scale");
+            .member<glm::vec3>("vec");
+    world.component<local_space>();
+    world.component<world_space>();
 }

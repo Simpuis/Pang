@@ -2,6 +2,7 @@
 #include "src/flecs_modules/transformation/transformation.h"
 #include "src/render/shader.h"
 #include "src/flecs_modules/freefly_camera/freefly.h"
+#include "src/serialization/scene_serializer.h"
 
 #include <glad/glad.h>
 
@@ -15,6 +16,31 @@ rendering::rendering(flecs::world& world) {
     world.import<transformation>();
     world.import<freefly>();
 
+    world.system<const position, const rotation, const scale, const scene_root>("world_transform_conversion")
+        .kind(flecs::PreStore)
+        .term_at(4).singleton()
+        .each([](flecs::entity e, const position& pos, const rotation& rot, const scale& local_scale, const scene_root& root) {
+                auto parent = e.parent();
+                transform_matrix* parent_transform = nullptr;
+                if(parent != root.root_entity) {
+                    parent_transform = parent.get_mut<transform_matrix, world_space>();
+                }
+
+                auto* local_transform = e.get_mut<transform_matrix, local_space>();
+                local_transform->transform = glm::mat4x4(1.0f);
+                local_transform->transform = glm::translate(local_transform->transform, pos.pos);
+                local_transform->transform *= glm::mat4_cast(rot.rot);
+                local_transform->transform = glm::scale(local_transform->transform, local_scale.vec);
+
+                auto* global_transform = e.get_mut<transform_matrix, world_space>();
+                if(parent_transform) {
+                    global_transform->transform = parent_transform->transform * local_transform->transform;
+                }
+                else {
+                    global_transform->transform = local_transform->transform;
+                }
+        });
+
     world.system("render_clear")
         .kind(flecs::OnStore)
         .iter([](flecs::iter& it) {
@@ -22,23 +48,20 @@ rendering::rendering(flecs::world& world) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         });
 
-    world.system<const position,
-                 const rotation,
-                 const scale,
+    world.system<const transform_matrix,
                  const mesh_component,
                  const mesh_table,
                  const material_table,
                  const texture_table,
                  const freefly_camera>("Render")
+                 .term_at(1).second<world_space>()
+                 .term_at(3).singleton()
+                 .term_at(4).singleton()
                  .term_at(5).singleton()
                  .term_at(6).singleton()
-                 .term_at(7).singleton()
-                 .term_at(8).singleton()
                  .kind(flecs::OnStore)
                  .each([&](
-                 const position& pos,
-                 const rotation& rot,
-                 const scale& local_scale,
+                 const transform_matrix& transform,
                  const mesh_component& mesh_comp,
                  const mesh_table& mesh_lookup,
                  const material_table& material_lookup,
@@ -53,7 +76,7 @@ rendering::rendering(flecs::world& world) {
                 }
                 mat->material_shader->use();
 
-                mat->material_shader->set_matrix("model", transformation::model(pos, rot, local_scale));
+                mat->material_shader->set_matrix("model", transform.transform);
 
                 mat->material_shader->set_matrix("view", glm::inverse(main_cam.transform_matrix * main_cam.local_trans));
 
