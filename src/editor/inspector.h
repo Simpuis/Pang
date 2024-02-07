@@ -9,6 +9,7 @@
 #include "src/flecs_modules/transformation/transformation.h"
 #include "src/flecs_modules/rendering/rendering.h"
 #include "src/serialization/serializable.h"
+#include "src/serialization/scene_serializer.h"
 
 template<typename T>
 concept simple_pair = requires (T t) { T::first_type(); T::second_type(); };
@@ -73,6 +74,17 @@ class inspector : public editor_element {
         }
     }
 
+    template<typename T>
+    void component_input(std::vector<T> value) {
+        for(auto& t : value) {
+            component_input(t);
+        }
+    }
+
+    void component_input(std::shared_ptr<mesh>& value) {
+        ImGui::Text("Test");
+    }
+
     void tick(flecs::world& world, shared_editor_state& shared_state) override {
         if(ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_MenuBar)) {
             static bool has_changed_entity = false;
@@ -83,7 +95,12 @@ class inspector : public editor_element {
                 ImGui::Separator();
                 if(ImGui::BeginTabBar("#Tabs", ImGuiTabBarFlags_None)) {
                     if(ImGui::BeginTabItem("Inspect")) {
-                        draw_serializables<Serializable_Ts...>(shared_state.selected_entity);
+                        if(shared_state.selected_entity == world.get<scene_root>()->root_entity) {
+                            draw_singleton_serializables<Serializable_Ts...>(world);
+                        }
+                        else {
+                            draw_serializables<Serializable_Ts...>(shared_state.selected_entity);
+                        }
                         if(ImGui::Button("Add Component##AddButton"))
                             ImGui::OpenPopup("add_component_popup");
                         if(ImGui::BeginPopup("add_component_popup")) {
@@ -106,6 +123,36 @@ class inspector : public editor_element {
         draw_serializable<Head_T>(selected_entity, i);
         if constexpr (sizeof...(Tail_Ts) > 0) {
             draw_serializables<Tail_Ts...>(selected_entity, i + 1);
+        }
+    }
+
+    template<typename Head_T, typename... Tail_Ts>
+    void draw_singleton_serializables(flecs::world& world, int i = 0) {
+        if(world.has<Head_T>()) {
+            Head_T* component = world.get_mut<Head_T>();
+            constexpr auto type = refl::reflect<Head_T>();
+            ImGui::Text("%s", type.name);
+            if (ImGui::BeginPopupContextItem(("Remove Component Popup " + std::to_string(i)).c_str())) {
+                if (ImGui::Selectable("Remove Component")) {
+                    world.remove<Head_T>();
+                    ImGui::EndPopup();
+                    return;
+                }
+                ImGui::EndPopup();
+            }
+            for_each(refl::reflect(*component).members, [&](auto member) {
+                if constexpr (is_readable(member) && refl::descriptor::has_attribute<serializable>(member)) {
+                    ImGui::Text("%s", get_display_name(member));
+                    ImGui::PushID(i);
+                    component_input(member(*component));
+                    ImGui::PopID();
+                    ImGui::Separator();
+                }
+            });
+            ImGui::Separator();
+        }
+        if constexpr(sizeof...(Tail_Ts) > 0) {
+            draw_singleton_serializables<Tail_Ts...>(world, i + 1);
         }
     }
 

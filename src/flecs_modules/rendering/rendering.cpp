@@ -20,25 +20,25 @@ rendering::rendering(flecs::world& world) {
         .kind(flecs::PreStore)
         .term_at(4).singleton()
         .each([](flecs::entity e, const position& pos, const rotation& rot, const scale& local_scale, const scene_root& root) {
-                auto parent = e.parent();
-                transform_matrix* parent_transform = nullptr;
-                if(parent != root.root_entity) {
-                    parent_transform = parent.get_mut<transform_matrix, world_space>();
-                }
+            auto parent = e.parent();
+            transform_matrix* parent_transform = nullptr;
+            if(parent != root.root_entity) {
+                parent_transform = parent.get_mut<transform_matrix, world_space>();
+            }
 
-                auto* local_transform = e.get_mut<transform_matrix, local_space>();
-                local_transform->transform = glm::mat4x4(1.0f);
-                local_transform->transform = glm::translate(local_transform->transform, pos.pos);
-                local_transform->transform *= glm::mat4_cast(rot.rot);
-                local_transform->transform = glm::scale(local_transform->transform, local_scale.vec);
+            auto* local_transform = e.get_mut<transform_matrix, local_space>();
+            local_transform->transform = glm::mat4x4(1.0f);
+            local_transform->transform = glm::translate(local_transform->transform, pos.pos);
+            local_transform->transform *= glm::mat4_cast(rot.rot);
+            local_transform->transform = glm::scale(local_transform->transform, local_scale.vec);
 
-                auto* global_transform = e.get_mut<transform_matrix, world_space>();
-                if(parent_transform) {
-                    global_transform->transform = parent_transform->transform * local_transform->transform;
-                }
-                else {
-                    global_transform->transform = local_transform->transform;
-                }
+            auto* global_transform = e.get_mut<transform_matrix, world_space>();
+            if(parent_transform) {
+                global_transform->transform = parent_transform->transform * local_transform->transform;
+            }
+            else {
+                global_transform->transform = local_transform->transform;
+            }
         });
 
     world.system("render_clear")

@@ -23,6 +23,10 @@ struct mesh_table {
     std::vector<std::shared_ptr<mesh>> table;
 };
 
+REFL_TYPE(mesh_table, bases<>)
+    REFL_FIELD(table, serializable())
+REFL_END
+
 struct material_table {
     std::vector<std::shared_ptr<material>> table;
 };
