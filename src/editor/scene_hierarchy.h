@@ -14,7 +14,7 @@ class scene_hierarchy : public editor_element {
                 ImGui::EndPopup();
             }
             auto root = world.get<scene_root>()->root_entity;
-            traverse_hierarchy(root);
+            traverse_hierarchy(root, shared_state);
 
             ImGui::EndChild();
             ImGui::SameLine();
@@ -23,10 +23,18 @@ class scene_hierarchy : public editor_element {
 
     }
 
-    void traverse_hierarchy(flecs::entity parent) {
-        if(ImGui::TreeNode(parent.name())) {
+    void traverse_hierarchy(flecs::entity parent, shared_editor_state& shared_state) {
+        ImGuiTreeNodeFlags tree_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+        if(parent == shared_state.selected_entity) {
+            tree_flags |= ImGuiTreeNodeFlags_Selected;
+        }
+        bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)parent, tree_flags, parent.name(), parent);
+        if(ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
+            shared_state.selected_entity = parent;
+        }
+        if(node_open) {
             parent.children([&](flecs::entity child) {
-                traverse_hierarchy(child);
+                traverse_hierarchy(child, shared_state);
             });
             ImGui::TreePop();
         }
