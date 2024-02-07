@@ -39,6 +39,19 @@ class scene_hierarchy : public editor_element {
         if(ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
             shared_state.selected_entity = entity;
         }
+        if(ImGui::BeginDragDropSource()) {
+            ImGui::SetDragDropPayload("REPARENT", &entity, sizeof(flecs::entity));
+            ImGui::Text("%s", entity.name().c_str());
+            ImGui::EndDragDropSource();
+        }
+        if(ImGui::BeginDragDropTarget()) {
+            if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("REPARENT")) {
+                flecs::entity payload_entity = *(const flecs::entity*)payload->Data;
+                if(payload_entity != root && !is_recursive_child_of(entity, payload_entity)) {
+                    reparent(entity, payload_entity);
+                }
+            }
+        }
         if(ImGui::BeginPopupContextItem()) {
             if(ImGui::Selectable("New Entity as child")) {
                 auto new_entity = world.entity();
@@ -84,7 +97,9 @@ class scene_hierarchy : public editor_element {
               new_parent.get<transform_matrix, world_space>()->transform :
               glm::mat4x4(1.0f);
 
-        glm::mat4 child_transform = child.get<transform_matrix, world_space>()->transform;
+        glm::mat4 child_transform = (child.has<transform_matrix, world_space>()) ?
+                              child.get<transform_matrix, world_space>()->transform :
+                              glm::mat4x4(1.0f);
 
         auto transform_diff = child_transform * transform;
         glm::vec3 new_pos = glm::vec3(transform_diff[3]);
@@ -122,36 +137,15 @@ class scene_hierarchy : public editor_element {
         return has_children;
     }
 
-    glm::vec3 get_global_pos(flecs::entity e) {
-        auto pos = glm::vec3(0.0f);
-        if(e.has<position>()) {
-            pos = e.get<position>()->pos;
+    static bool is_recursive_child_of(flecs::entity potential_child, flecs::entity parent) {
+        if(potential_child.parent() == parent) {
+            return true;
         }
-        if(e.parent().is_valid()) {
-            pos += get_global_pos(e.parent());
+        else if(potential_child.parent().is_valid()) {
+            return is_recursive_child_of(potential_child.parent(), parent);
         }
-        return pos;
-    }
-
-    glm::quat get_global_rot(flecs::entity e) {
-        auto rot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-        if(e.has<rotation>()) {
-            rot = e.get<rotation>()->rot;
+        else {
+            return false;
         }
-        if(e.parent().is_valid()) {
-            rot *= get_global_rot(e.parent());
-        }
-        return rot;
-    }
-
-    glm::vec3 get_global_scale(flecs::entity e) {
-        auto result = glm::vec3(1.0f);
-        if(e.has<scale>()) {
-            result = e.get<scale>()->vec;
-        }
-        if(e.parent().is_valid()) {
-            result *= get_global_scale(e.parent());
-        }
-        return result;
     }
 };
