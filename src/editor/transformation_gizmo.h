@@ -16,10 +16,11 @@ class transformation_gizmo : public editor_element {
 public:
     void tick(flecs::world& world, shared_editor_state& shared_state) override {
         if(!shared_state.selected_entity.is_valid()) return;
+        if(!shared_state.selected_entity.has<transform_matrix, world_space>()) return;
         if(world.get<scene_root>()->root_entity == shared_state.selected_entity) return;
 
-        static ImGuizmo::OPERATION current_operation(ImGuizmo::ROTATE);
-        static ImGuizmo::MODE current_mode(ImGuizmo::WORLD);
+        static ImGuizmo::OPERATION current_operation(ImGuizmo::TRANSLATE);
+        static ImGuizmo::MODE current_mode(ImGuizmo::LOCAL);
         if(ImGui::IsKeyPressed(ImGuiKey_W)) current_operation = ImGuizmo::TRANSLATE;
         if(ImGui::IsKeyPressed(ImGuiKey_E)) current_operation = ImGuizmo::ROTATE;
         if(ImGui::IsKeyPressed(ImGuiKey_R)) current_operation = ImGuizmo::SCALE;
