@@ -40,32 +40,32 @@ freefly::freefly(flecs::world& world) {
         camera.cam_y = input.mouse_y;
 
         constexpr float camera_speed = 7.5f;
-        if (input.key_w == GLFW_PRESS) {
+        if (input.key_w == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
             camera.transform_matrix = glm::translate(camera.transform_matrix,
                                                      camera_speed * (float) it.delta_time() *
                                                      transformation::global_forward());
         }
-        if (input.key_s == GLFW_PRESS) {
+        if (input.key_s == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
             camera.transform_matrix = glm::translate(camera.transform_matrix,
                                                      camera_speed * (float) it.delta_time() *
                                                      -transformation::global_forward());
         }
-        if (input.key_d == GLFW_PRESS) {
+        if (input.key_d == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
             camera.transform_matrix = glm::translate(camera.transform_matrix,
                                                      camera_speed * (float) it.delta_time() *
                                                      transformation::global_right());
         }
-        if (input.key_a == GLFW_PRESS) {
+        if (input.key_a == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
             camera.transform_matrix = glm::translate(camera.transform_matrix,
                                                      camera_speed * (float) it.delta_time() *
                                                      -transformation::global_right());
         }
-        if (input.key_space_bar == GLFW_PRESS) {
+        if (input.key_space_bar == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
             camera.transform_matrix = glm::translate(camera.transform_matrix,
                                                      camera_speed * (float) it.delta_time() *
                                                      transformation::global_up());
         }
-        if (input.key_left_shift == GLFW_PRESS) {
+        if (input.key_left_shift == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
             camera.transform_matrix = glm::translate(camera.transform_matrix,
                                                      camera_speed * (float) it.delta_time() *
                                                      -transformation::global_up());

@@ -102,18 +102,6 @@ class scene_hierarchy : public editor_element {
                               glm::mat4x4(1.0f);
 
         auto transform_diff = glm::inverse(transform) * child_transform;
-        /*
-        glm::vec3 new_pos = glm::vec3(transform_diff[3]);
-        glm::vec3 new_scale;
-        for(int i = 0; i < 3; i++) {
-            new_scale[i] = glm::length(glm::vec3(transform_diff[i]));
-        }
-        glm::quat new_rot = glm::quat_cast(transform_diff);
-
-        child.get_mut<position>()->pos = new_pos;
-        child.get_mut<rotation>()->rot = new_rot;
-        child.get_mut<scale>()->vec = new_scale;
-         */
 
         glm::quat new_rotation;
 

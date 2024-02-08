@@ -81,7 +81,7 @@ rendering::rendering(flecs::world& world) {
                 mat->material_shader->set_matrix("view", glm::inverse(main_cam.transform_matrix * main_cam.local_trans));
 
                 glm::mat4 projection_matrix;
-                projection_matrix = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+                projection_matrix = glm::perspective(glm::radians(45.0f), 2560.0f / 1440.0f, 0.1f, 100.0f);
                 mat->material_shader->set_matrix("projection", projection_matrix);
 
                 glBindVertexArray(primitive.VAO);

@@ -8,6 +8,7 @@
 editor::editor() {
     file_menu_element = std::make_unique<file_menu>();
     hierarchy = std::make_unique<scene_hierarchy>();
+    gizmo = std::make_unique<transformation_gizmo>();
 }
 
 void editor::update(ImGuiIO& imgui_io, flecs::world& registry)
@@ -31,6 +32,10 @@ void editor::update(ImGuiIO& imgui_io, flecs::world& registry)
 
     if(hierarchy) {
         hierarchy->tick(registry, shared_state);
+    }
+
+    if(gizmo) {
+        gizmo->tick(registry, shared_state);
     }
 }
 

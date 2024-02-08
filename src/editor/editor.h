@@ -9,6 +9,7 @@
 #include "inspector.h"
 #include "scene_hierarchy.h"
 #include "file_menu.h"
+#include "transformation_gizmo.h"
 
 class editor
 {
@@ -27,6 +28,7 @@ private:
     std::unique_ptr<file_menu> file_menu_element;
     std::unique_ptr<editor_element> inspector_element;
     std::unique_ptr<editor_element> hierarchy;
+    std::unique_ptr<transformation_gizmo> gizmo;
 
     shared_editor_state shared_state;
 };

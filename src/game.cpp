@@ -2,6 +2,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include "ImGuizmo.h"
 #include "gl_debug.h"
 #include "src/render/material.h"
 #include "src/render/texture.h"
@@ -55,6 +56,7 @@ void game::loop(unsigned int startup_scene)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
 
         input_->process_input(scene_manager_->get_world(), window_);
 

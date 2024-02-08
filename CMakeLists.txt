@@ -69,6 +69,7 @@ add_library(OpenGLPongLib
         src/flecs_modules/freefly_camera/freefly.cpp
         src/serialization/serializers/child_serializer.h
         src/serialization/serializers/child_serializer.cpp
+        src/editor/transformation_gizmo.h
 )
 
 find_package(EnTT CONFIG REQUIRED)
