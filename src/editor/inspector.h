@@ -4,6 +4,7 @@
 #include <refl.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include <magic_enum.hpp>
 
 #include "editor_element.h"
 #include "src/flecs_modules/transformation/transformation.h"
@@ -13,6 +14,9 @@
 
 template<typename T>
 concept simple_pair = requires (T t) { T::first_type(); T::second_type(); };
+
+template<typename T>
+concept is_enum = requires (T t) { std::is_enum_v<T>; };
 
 template<typename... Serializable_Ts>
 class inspector;
@@ -75,7 +79,7 @@ class inspector : public editor_element {
     }
 
     template<typename T>
-    void component_input(std::vector<T> value) {
+    void component_input(std::vector<T>& value) {
         for(auto& t : value) {
             component_input(t);
         }
@@ -83,6 +87,22 @@ class inspector : public editor_element {
 
     void component_input(std::shared_ptr<mesh>& value) {
         ImGui::Text("Test");
+    }
+
+    template<is_enum T>
+    void component_input(T& value) {
+        constexpr auto enum_values = magic_enum::enum_values<T>();
+        if(ImGui::Button(std::string(magic_enum::enum_name(value)).c_str())) {
+            ImGui::OpenPopup("select_enum");
+        }
+        if(ImGui::BeginPopup("select_enum")) {
+            for(int i = 0; i < magic_enum::enum_count<T>(); i++) {
+                if(ImGui::Selectable(std::string(magic_enum::enum_name(enum_values[i])).c_str())) {
+                    value = enum_values[i];
+                }
+            }
+            ImGui::EndPopup();
+        }
     }
 
     void tick(flecs::world& world, shared_editor_state& shared_state) override {
@@ -179,7 +199,7 @@ class inspector : public editor_element {
         if(selected_entity.has<T>()) {
             T* component = selected_entity.get_mut<T>();
             constexpr auto type = refl::reflect<T>();
-            ImGui::Text("%s", type.name);
+            ImGui::SeparatorText(type.name.c_str());
             if(ImGui::BeginPopupContextItem(("Remove Component Popup " + std::to_string(i)).c_str())) {
                 if(ImGui::Selectable("Remove Component")) {
                     selected_entity.remove<T>();

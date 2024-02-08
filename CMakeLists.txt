@@ -19,6 +19,7 @@ find_package(Microsoft.GSL CONFIG REQUIRED)
 find_package(flecs CONFIG REQUIRED)
 find_package(imguizmo CONFIG REQUIRED)
 find_package(unofficial-nativefiledialog CONFIG REQUIRED)
+find_package(magic_enum CONFIG REQUIRED)
 
 add_library(OpenGLPongLib
         src/editor/editor.cpp
@@ -85,6 +86,7 @@ target_link_libraries(OpenGLPongLib Microsoft.GSL::GSL)
 target_link_libraries(OpenGLPongLib $<IF:$<TARGET_EXISTS:flecs::flecs>,flecs::flecs,flecs::flecs_static>)
 target_link_libraries(OpenGLPongLib imguizmo::imguizmo)
 target_link_libraries(OpenGLPongLib unofficial::nativefiledialog::nfd)
+target_link_libraries(OpenGLPongLib magic_enum::magic_enum)
 
 add_executable(OpenGLPong src/main.cpp
 )
