@@ -23,7 +23,7 @@ struct mesh_table {
     std::vector<std::shared_ptr<mesh>> table;
 };
 
-REFL_TYPE(mesh_table, bases<>)
+REFL_TYPE(mesh_table, bases<>, singleton_component())
     REFL_FIELD(table, serializable())
 REFL_END
 
@@ -31,9 +31,17 @@ struct material_table {
     std::vector<std::shared_ptr<material>> table;
 };
 
+REFL_TYPE(material_table, bases<>, singleton_component())
+        REFL_FIELD(table, serializable())
+REFL_END
+
 struct texture_table {
     std::vector<std::shared_ptr<texture>> table;
 };
+
+REFL_TYPE(texture_table, bases<>, singleton_component())
+        REFL_FIELD(table, serializable())
+REFL_END
 
 struct camera {
     enum class projection { perspective, orthographic };
@@ -49,6 +57,14 @@ REFL_TYPE(camera, bases<>)
     REFL_FIELD(field_of_view_degrees, serializable())
     REFL_FIELD(near_plane_z, serializable())
     REFL_FIELD(far_plane_z, serializable())
+REFL_END
+
+struct main_camera {
+    flecs::entity camera_entity;
+};
+
+REFL_TYPE(main_camera, bases<>, singleton_component())
+    REFL_FIELD(camera_entity, serializable())
 REFL_END
 
 struct rendering {

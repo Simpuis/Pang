@@ -69,7 +69,7 @@ private:
 template<typename... Extension_Serializer_Ts>
 void game::register_extension_types() {
     if(editor_) {
-        editor_->register_serializables<position, rotation, scale, mesh_component, camera, mesh_table, Extension_Serializer_Ts...>();
+        editor_->register_serializables<position, rotation, scale, mesh_component, camera, main_camera, mesh_table, Extension_Serializer_Ts...>();
     }
 
     scene_manager_->get_serializer().register_serializer(std::make_unique<extension_serializer<Extension_Serializer_Ts...>>());
