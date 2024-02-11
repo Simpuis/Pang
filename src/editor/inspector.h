@@ -7,6 +7,7 @@
 #include <magic_enum.hpp>
 
 #include "editor_element.h"
+#include "src/glm_reflection.h"
 #include "src/flecs_modules/transformation/transformation.h"
 #include "src/flecs_modules/rendering/rendering.h"
 #include "src/serialization/serializable.h"

@@ -26,16 +26,9 @@ struct position {
     glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
 };
 
-REFL_TYPE(glm::vec3, bases<>)
-    REFL_FIELD(x, serializable())
-    REFL_FIELD(y, serializable())
-    REFL_FIELD(z, serializable())
-REFL_END
-
 REFL_TYPE(position, bases<>)
     REFL_FIELD(pos, serializable())
 REFL_END
-
 
 struct rotation {
     rotation() = default;
