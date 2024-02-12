@@ -67,6 +67,10 @@ REFL_TYPE(main_camera, bases<>, singleton_component())
     REFL_FIELD(camera_entity, serializable())
 REFL_END
 
+struct render_debug_camera {
+    bool value = false;
+};
+
 struct rendering {
     explicit rendering(flecs::world& world);
 };

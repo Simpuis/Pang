@@ -53,12 +53,17 @@ rendering::rendering(flecs::world& world) {
                  const mesh_table,
                  const material_table,
                  const texture_table,
-                 const freefly_camera>("Render")
+                 const main_camera,
+                 const freefly_camera,
+                 const render_debug_camera>("Render")
                  .term_at(1).second<world_space>()
                  .term_at(3).singleton()
                  .term_at(4).singleton()
                  .term_at(5).singleton()
                  .term_at(6).singleton()
+                 .term_at(6).optional()
+                 .term_at(7).singleton()
+                 .term_at(8).singleton()
                  .kind(flecs::OnStore)
                  .each([&](
                  const transform_matrix& transform,
@@ -66,7 +71,9 @@ rendering::rendering(flecs::world& world) {
                  const mesh_table& mesh_lookup,
                  const material_table& material_lookup,
                  const texture_table& texture_lookup,
-                 const freefly_camera& main_cam) {
+                 const main_camera& main,
+                 const freefly_camera& main_cam,
+                 const render_debug_camera& use_debug_camera) {
         if(mesh_comp.mesh >= 0 && mesh_comp.mesh < mesh_lookup.table.size()) {
             for (auto &primitive: mesh_lookup.table.at(mesh_comp.mesh)->primitives) {
                 const material *mat = material_lookup.table.at(primitive.material_index).get();
@@ -78,6 +85,8 @@ rendering::rendering(flecs::world& world) {
 
                 mat->material_shader->set_matrix("model", transform.transform);
 
+                glm::mat4x4 view = (use_debug_camera.value) ? glm::inverse(main_cam.transform_matrix * main_cam.local_trans) :
+                        glm::inverse(main.camera_entity.get<transform_matrix, world_space>()->transform);
                 mat->material_shader->set_matrix("view", glm::inverse(main_cam.transform_matrix * main_cam.local_trans));
 
                 glm::mat4 projection_matrix;
