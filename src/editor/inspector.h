@@ -186,18 +186,10 @@ class inspector : public editor_element {
 
     template<typename Head_T, typename... Tail_Ts>
     void draw_add_component_options(flecs::entity& selected, int i = 0) {
-        const Head_T* component = selected.get<Head_T>();
-        if(component) ImGui::BeginDisabled(true);
-
-        constexpr auto type = refl::reflect<Head_T>();
         if constexpr(!refl::descriptor::has_attribute<singleton_component>(refl::reflect<Head_T>())) {
-            if (ImGui::Selectable(type.name.c_str())) {
-                selected.add<Head_T>();
-            }
+            draw_add_component_option<Head_T, flecs::entity>(selected);
+
         }
-
-        if(component) ImGui::EndDisabled();
-
         if constexpr(sizeof...(Tail_Ts) > 0) {
             draw_add_component_options<Tail_Ts...>(selected, i + 1);
         }
@@ -205,21 +197,28 @@ class inspector : public editor_element {
 
     template<typename Head_T, typename... Tail_Ts>
     void draw_add_component_options(flecs::world& selected, int i = 0) {
-        constexpr auto type = refl::reflect<Head_T>();
         if constexpr(refl::descriptor::has_attribute<singleton_component>(refl::reflect<Head_T>())) {
-            const Head_T *component = selected.get<Head_T>();
-            if (component) ImGui::BeginDisabled(true);
-
-            if (ImGui::Selectable(type.name.c_str())) {
-                selected.add<Head_T>();
-            }
-
-            if (component) ImGui::EndDisabled();
+            draw_add_component_option<Head_T, flecs::world>(selected);
         }
         if constexpr(sizeof...(Tail_Ts) > 0) {
             draw_add_component_options<Tail_Ts...>(selected, i + 1);
         }
     }
+
+    template<typename Option_Type_T, typename Component_Holder_T>
+        requires component_holder<Component_Holder_T, Option_Type_T>
+    void draw_add_component_option(Component_Holder_T &selected) const {
+        constexpr auto type = refl::reflect<Option_Type_T>();
+        const Option_Type_T* component = selected.template get<Option_Type_T>();
+        if (component) ImGui::BeginDisabled(true);
+
+        if (ImGui::Selectable(type.name.c_str())) {
+            selected.template add<Option_Type_T>();
+        }
+
+        if (component) ImGui::EndDisabled();
+    }
+
 
     template<typename T, typename Component_Holder_T>
         requires (!simple_pair<T>) &&
