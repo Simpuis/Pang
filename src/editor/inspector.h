@@ -157,7 +157,7 @@ class inspector : public editor_element {
                             ImGui::OpenPopup("add_component_popup");
                         if(ImGui::BeginPopup("add_component_popup")) {
                             if(shared_state.selected_entity == world.get<scene_root>()->root_entity) {
-                                draw_add_component_options_singleton<Serializable_Ts...>(shared_state.selected_entity);
+                                draw_add_component_options<Serializable_Ts...>(world);
                             }
                             else {
                                 draw_add_component_options<Serializable_Ts...>(shared_state.selected_entity);
@@ -185,39 +185,39 @@ class inspector : public editor_element {
     }
 
     template<typename Head_T, typename... Tail_Ts>
-    void draw_add_component_options(flecs::entity selected_entity, int i = 0) {
-        const Head_T* component = selected_entity.get<Head_T>();
+    void draw_add_component_options(flecs::entity& selected, int i = 0) {
+        const Head_T* component = selected.get<Head_T>();
         if(component) ImGui::BeginDisabled(true);
 
         constexpr auto type = refl::reflect<Head_T>();
         if constexpr(!refl::descriptor::has_attribute<singleton_component>(refl::reflect<Head_T>())) {
             if (ImGui::Selectable(type.name.c_str())) {
-                selected_entity.add<Head_T>();
+                selected.add<Head_T>();
             }
         }
 
         if(component) ImGui::EndDisabled();
 
         if constexpr(sizeof...(Tail_Ts) > 0) {
-            draw_add_component_options<Tail_Ts...>(selected_entity, i + 1);
+            draw_add_component_options<Tail_Ts...>(selected, i + 1);
         }
     }
 
     template<typename Head_T, typename... Tail_Ts>
-    void draw_add_component_options_singleton(flecs::entity selected_entity, int i = 0) {
+    void draw_add_component_options(flecs::world& selected, int i = 0) {
         constexpr auto type = refl::reflect<Head_T>();
         if constexpr(refl::descriptor::has_attribute<singleton_component>(refl::reflect<Head_T>())) {
-            const Head_T *component = selected_entity.get<Head_T>();
+            const Head_T *component = selected.get<Head_T>();
             if (component) ImGui::BeginDisabled(true);
 
             if (ImGui::Selectable(type.name.c_str())) {
-                selected_entity.add<Head_T>();
+                selected.add<Head_T>();
             }
 
             if (component) ImGui::EndDisabled();
         }
         if constexpr(sizeof...(Tail_Ts) > 0) {
-            draw_add_component_options_singleton<Tail_Ts...>(selected_entity, i + 1);
+            draw_add_component_options<Tail_Ts...>(selected, i + 1);
         }
     }
 
