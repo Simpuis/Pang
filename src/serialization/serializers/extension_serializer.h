@@ -50,14 +50,9 @@ class extension_serializer : public serializer {
         constexpr auto type = refl::reflect<Head_T>();
         for(gsl::index i = 0; i < load_data.model.nodes.size(); i++) {
             if(load_data.model.nodes[i].extensions.find(type.name.c_str()) != load_data.model.nodes[i].extensions.end()) {
-                Head_T component_instance;
                 const tinygltf::Value& object = load_data.model.nodes[i].extensions.at(type.name.c_str());
 
-                for_each(type.members, [&](auto member) {
-                    if constexpr(is_readable(member) && refl::descriptor::has_attribute<serializable>(member)) {
-                        assign_component(member(component_instance), object.Get(get_display_name(member)), load_data);
-                    }
-                });
+                Head_T component_instance = deserialize_component<Head_T>(load_data, object);
 
                 load_data.node_entity_map[i].set<Head_T>(component_instance);
             }
@@ -66,5 +61,19 @@ class extension_serializer : public serializer {
         if constexpr(sizeof...(Tail_Ts) > 0) {
             load_types<Tail_Ts...>(load_data);
         }
+    }
+
+    template<typename Head_T>
+    Head_T deserialize_component(serializer_load_data &load_data, const tinygltf::Value &object) const {
+        constexpr auto type = refl::reflect<Head_T>();
+        Head_T component_instance;
+
+        for_each(type.members, [&](auto member) {
+            if constexpr(is_readable(member) && refl::descriptor::has_attribute<serializable>(member)) {
+                assign_component(member(component_instance), object.Get(get_display_name(member)), load_data);
+            }
+        });
+
+        return component_instance;
     }
 };
