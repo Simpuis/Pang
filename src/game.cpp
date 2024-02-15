@@ -34,14 +34,6 @@ void game::loop(unsigned int startup_scene)
 {
     if(scene_manager_) {
         scene_manager_->load_scene(startup_scene);
-
-        scene_manager_->get_world().import<transformation>();
-        scene_manager_->get_world().import<freefly>();
-        scene_manager_->get_world().import<rendering>();
-        render_debug_camera debug {};
-        debug.value = true;
-        scene_manager_->get_world().set<render_debug_camera>(debug);
-        scene_manager_->get_world().set<freefly_camera>({});
     }
 
     IMGUI_CHECKVERSION();

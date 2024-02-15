@@ -10,6 +10,7 @@ material::material() {
 
 std::shared_ptr<material> material::deserialize(const tinygltf::Model& model, const tinygltf::Material& gltf_material) {
     auto mat = std::make_shared<material>();
+    mat->name = gltf_material.name;
 
     const auto& pbr_metallic_roughness = gltf_material.pbrMetallicRoughness;
 
@@ -40,6 +41,7 @@ void material::apply_texture_uniform(const std::string &texture_uniform, const s
 
 tinygltf::Material material::serialize() {
     tinygltf::Material serialized_material;
+    serialized_material.name = name;
     tinygltf::PbrMetallicRoughness pbr_metallic_roughness;
 
     const glm::vec4 base_color = get_uniform("baseColor").vec4_value;

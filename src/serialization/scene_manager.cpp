@@ -57,6 +57,12 @@ void scene_manager::load_scene(std::string scene_filename) {
     unload_scene();
 
     serializer.load_scene_from_file(main_world, scene_filename);
+    main_world.import<transformation>();
+    main_world.import<freefly>();
+    main_world.import<rendering>();
+    render_debug_camera debug {};
+    debug.value = true;
+    main_world.set<render_debug_camera>(debug);
     main_world.set<freefly_camera>({});
 }
 

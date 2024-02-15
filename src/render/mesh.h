@@ -37,6 +37,7 @@ class mesh {
 public:
 
 public:
+    std::string name;
     std::vector<primitive> primitives;
 
     tinygltf::Mesh serialize();

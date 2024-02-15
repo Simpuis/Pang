@@ -77,6 +77,7 @@ public:
 
     uniform_value& get_uniform(const std::string& name);
 
+    std::string name;
     std::map<std::string, texture_info> textures;
     std::unique_ptr<shader> material_shader;
     std::map<std::string, uniform_value> uniforms;

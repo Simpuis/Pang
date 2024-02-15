@@ -96,7 +96,11 @@ class inspector : public editor_element {
     }
 
     void component_input(flecs::world& world, std::shared_ptr<mesh>& value) {
-        ImGui::Text("Test");
+        ImGui::Text("%s", value->name.c_str());
+    }
+
+    void component_input(flecs::world& world, std::shared_ptr<material>& value) {
+        ImGui::Text("%s", value->name.c_str());
     }
 
     template<is_enum T>

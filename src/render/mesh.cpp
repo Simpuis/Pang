@@ -10,6 +10,7 @@ std::shared_ptr<mesh> mesh::deserialize(const tinygltf::Model& model, const tiny
 }
 
 void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& mesh_to_load) {
+    this->name = mesh_to_load.name;
     for(const auto& gltf_primitive : mesh_to_load.primitives) {
         primitive mesh_primitive;
         mesh_primitive.mode = gltf_primitive.mode;
@@ -67,6 +68,7 @@ void mesh::setup_gltf_mesh(const tinygltf::Model &model, const tinygltf::Mesh& m
 
 tinygltf::Mesh mesh::serialize() {
     tinygltf::Mesh serialized_mesh;
+    serialized_mesh.name = name;
     for(const auto& primitive : primitives) {
         tinygltf::Primitive serialized_primitive;
         serialized_primitive.mode = primitive.mode;
