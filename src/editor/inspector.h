@@ -236,13 +236,15 @@ class inspector : public editor_element {
                 }
                 ImGui::EndPopup();
             }
+            gsl::index sub_index = 0;
             for_each(refl::reflect(*component).members, [&](auto member) {
                 if constexpr (is_readable(member) && refl::descriptor::has_attribute<serializable>(member)) {
                     ImGui::Text("%s", get_display_name(member));
-                    ImGui::PushID(i);
+                    ImGui::PushID((i * 100000) + sub_index);
                     component_input(world, member(*component));
                     ImGui::PopID();
                     ImGui::Separator();
+                    sub_index++;
                 }
             });
             ImGui::Separator();

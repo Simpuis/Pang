@@ -9,7 +9,7 @@ int main() {
             .build();
 
     context->setup_scenes({{0, "untitled.gltf"}, {1, "untitled1.gltf"}});
-    context->register_extension_types<camera>();
+    context->register_extension_types<>();
     context->loop();
 
 	return 0;

@@ -72,5 +72,5 @@ void game::register_extension_types() {
         editor_->register_serializables<position, rotation, scale, mesh_component, camera, main_camera, mesh_table, Extension_Serializer_Ts...>();
     }
 
-    scene_manager_->get_serializer().register_serializer(std::make_unique<extension_serializer<Extension_Serializer_Ts...>>());
+    scene_manager_->get_serializer().register_serializer(std::make_unique<extension_serializer<camera, Extension_Serializer_Ts...>>());
 }
