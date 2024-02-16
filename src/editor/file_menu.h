@@ -8,20 +8,29 @@
 class file_menu : public editor_element {
 public:
     void tick(flecs::world& world, shared_editor_state& shared_state) override {
-        if(ImGui::MenuItem("New Scene")) {
-            world.set<new_scene_command>(new_scene_command());
-        }
-        if(ImGui::MenuItem("Open Scene")) {
-            auto result = get_load_path();
-            if(result.has_value()) {
-                world.set<scene_swap_command>({result.value(), true});
+        if(ImGui::BeginMainMenuBar())
+        {
+            if(ImGui::BeginMenu("File"))
+            {
+                if(ImGui::MenuItem("New Scene")) {
+                    world.set<new_scene_command>(new_scene_command());
+                }
+                if(ImGui::MenuItem("Open Scene")) {
+                    auto result = get_load_path();
+                    if(result.has_value()) {
+                        world.set<scene_swap_command>({result.value(), true});
+                    }
+                }
+                if(ImGui::MenuItem("Save Scene As...")) {
+                    auto result = get_save_path();
+                    if(result.has_value()) {
+                        world.set<scene_save_command>({result.value()});
+                    }
+                }
+                ImGui::EndMenu();
             }
-        }
-        if(ImGui::MenuItem("Save Scene As...")) {
-            auto result = get_save_path();
-            if(result.has_value()) {
-                world.set<scene_save_command>({result.value()});
-            }
+
+            ImGui::EndMainMenuBar();
         }
     }
 

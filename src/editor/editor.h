@@ -11,9 +11,6 @@
 #include "file_menu.h"
 #include "transformation_gizmo.h"
 
-struct PlayAndEditor {};
-struct EditorOnly {};
-
 class editor
 {
 public:
@@ -22,16 +19,13 @@ public:
 public:
     template<typename... Serializable_Ts>
     void register_serializables() {
-        inspector_element = std::make_unique<inspector<Serializable_Ts...>>();
+        editor_elements.push_back(std::make_unique<inspector<Serializable_Ts...>>());
     }
 
 	void update(ImGuiIO& imgui_io, flecs::world& world);
 
 private:
-    std::unique_ptr<file_menu> file_menu_element;
-    std::unique_ptr<editor_element> inspector_element;
-    std::unique_ptr<editor_element> hierarchy;
-    std::unique_ptr<transformation_gizmo> gizmo;
+    std::vector<std::unique_ptr<editor_element>> editor_elements;
 
     shared_editor_state shared_state;
 };
