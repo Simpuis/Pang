@@ -2,7 +2,8 @@
 #include "src/flecs_modules/transformation/transformation.h"
 #include "src/render/shader.h"
 #include "src/flecs_modules/freefly_camera/freefly.h"
-#include "src/serialization/scene_serializer.h"
+#include "src/serialization/scene_manager.h"
+#include "src/editor/editor.h"
 
 #include <glad/glad.h>
 
@@ -17,7 +18,9 @@ rendering::rendering(flecs::world& world) {
     world.import<freefly>();
 
     world.system<const position, const rotation, const scale, const scene_root>("world_transform_conversion")
-        .kind(flecs::PreStore)
+        .kind(scene_manager::play_and_editor_onstore)
+        .write<transform_matrix, local_space>()
+        .write<transform_matrix, world_space>()
         .term_at(4).singleton()
         .each([](flecs::entity e, const position& pos, const rotation& rot, const scale& local_scale, const scene_root& root) {
             auto parent = e.parent();
@@ -42,7 +45,7 @@ rendering::rendering(flecs::world& world) {
         });
 
     world.system("render_clear")
-        .kind(flecs::OnStore)
+        .kind(scene_manager::play_and_editor_onstore)
         .iter([](flecs::iter& it) {
             glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -64,7 +67,7 @@ rendering::rendering(flecs::world& world) {
                  .term_at(6).optional()
                  .term_at(7).singleton()
                  .term_at(8).singleton()
-                 .kind(flecs::OnStore)
+                 .kind(scene_manager::play_and_editor_onstore)
                  .each([&](
                  const transform_matrix& transform,
                  const mesh_component& mesh_comp,

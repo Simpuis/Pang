@@ -2,13 +2,14 @@
 
 #include "src/flecs_modules/transformation/transformation.h"
 #include "src/input_handler.h"
+#include "src/editor/editor.h"
 
 freefly::freefly(flecs::world& world) {
     world.component<freefly_camera>();
 
     world.system<freefly_camera>("freefly_camera_init")
             .term_at(1).singleton()
-            .kind(flecs::OnStart)
+            .kind(scene_manager::play_and_editor_onstart)
             .each([](flecs::iter& it, size_t, freefly_camera& camera) {
                 camera.transform_matrix = glm::translate(camera.transform_matrix, glm::vec3(0.0f, 0.0f, 5.0f));
             });
@@ -16,7 +17,7 @@ freefly::freefly(flecs::world& world) {
     world.system<freefly_camera, frame_input_table>("freefly_camera_control")
         .term_at(1).singleton()
         .term_at(2).singleton()
-        .kind(flecs::OnUpdate)
+        .kind(scene_manager::play_and_editor_onupdate)
         .each([](flecs::iter &it, size_t,
                  freefly_camera &camera,
                  frame_input_table &input) {

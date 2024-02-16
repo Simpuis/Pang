@@ -11,6 +11,9 @@
 #include "file_menu.h"
 #include "transformation_gizmo.h"
 
+struct PlayAndEditor {};
+struct EditorOnly {};
+
 class editor
 {
 public:

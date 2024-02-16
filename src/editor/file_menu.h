@@ -14,7 +14,7 @@ public:
         if(ImGui::MenuItem("Open Scene")) {
             auto result = get_load_path();
             if(result.has_value()) {
-                world.set<scene_swap_command>({result.value()});
+                world.set<scene_swap_command>({result.value(), true});
             }
         }
         if(ImGui::MenuItem("Save Scene As...")) {

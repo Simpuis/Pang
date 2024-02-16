@@ -33,7 +33,7 @@ void game::framebuffer_size_callback(GLFWwindow* window, const int width, const 
 void game::loop(unsigned int startup_scene)
 {
     if(scene_manager_) {
-        scene_manager_->load_scene(startup_scene);
+        scene_manager_->load_scene(startup_scene, static_cast<bool>(editor_));
     }
 
     IMGUI_CHECKVERSION();
