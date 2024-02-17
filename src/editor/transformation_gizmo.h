@@ -47,7 +47,7 @@ public:
                                  glm::value_ptr(glm::perspective(glm::radians(cam.field_of_view_degrees),
                                                                  2560.0f / 1440.0f, cam.near_plane_z, cam.far_plane_z)),
                                  current_operation,
-                                 current_mode,
+                                 (current_operation == ImGuizmo::SCALE) ? ImGuizmo::LOCAL : current_mode,
                                  glm::value_ptr(world_transform->transform),
                                  nullptr, nullptr);
 
