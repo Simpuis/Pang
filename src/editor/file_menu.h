@@ -20,6 +20,7 @@ public:
                     if(result.has_value()) {
                         world.set<scene_swap_command>({result.value(), true});
                     }
+                    shared_state.selected_entity.reset();
                 }
                 if(ImGui::MenuItem("Save Scene As...")) {
                     auto result = get_save_path();
@@ -31,8 +32,11 @@ public:
             }
 
             ImGui::Separator();
-            if(ImGui::Button("Test")) {
+            if(ImGui::Button("Play")) {
                 world.set<switch_play_command>({false});
+            }
+            if(ImGui::Button("Stop")) {
+                world.set<switch_play_command>({true});
             }
 
             ImGui::EndMainMenuBar();

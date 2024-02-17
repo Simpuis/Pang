@@ -54,6 +54,7 @@ public:
 private:
     flecs::entity editor_pipeline;
     flecs::entity play_pipeline;
+    std::optional<flecs::snapshot> editor_play_snapshot;
     bool in_editor = true;
     void unload_scene();
 

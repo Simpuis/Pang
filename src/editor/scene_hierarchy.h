@@ -28,7 +28,7 @@ class scene_hierarchy : public editor_element {
     void traverse_hierarchy(flecs::world& world, flecs::entity root, flecs::entity entity, shared_editor_state& shared_state) {
         ImGuiTreeNodeFlags tree_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth
                                         | ImGuiTreeNodeFlags_DefaultOpen;
-        if(entity == shared_state.selected_entity) {
+        if(shared_state.selected_entity && entity == shared_state.selected_entity.value()) {
             tree_flags |= ImGuiTreeNodeFlags_Selected;
         }
 

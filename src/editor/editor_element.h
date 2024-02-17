@@ -1,11 +1,13 @@
 #pragma once
 
+#include <optional>
+
 namespace flecs {
     struct world;
 }
 
 struct shared_editor_state {
-    flecs::entity selected_entity;
+    std::optional<flecs::entity> selected_entity;
 };
 
 class editor_element {

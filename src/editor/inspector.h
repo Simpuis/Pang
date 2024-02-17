@@ -144,27 +144,27 @@ class inspector : public editor_element {
     void tick(flecs::world& world, shared_editor_state& shared_state) override {
         if(ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_MenuBar)) {
             static bool has_changed_entity = false;
-            if(world.is_valid(shared_state.selected_entity)) {
+            if(shared_state.selected_entity && world.is_valid(shared_state.selected_entity.value())) {
                 ImGui::BeginGroup();
                 ImGui::BeginChild("item view", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
-                ImGui::Text("%s", shared_state.selected_entity.name().c_str());
+                ImGui::Text("%s", shared_state.selected_entity->name().c_str());
                 ImGui::Separator();
                 if(ImGui::BeginTabBar("#Tabs", ImGuiTabBarFlags_None)) {
                     if(ImGui::BeginTabItem("Inspect")) {
-                        if(shared_state.selected_entity == world.get<scene_root>()->root_entity) {
+                        if(shared_state.selected_entity.value() == world.get<scene_root>()->root_entity) {
                             draw_serializables<flecs::world, Serializable_Ts...>(world, world);
                         }
                         else {
-                            draw_serializables<flecs::entity, Serializable_Ts...>(world, shared_state.selected_entity);
+                            draw_serializables<flecs::entity, Serializable_Ts...>(world, shared_state.selected_entity.value());
                         }
                         if(ImGui::Button("Add Component##AddButton"))
                             ImGui::OpenPopup("add_component_popup");
                         if(ImGui::BeginPopup("add_component_popup")) {
-                            if(shared_state.selected_entity == world.get<scene_root>()->root_entity) {
+                            if(shared_state.selected_entity.value() == world.get<scene_root>()->root_entity) {
                                 draw_add_component_options<Serializable_Ts...>(world);
                             }
                             else {
-                                draw_add_component_options<Serializable_Ts...>(shared_state.selected_entity);
+                                draw_add_component_options<Serializable_Ts...>(shared_state.selected_entity.value());
                             }
                             ImGui::EndPopup();
                         }

@@ -15,8 +15,9 @@
 class transformation_gizmo : public editor_element {
 public:
     void tick(flecs::world& world, shared_editor_state& shared_state) override {
-        if(!shared_state.selected_entity.is_valid()) return;
-        if(!shared_state.selected_entity.has<transform_matrix, world_space>()) return;
+        if(!shared_state.selected_entity) return;
+        if(!shared_state.selected_entity->is_valid()) return;
+        if(!shared_state.selected_entity->has<transform_matrix, world_space>()) return;
         if(world.get<scene_root>()->root_entity == shared_state.selected_entity) return;
 
         static ImGuizmo::OPERATION current_operation(ImGuizmo::TRANSLATE);
@@ -27,9 +28,9 @@ public:
         if(ImGui::IsKeyPressed(ImGuiKey_T)) current_mode = ImGuizmo::WORLD;
         if(ImGui::IsKeyPressed(ImGuiKey_Y)) current_mode = ImGuizmo::LOCAL;
 
-        auto* world_transform = shared_state.selected_entity.get_mut<transform_matrix, world_space>();
-        auto parent_transform = (shared_state.selected_entity.parent().has<transform_matrix, local_space>()) ?
-                shared_state.selected_entity.parent().get_mut<transform_matrix, local_space>()->transform :
+        auto* world_transform = shared_state.selected_entity->get_mut<transform_matrix, world_space>();
+        auto parent_transform = (shared_state.selected_entity->parent().has<transform_matrix, local_space>()) ?
+                shared_state.selected_entity->parent().get_mut<transform_matrix, local_space>()->transform :
                 glm::mat4x4(1.0f);
 
         glm::mat4x4 view;
@@ -55,10 +56,10 @@ public:
 
             glm::vec3 skew;
             glm::vec4 perspective;
-            glm::decompose(new_local, shared_state.selected_entity.get_mut<scale>()->vec, new_rotation,
-                           shared_state.selected_entity.get_mut<position>()->pos, skew, perspective);
+            glm::decompose(new_local, shared_state.selected_entity->get_mut<scale>()->vec, new_rotation,
+                           shared_state.selected_entity->get_mut<position>()->pos, skew, perspective);
 
-            shared_state.selected_entity.get_mut<rotation>()->rot = new_rotation;
+            shared_state.selected_entity->get_mut<rotation>()->rot = new_rotation;
         }
     }
 };

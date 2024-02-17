@@ -53,9 +53,11 @@ void scene_manager::update() {
         const auto* switch_command = main_world.get<switch_play_command>();
 
         if(switch_command->editor && !in_editor) {
+            if(editor_play_snapshot) editor_play_snapshot->restore();
             set_editor();
         }
         else if(!switch_command->editor && in_editor) {
+            editor_play_snapshot = flecs::snapshot(main_world);
             set_play();
         }
 
@@ -145,7 +147,7 @@ void scene_manager::set_editor() {
             .set<rotation>({})
             .set<scale>({})
             .set<freefly_controller>({})
-            .set<camera>({camera::projection::perspective});
+            .set<camera>({camera::projection::perspective, 45.0f, 0.1f, 1000.0f});
     debug.debug_camera = editor_camera;
     main_world.set<render_debug_camera>(debug);
 }
