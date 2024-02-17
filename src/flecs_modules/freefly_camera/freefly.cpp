@@ -26,6 +26,8 @@ freefly::freefly(flecs::world& world) {
         double delta_x = controller.cam_x - input.mouse_x;
         double delta_y = controller.cam_y - input.mouse_y;
 
+        glm::mat4 combined_trans = transform.transform * controller.local_trans;
+
         if (input.mouse_right_click == GLFW_PRESS) {
             //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             if (abs(delta_x) > 0.00001 || abs(delta_y) > 0.00001) {
@@ -44,21 +46,25 @@ freefly::freefly(flecs::world& world) {
 
         constexpr float controller_speed = 7.5f;
         if (input.key_w == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
+            glm::vec3 local_forward = controller.local_trans * glm::vec4(transformation::global_forward(), 1.0f);
             transform.transform = glm::translate(transform.transform,
                                                      controller_speed * (float) it.delta_time() *
-                                                     transformation::global_forward());
+                                                     local_forward);
         }
         if (input.key_s == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
+            glm::vec3 local_back = controller.local_trans * glm::vec4(-transformation::global_forward(), 1.0f);
             transform.transform = glm::translate(transform.transform,
                                                      controller_speed * (float) it.delta_time() *
                                                      -transformation::global_forward());
         }
         if (input.key_d == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
+            glm::vec3 local_right = controller.local_trans * glm::vec4(transformation::global_right(), 1.0f);
             transform.transform = glm::translate(transform.transform,
                                                      controller_speed * (float) it.delta_time() *
                                                      transformation::global_right());
         }
         if (input.key_a == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
+            glm::vec3 local_left = controller.local_trans * glm::vec4(-transformation::global_right(), 1.0f);
             transform.transform = glm::translate(transform.transform,
                                                      controller_speed * (float) it.delta_time() *
                                                      -transformation::global_right());
