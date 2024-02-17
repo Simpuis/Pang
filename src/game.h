@@ -73,5 +73,6 @@ void game::register_extension_types() {
                                         material_table, Extension_Serializer_Ts...>();
     }
 
-    scene_manager_->get_serializer().register_serializer(std::make_unique<extension_serializer<camera, Extension_Serializer_Ts...>>());
+    scene_manager_->get_serializer().register_serializer(std::make_unique<extension_serializer<main_camera, camera,
+                                                         Extension_Serializer_Ts...>>());
 }

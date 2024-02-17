@@ -68,7 +68,7 @@ REFL_TYPE(main_camera, bases<>, singleton_component())
 REFL_END
 
 struct render_debug_camera {
-    bool value = false;
+    std::optional<flecs::entity> debug_camera;
 };
 
 struct rendering {

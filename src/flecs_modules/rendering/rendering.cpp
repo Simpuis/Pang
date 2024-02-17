@@ -25,7 +25,7 @@ rendering::rendering(flecs::world& world) {
         .each([](flecs::entity e, const position& pos, const rotation& rot, const scale& local_scale, const scene_root& root) {
             auto parent = e.parent();
             transform_matrix* parent_transform = nullptr;
-            if(parent != root.root_entity) {
+            if(parent != root.root_entity && parent.is_valid()) {
                 parent_transform = parent.get_mut<transform_matrix, world_space>();
             }
 
@@ -57,7 +57,6 @@ rendering::rendering(flecs::world& world) {
                  const material_table,
                  const texture_table,
                  const main_camera,
-                 const freefly_camera,
                  const render_debug_camera>("Render")
                  .term_at(1).second<world_space>()
                  .term_at(3).singleton()
@@ -66,7 +65,6 @@ rendering::rendering(flecs::world& world) {
                  .term_at(6).singleton()
                  .term_at(6).optional()
                  .term_at(7).singleton()
-                 .term_at(8).singleton()
                  .kind(scene_manager::play_and_editor_onstore)
                  .each([&](
                  const transform_matrix& transform,
@@ -75,7 +73,6 @@ rendering::rendering(flecs::world& world) {
                  const material_table& material_lookup,
                  const texture_table& texture_lookup,
                  const main_camera& main,
-                 const freefly_camera& main_cam,
                  const render_debug_camera& use_debug_camera) {
         if(mesh_comp.mesh >= 0 && mesh_comp.mesh < mesh_lookup.table.size()) {
             for (auto &primitive: mesh_lookup.table.at(mesh_comp.mesh)->primitives) {
@@ -88,12 +85,23 @@ rendering::rendering(flecs::world& world) {
 
                 mat->material_shader->set_matrix("model", transform.transform);
 
-                glm::mat4x4 view = (use_debug_camera.value) ? glm::inverse(main_cam.transform_matrix * main_cam.local_trans) :
-                        glm::inverse(main.camera_entity.get<transform_matrix, world_space>()->transform);
-                mat->material_shader->set_matrix("view", glm::inverse(main_cam.transform_matrix * main_cam.local_trans));
+                glm::mat4x4 view;
+                camera cam;
+                if(use_debug_camera.debug_camera) {
+                    const auto* debug_camera_trans = use_debug_camera.debug_camera->get<transform_matrix, world_space>();
+                    const auto* debug_camera_freefly = use_debug_camera.debug_camera->get<freefly_controller>();
+                    view = glm::inverse(debug_camera_trans->transform * debug_camera_freefly->local_trans);
+                    cam = *use_debug_camera.debug_camera->get<camera>();
+                }
+                else {
+                    view = glm::inverse(main.camera_entity.get<transform_matrix, world_space>()->transform);
+                    cam = *main.camera_entity.get<camera>();
+                }
+                mat->material_shader->set_matrix("view", view);
 
                 glm::mat4 projection_matrix;
-                projection_matrix = glm::perspective(glm::radians(45.0f), 2560.0f / 1440.0f, 0.1f, 100.0f);
+                projection_matrix = glm::perspective(glm::radians(cam.field_of_view_degrees),
+                                                     2560.0f / 1440.0f, cam.near_plane_z, cam.far_plane_z);
                 mat->material_shader->set_matrix("projection", projection_matrix);
 
                 glBindVertexArray(primitive.VAO);

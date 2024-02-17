@@ -30,6 +30,11 @@ public:
                 ImGui::EndMenu();
             }
 
+            ImGui::Separator();
+            if(ImGui::Button("Test")) {
+                world.set<switch_play_command>({false});
+            }
+
             ImGui::EndMainMenuBar();
         }
     }

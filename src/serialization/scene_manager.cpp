@@ -52,8 +52,11 @@ void scene_manager::update() {
     if(main_world.has<switch_play_command>()) {
         const auto* switch_command = main_world.get<switch_play_command>();
 
-        if(switch_command->editor) {
-
+        if(switch_command->editor && !in_editor) {
+            set_editor();
+        }
+        else if(!switch_command->editor && in_editor) {
+            set_play();
         }
 
         main_world.remove<switch_play_command>();
@@ -67,8 +70,8 @@ void scene_manager::load_scene(unsigned int scene_index, bool editor) {
 void scene_manager::load_scene(std::string scene_filename, bool editor) {
     unload_scene();
     editor_only_onstart = main_world.entity()
-            .add(flecs::Phase)
-            .depends_on(flecs::OnStart);
+        .add(flecs::Phase)
+        .depends_on(flecs::OnStart);
     editor_only_preupdate = main_world.entity()
         .add(flecs::Phase)
         .depends_on(flecs::PreUpdate);
@@ -79,8 +82,8 @@ void scene_manager::load_scene(std::string scene_filename, bool editor) {
         .add(flecs::Phase)
         .depends_on(flecs::OnStore);
     play_and_editor_onstart = main_world.entity()
-            .add(flecs::Phase)
-            .depends_on(flecs::OnStart);
+        .add(flecs::Phase)
+        .depends_on(flecs::OnStart);
     play_and_editor_preupdate = main_world.entity()
         .add(flecs::Phase)
         .depends_on(flecs::PreUpdate);
@@ -111,18 +114,15 @@ void scene_manager::set_play() {
             .with(flecs::Phase).cascade(flecs::DependsOn)
             .without(flecs::Disabled).up(flecs::DependsOn)
             .without(flecs::Disabled).up(flecs::ChildOf)
-            .without(editor_only_onstore).up(flecs::DependsOn)
-            .without(editor_only_onstore).up(flecs::ChildOf)
-            .without(editor_only_onupdate).up(flecs::DependsOn)
-            .without(editor_only_onupdate).up(flecs::ChildOf)
-            .without(editor_only_preupdate).up(flecs::DependsOn)
-            .without(editor_only_preupdate).up(flecs::ChildOf)
+            .without(editor_only_onstart)
+            .without(editor_only_onstore)
+            .without(editor_only_onupdate)
             .build();
+    in_editor = false;
     main_world.set_pipeline(play_pipeline);
     render_debug_camera debug {};
-    debug.value = false;
+    debug.debug_camera = {};
     main_world.set<render_debug_camera>(debug);
-    main_world.set<freefly_camera>({});
 }
 
 void scene_manager::set_editor() {
@@ -137,11 +137,17 @@ void scene_manager::set_editor() {
             .without(flecs::Disabled).up(flecs::DependsOn)
             .without(flecs::Disabled).up(flecs::ChildOf)
             .build();
+    in_editor = true;
     main_world.set_pipeline(editor_pipeline);
     render_debug_camera debug {};
-    debug.value = true;
+    flecs::entity editor_camera = main_world.entity()
+            .set<position>({})
+            .set<rotation>({})
+            .set<scale>({})
+            .set<freefly_controller>({})
+            .set<camera>({camera::projection::perspective});
+    debug.debug_camera = editor_camera;
     main_world.set<render_debug_camera>(debug);
-    main_world.set<freefly_camera>({});
 }
 
 

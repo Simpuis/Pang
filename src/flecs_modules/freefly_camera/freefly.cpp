@@ -5,24 +5,26 @@
 #include "src/editor/editor.h"
 
 freefly::freefly(flecs::world& world) {
-    world.component<freefly_camera>();
+    world.component<freefly_controller>();
 
-    world.system<freefly_camera>("freefly_camera_init")
+    world.system<freefly_controller, transform_matrix>("freefly_controller_init")
             .term_at(1).singleton()
-            .kind(scene_manager::play_and_editor_onstart)
-            .each([](flecs::iter& it, size_t, freefly_camera& camera) {
-                camera.transform_matrix = glm::translate(camera.transform_matrix, glm::vec3(0.0f, 0.0f, 5.0f));
+            .term_at(2).second<world_space>()
+            .kind(scene_manager::editor_only_onstart)
+            .each([](flecs::iter& it, size_t, freefly_controller& controller, transform_matrix& transform) {
+                transform.transform = glm::translate(transform.transform, glm::vec3(0.0f, 0.0f, 5.0f));
             });
 
-    world.system<freefly_camera, frame_input_table>("freefly_camera_control")
-        .term_at(1).singleton()
+    world.system<freefly_controller, frame_input_table, transform_matrix>("freefly_controller_control")
         .term_at(2).singleton()
-        .kind(scene_manager::play_and_editor_onupdate)
-        .each([](flecs::iter &it, size_t,
-                 freefly_camera &camera,
-                 frame_input_table &input) {
-        double delta_x = camera.cam_x - input.mouse_x;
-        double delta_y = camera.cam_y - input.mouse_y;
+        .term_at(3).second<world_space>()
+        .kind(scene_manager::editor_only_onupdate)
+        .each([](flecs::iter &it, size_t t,
+                 freefly_controller &controller,
+                 frame_input_table &input,
+                 transform_matrix& transform) {
+        double delta_x = controller.cam_x - input.mouse_x;
+        double delta_y = controller.cam_y - input.mouse_y;
 
         if (input.mouse_right_click == GLFW_PRESS) {
             //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -30,46 +32,51 @@ freefly::freefly(flecs::world& world) {
                 constexpr float rot_speed = 0.1f;
                 glm::quat rot1 = glm::angleAxis((float) (delta_x * rot_speed * it.delta_time()),
                                                 glm::vec3(0.0, 1.0, 0.0));
-                camera.transform_matrix *= glm::mat4_cast(rot1);
+                transform.transform *= glm::mat4_cast(rot1);
                 glm::quat rot2 = glm::angleAxis((float) (delta_y * rot_speed * it.delta_time()),
                                                 glm::vec3(1.0, 0.0, 0.0));
-                camera.local_trans *= glm::mat4_cast(rot2);
+                controller.local_trans *= glm::mat4_cast(rot2);
             }
         }
 
-        camera.cam_x = input.mouse_x;
-        camera.cam_y = input.mouse_y;
+        controller.cam_x = input.mouse_x;
+        controller.cam_y = input.mouse_y;
 
-        constexpr float camera_speed = 7.5f;
+        constexpr float controller_speed = 7.5f;
         if (input.key_w == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
-            camera.transform_matrix = glm::translate(camera.transform_matrix,
-                                                     camera_speed * (float) it.delta_time() *
+            transform.transform = glm::translate(transform.transform,
+                                                     controller_speed * (float) it.delta_time() *
                                                      transformation::global_forward());
         }
         if (input.key_s == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
-            camera.transform_matrix = glm::translate(camera.transform_matrix,
-                                                     camera_speed * (float) it.delta_time() *
+            transform.transform = glm::translate(transform.transform,
+                                                     controller_speed * (float) it.delta_time() *
                                                      -transformation::global_forward());
         }
         if (input.key_d == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
-            camera.transform_matrix = glm::translate(camera.transform_matrix,
-                                                     camera_speed * (float) it.delta_time() *
+            transform.transform = glm::translate(transform.transform,
+                                                     controller_speed * (float) it.delta_time() *
                                                      transformation::global_right());
         }
         if (input.key_a == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
-            camera.transform_matrix = glm::translate(camera.transform_matrix,
-                                                     camera_speed * (float) it.delta_time() *
+            transform.transform = glm::translate(transform.transform,
+                                                     controller_speed * (float) it.delta_time() *
                                                      -transformation::global_right());
         }
         if (input.key_space_bar == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
-            camera.transform_matrix = glm::translate(camera.transform_matrix,
-                                                     camera_speed * (float) it.delta_time() *
+            transform.transform = glm::translate(transform.transform,
+                                                     controller_speed * (float) it.delta_time() *
                                                      transformation::global_up());
         }
         if (input.key_left_shift == GLFW_PRESS && input.mouse_right_click == GLFW_PRESS) {
-            camera.transform_matrix = glm::translate(camera.transform_matrix,
-                                                     camera_speed * (float) it.delta_time() *
+            transform.transform = glm::translate(transform.transform,
+                                                     controller_speed * (float) it.delta_time() *
                                                      -transformation::global_up());
         }
+
+        glm::vec3 skew;
+        glm::vec4 perspective;
+        glm::decompose(transform.transform, it.entity(t).get_mut<scale>()->vec, it.entity(t).get_mut<rotation>()->rot,
+                       it.entity(t).get_mut<position>()->pos, skew, perspective);
     });
 }

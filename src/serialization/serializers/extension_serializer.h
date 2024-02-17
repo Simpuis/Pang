@@ -16,12 +16,19 @@ class extension_serializer : public serializer {
     template<typename Head_T, typename... Tail_Ts>
     void save_types(serializer_save_data& save_data) {
         constexpr auto type = refl::reflect<Head_T>();
-        save_data.world.each<Head_T>([&](flecs::entity entity, Head_T& component) {
-            tinygltf::Value::Object object = serialize_component(save_data, component);
+        save_data.world.each([&](flecs::entity entity, Head_T& component) {
+            if(save_data.entity_node_map.contains(entity)) {
+                tinygltf::Value::Object object = serialize_component(save_data, component);
 
-            tinygltf::Node& gltf_node = save_data.model.nodes[save_data.entity_node_map[entity]];
-            gltf_node.extensions[type.name.c_str()] = tinygltf::Value(object);
+                tinygltf::Node &gltf_node = save_data.model.nodes.at(save_data.entity_node_map.at(entity));
+                gltf_node.extensions[type.name.c_str()] = tinygltf::Value(object);
+            }
         });
+
+        if(save_data.world.has<Head_T>()) {
+            tinygltf::Value::Object object = serialize_component(save_data, *save_data.world.get<Head_T>());
+            save_data.model.extensions[type.name.c_str()] = tinygltf::Value(object);
+        }
 
         if constexpr(sizeof...(Tail_Ts) > 0) {
             save_types<Tail_Ts...>(save_data);
@@ -56,6 +63,13 @@ class extension_serializer : public serializer {
 
                 load_data.node_entity_map[i].set<Head_T>(component_instance);
             }
+        }
+        if(load_data.model.extensions.find(type.name.c_str()) != load_data.model.extensions.end())  {
+            const tinygltf::Value& object = load_data.model.extensions.at(type.name.c_str());
+
+            Head_T component_instance = deserialize_component<Head_T>(load_data, object);
+
+            load_data.world.set<Head_T>(component_instance);
         }
 
         if constexpr(sizeof...(Tail_Ts) > 0) {

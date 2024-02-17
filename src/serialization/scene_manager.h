@@ -54,6 +54,7 @@ public:
 private:
     flecs::entity editor_pipeline;
     flecs::entity play_pipeline;
+    bool in_editor = true;
     void unload_scene();
 
     scene_serializer serializer;

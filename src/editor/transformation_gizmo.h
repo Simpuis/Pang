@@ -32,24 +32,33 @@ public:
                 shared_state.selected_entity.parent().get_mut<transform_matrix, local_space>()->transform :
                 glm::mat4x4(1.0f);
 
-        const auto* camera = world.get<freefly_camera>();
-        ImGuiIO& io = ImGui::GetIO();
-        ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-        ImGuizmo::Manipulate(glm::value_ptr(glm::inverse(camera->transform_matrix * camera->local_trans)),
-                             glm::value_ptr(glm::perspective(glm::radians(45.0f), 2560.0f / 1440.0f, 0.1f, 100.0f)),
-                             current_operation,
-                             current_mode,
-                             glm::value_ptr(world_transform->transform),
-                             nullptr, nullptr);
+        glm::mat4x4 view;
+        camera cam;
+        if(const auto* debug_camera = world.get<render_debug_camera>(); debug_camera->debug_camera) {
+            const auto* debug_camera_trans = debug_camera->debug_camera->get<transform_matrix, world_space>();
+            const auto* debug_camera_freefly = debug_camera->debug_camera->get<freefly_controller>();
+            view = glm::inverse(debug_camera_trans->transform * debug_camera_freefly->local_trans);
+            cam = *debug_camera->debug_camera->get<camera>();
 
-        glm::mat4 new_local = glm::inverse(parent_transform) * world_transform->transform;
-        glm::quat new_rotation;
+            ImGuiIO& io = ImGui::GetIO();
+            ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+            ImGuizmo::Manipulate(glm::value_ptr(view),
+                                 glm::value_ptr(glm::perspective(glm::radians(cam.field_of_view_degrees),
+                                                                 2560.0f / 1440.0f, cam.near_plane_z, cam.far_plane_z)),
+                                 current_operation,
+                                 current_mode,
+                                 glm::value_ptr(world_transform->transform),
+                                 nullptr, nullptr);
 
-        glm::vec3 skew;
-        glm::vec4 perspective;
-        glm::decompose(new_local, shared_state.selected_entity.get_mut<scale>()->vec, new_rotation,
-                       shared_state.selected_entity.get_mut<position>()->pos, skew, perspective);
+            glm::mat4 new_local = glm::inverse(parent_transform) * world_transform->transform;
+            glm::quat new_rotation;
 
-        shared_state.selected_entity.get_mut<rotation>()->rot = new_rotation;
+            glm::vec3 skew;
+            glm::vec4 perspective;
+            glm::decompose(new_local, shared_state.selected_entity.get_mut<scale>()->vec, new_rotation,
+                           shared_state.selected_entity.get_mut<position>()->pos, skew, perspective);
+
+            shared_state.selected_entity.get_mut<rotation>()->rot = new_rotation;
+        }
     }
 };
