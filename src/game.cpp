@@ -41,6 +41,7 @@ void game::loop(unsigned int startup_scene)
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigDragClickToInputText = true;
     io.Fonts->AddFontFromFileTTF("InterVariable.ttf", 18);
 
     ImGui_ImplGlfw_InitForOpenGL(window_, true);

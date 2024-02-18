@@ -67,13 +67,13 @@ class inspector : public editor_element {
     }
 
     void component_input(flecs::world& world, glm::vec3& value) {
-        ImGui::InputFloat3("##value", glm::value_ptr(value));
+        ImGui::DragFloat3("##value", glm::value_ptr(value));
     }
 
     void component_input(flecs::world& world, glm::quat& value) {
         glm::vec3 previous_euler_angles = glm::degrees(eulerAngles(value));
         glm::vec3 euler_angles = previous_euler_angles;
-        ImGui::InputFloat3("##value", glm::value_ptr(euler_angles));
+        ImGui::DragFloat3("##value", glm::value_ptr(euler_angles));
         if(previous_euler_angles != euler_angles) {
             if(abs(euler_angles.x) > 180.0f) {
                 euler_angles.x = fmod(euler_angles.x, 180.0f);
