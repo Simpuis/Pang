@@ -50,7 +50,7 @@ class inspector : public editor_element {
     }
 
     void component_input(flecs::world& world, float& value) {
-        ImGui::InputFloat("##value", &value, 0.1f);
+        ImGui::DragFloat("##value", &value, 0.1f);
     }
 
     void component_input(flecs::world& world, int& value) {
